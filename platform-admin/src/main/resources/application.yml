@@ -1,2 +1,4 @@
-server:
-  port: 81
+spring:
+  profiles:
+    active:
+    - dev
