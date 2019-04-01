@@ -1,0 +1,1 @@
+1.目前未考虑把admin-web和wechat-web的权限统一
