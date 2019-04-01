@@ -18,7 +18,7 @@
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${log.dir}/foolday-admin-log.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log.dir}/log.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+			<fileNamePattern>${log.dir}/admin.log.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 		<encoder>
@@ -36,7 +36,7 @@
 
 		<File>${log.dir}/log-error.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log.dir}/log-error.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+			<fileNamePattern>${log.dir}/admin-log-error.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 		<encoder>
