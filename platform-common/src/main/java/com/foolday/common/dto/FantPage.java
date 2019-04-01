@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unchecked")
 public class FantPage<T> implements Serializable {
     private static final long serialVersionUID = -1904616193145050158L;
     private List<T> rows;
@@ -76,6 +77,7 @@ public class FantPage<T> implements Serializable {
         this.pageNo = pageNo;
     }
 
+    @SuppressWarnings("unchecked")
     public <R> FantPage<R> map(Function<? super T, ? extends R> mapper) {
         List<R> list = null;
         if (this.rows != null) {

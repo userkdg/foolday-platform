@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class FantResult<T> implements Serializable {
     private static final long serialVersionUID = -8189520564623761867L;
     private boolean ok;
