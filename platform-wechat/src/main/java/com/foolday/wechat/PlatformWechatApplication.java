@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @SpringBootApplication
-@ComponentScan(value = {"com.foolday.wechat", "com.foolday.service", "com.foolday.service.api", "com.foolday.common"})
+@ComponentScan(value = {"com.foolday", "com.foolday.wechat", "com.foolday.service", "com.foolday.service.api", "com.foolday.common"})
 @Controller
 public class PlatformWechatApplication {
     @Autowired
