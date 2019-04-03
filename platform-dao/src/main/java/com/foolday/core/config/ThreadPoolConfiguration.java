@@ -4,6 +4,7 @@ import com.foolday.common.enums.ThreadPoolType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.concurrent.*;
 
