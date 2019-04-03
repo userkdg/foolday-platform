@@ -6,14 +6,14 @@
         <groupId>com.foolday.platform</groupId>
         <artifactId>platform-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <!--<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+        <relativePath></relativePath> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.foolday.cloud</groupId>
-    <artifactId>platform-admin</artifactId>
+    <artifactId>platform-dao</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>platform-admin</name>
-    <description>平台管理模块</description>
+    <name>platform-dao</name>
+    <description>抽象层</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -22,17 +22,12 @@
     <dependencies>
         <dependency>
             <groupId>com.foolday.cloud</groupId>
-            <artifactId>platform-service</artifactId>
+            <artifactId>platform-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
@@ -40,22 +35,31 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>platform-admin</finalName>
+        <finalName>platform-dao</finalName>
+        <resources>
+            <!-- 打包的时候包含mapper.xml文件 main-->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**.*</include>
+                </includes>
+            </resource>
+        </resources>
 
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
     </build>
 
 </project>

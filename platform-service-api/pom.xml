@@ -6,7 +6,7 @@
         <groupId>com.foolday.platform</groupId>
         <artifactId>platform-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <!--<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
     </parent>
 
     <groupId>com.foolday.cloud</groupId>
@@ -15,10 +15,6 @@
     <packaging>jar</packaging>
     <name>platform-service-api</name>
     <description>为platform-service的抽象接口层，后期考虑接口服务化</description>
-
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
 
     <dependencies>
         <dependency>

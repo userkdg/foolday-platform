@@ -1,4 +1,4 @@
-package com.foolday.common.config;
+package com.foolday.core.config;
 
 import com.foolday.common.enums.ThreadPoolType;
 import org.apache.commons.dbutils.AsyncQueryRunner;
@@ -23,14 +23,23 @@ public class DbUtilsConfiguration {
     /**
      * 查询数据库的工厂类
      *
-     * @param dataSource
-     * @return
+     * @param dataSource 获取application.yml的自动配置的数据源 实例
+     * @return QueryRunner
+     * @see org.springframework.boot.autoconfigure.jdbc.DataSourceConfiguration 基于本类的基础上，进行的注入dataSource
+     * 用法通过注入方式进行获取jvm的单列
      */
     @Bean
     public static QueryRunner queryRunner(@Qualifier("dataSource") DataSource dataSource) {
         return new QueryRunner(dataSource);
     }
 
+    /**
+     * 基于线程池的异步
+     *
+     * @param executor
+     * @param queryRunner
+     * @return
+     */
     @Bean
     public static AsyncQueryRunner asyncQueryRunner(@Qualifier(ThreadPoolType.AsyncQueryRunnerThreadPool) ExecutorService executor,
                                                     @Qualifier("queryRunner") QueryRunner queryRunner) {

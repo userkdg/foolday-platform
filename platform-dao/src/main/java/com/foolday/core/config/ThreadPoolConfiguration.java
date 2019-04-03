@@ -1,4 +1,4 @@
-package com.foolday.common.config;
+package com.foolday.core.config;
 
 import com.foolday.common.enums.ThreadPoolType;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +11,12 @@ import static com.foolday.common.util.DateUtils.formatStandard;
 
 @Configuration
 public class ThreadPoolConfiguration {
+
+    /*
+    用例
+     */
+//    @Resource(name = ThreadPoolType.CommonBlockThreadPool)
+//    private ExecutorService executorService;
 
     @Bean(ThreadPoolType.AsyncQueryRunnerThreadPool)
     public static ExecutorService asyncQueryRunnerThreadPool() {
