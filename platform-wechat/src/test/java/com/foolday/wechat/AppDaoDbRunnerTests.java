@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.cloud.serviceweb.dto.TestServiceWebDto;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
-import com.foolday.service.api.wechat.TestServiceApi;
+import com.foolday.service.api.TestServiceApi;
 import org.apache.commons.dbutils.AsyncQueryRunner;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanMapHandler;

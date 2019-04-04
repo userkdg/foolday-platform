@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.foolday.platform</groupId>
+        <artifactId>platform-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <!--<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+    </parent>
+
+    <groupId>com.foolday.cloud</groupId>
+    <artifactId>platform-schedule-job</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>platform-schedule-job</name>
+    <description>针对定时调度的独立模块，依赖service dao common</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.foolday.cloud</groupId>
+            <artifactId>platform-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.foolday.cloud</groupId>
+            <artifactId>platform-service-dto</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>platform-schedule-job</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

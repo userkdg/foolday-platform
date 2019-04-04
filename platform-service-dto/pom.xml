@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.foolday.platform</groupId>
+        <artifactId>platform-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <!--<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+    </parent>
+
+    <groupId>com.foolday.cloud</groupId>
+    <artifactId>platform-service-dto</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>platform-service-dto</name>
+    <description>把web(controller)端与service端的数据交互的实体类独立出来</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.foolday.cloud</groupId>
+            <artifactId>platform-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>platform-service-dto</finalName>
+
+    </build>
+</project>

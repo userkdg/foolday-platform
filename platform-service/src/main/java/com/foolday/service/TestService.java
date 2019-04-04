@@ -1,10 +1,10 @@
-package com.foolday.service.wechat;
+package com.foolday.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
-import com.foolday.service.api.wechat.TestServiceApi;
+import com.foolday.service.api.TestServiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
