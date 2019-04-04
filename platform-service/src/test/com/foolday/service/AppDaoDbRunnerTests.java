@@ -12,7 +12,12 @@ import org.apache.commons.dbutils.handlers.BeanMapHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -32,8 +37,26 @@ import java.util.concurrent.Future;
 @SpringBootTest(properties = {"application.yml"}, classes = PlatformServiceApplication.class)
 public class AppDaoDbRunnerTests {
 
+    @Autowired
+    RedisTemplate redisTemplate;
+
     @Test
-    public void testDto(){
+    public void getYaml(){
+
+    }
+
+    /**
+     * test spring-data-redis
+     */
+    @Test
+    public void redis() {
+        List clientList = redisTemplate.getClientList();
+        Long add = redisTemplate.opsForSet().add(1, 1);
+
+    }
+
+    @Test
+    public void testDto() {
         TestServiceWebDto testServiceWebDto = new TestServiceWebDto();
         System.out.println(testServiceWebDto);
     }

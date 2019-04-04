@@ -1,5 +1,7 @@
 server:
   port: 8080
+  servlet:
+    context-path: /wechat
 
 spring:
   application:
@@ -70,4 +72,4 @@ mybatis-plus:
 logging:
   level:
     ROOT: INFO
-    cn.fooltech: DEBUG
+    com.foolday: DEBUG

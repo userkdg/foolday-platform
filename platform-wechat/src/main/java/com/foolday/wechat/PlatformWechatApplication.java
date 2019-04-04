@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-@ComponentScan(value = {"com.foolday", "com.foolday.wechat", "com.foolday.service", "com.foolday.service.api", "com.foolday.common"})
+@ComponentScan(value = {"com.foolday"})
 public class PlatformWechatApplication {
 
     public static void main(String[] args) {

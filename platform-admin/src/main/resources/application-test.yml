@@ -1,5 +1,7 @@
 server:
   port: 80
+  servlet:
+    context-path: /system
 
 spring:
   application:
@@ -28,7 +30,7 @@ spring:
     multipart:
       max-request-size: 100Mb
   redis:
-    database: 1
+    database: 0
     host: localhost
     password:
     port: 6379
@@ -69,4 +71,4 @@ mybatis-plus:
 logging:
   level:
     ROOT: INFO
-    cn.fooltech: DEBUG
+    com.foolday: DEBUG

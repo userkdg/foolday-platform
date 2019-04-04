@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(value = {"com.foolday.admin", "com.foolday.service", "com.foolday.service.api", "com.foolday.common"})
+@ComponentScan(value = {"com.foolday"})
 public class PlatformAdminApplication {
 
     public static void main(String[] args) {

@@ -19,7 +19,7 @@ public class PlatformScheduleJobRunner extends AbstractScheduledJob{
     /**
      * test
      */
-    @Scheduled(fixedRate = 5L)
+    @Scheduled(fixedRate = 10L, initialDelay = 1L)
     public void testSchedul() {
         logger.debug("cost {}", LocalDateTime.now());
     }

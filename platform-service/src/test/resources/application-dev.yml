@@ -69,4 +69,4 @@ mybatis-plus:
 logging:
   level:
     ROOT: INFO
-    cn.fooltech: DEBUG
+    com.foolday: DEBUG

@@ -26,7 +26,7 @@ spring:
     multipart:
       max-request-size: 100Mb
   redis:
-    database: 1
+    database: 2
     host: localhost
     password:
     port: 6379
@@ -67,4 +67,4 @@ mybatis-plus:
 logging:
   level:
     ROOT: INFO
-    cn.fooltech: DEBUG
+    com.foolday: DEBUG

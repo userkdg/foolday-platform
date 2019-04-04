@@ -1,9 +1,11 @@
 server:
   port: 8080
+  servlet:
+    context-path: /wechat
 
 spring:
   application:
-    name: platform
+    name: platform-wechat
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
@@ -41,6 +43,7 @@ mybatis-plus:
   typeAliasesPackage: com.foolday.dao.* # todo
   # 支持统配符 * 或者 ; 分割
   typeEnumsPackage: com.foolday.core.enums
+  # 自动配置中已Map来存储
   global-config:
     #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
     id-type: 3
@@ -69,4 +72,4 @@ mybatis-plus:
 logging:
   level:
     ROOT: INFO
-    cn.fooltech: DEBUG
+    com.foolday: DEBUG
