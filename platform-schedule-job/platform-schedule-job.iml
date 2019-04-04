@@ -27,7 +27,6 @@
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:2.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.2.3" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.2.3" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-to-slf4j:2.10.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.10.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jul-to-slf4j:1.7.25" level="project" />
@@ -65,6 +64,10 @@
     <orderEntry type="module" module-name="platform-service-api" />
     <orderEntry type="module" module-name="platform-service-dto" />
     <orderEntry type="module" module-name="platform-common" />
+    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: redis.clients:jedis:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.5.0" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.19" level="project" />

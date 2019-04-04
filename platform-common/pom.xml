@@ -18,6 +18,17 @@
     <description>平台公共模块,与spring容器解耦，不适用spring的环境</description>
 
     <dependencies>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
         <!-- redis的使用spring boot 的 -->
         <dependency>
             <groupId>redis.clients</groupId>
