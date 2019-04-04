@@ -26,6 +26,28 @@
             <groupId>com.foolday.cloud</groupId>
             <artifactId>platform-service-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.foolday.cloud</groupId>
+                    <artifactId>platform-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.foolday.cloud</groupId>
+                    <artifactId>platform-service-dto</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.foolday.cloud</groupId>
+            <artifactId>platform-service-dto</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 提供给service层做测试启动类使用-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -21,6 +21,8 @@
         <module>platform-admin</module>
         <module>platform-wechat</module>
         <module>platform-service</module>
+        <module>platform-service-dto</module>
+        <module>platform-schedule-job</module>
         <module>platform-dao</module>
         <module>platform-service-api</module>
         <module>platform-common</module>
@@ -93,9 +95,9 @@
 
             <!-- 由于支持的spring boot版本不是2.x 攒抛弃 lock4j-spring-boot-starter是一个分布式锁组件，其提供了多种不同的支持以满足不同性能和环境的需求。-->
             <!--<dependency>-->
-                <!--<groupId>com.baomidou</groupId>-->
-                <!--<artifactId>lock4j-spring-boot-starter</artifactId>-->
-                <!--<version>${spring.boot.version}</version>-->
+            <!--<groupId>com.baomidou</groupId>-->
+            <!--<artifactId>lock4j-spring-boot-starter</artifactId>-->
+            <!--<version>${spring.boot.version}</version>-->
             <!--</dependency>-->
 
             <!--为支持多种环境redis不会默认引入，虽然初版只支持原生redisTemplate-->
@@ -146,15 +148,15 @@
             </dependency>
 
             <!--<dependency>-->
-                <!--<groupId>org.mybatis.spring.boot</groupId>-->
-                <!--<artifactId>mybatis-spring-boot-starter</artifactId>-->
-                <!--<version>${mybatis-spring-boot-starter.version}</version>-->
+            <!--<groupId>org.mybatis.spring.boot</groupId>-->
+            <!--<artifactId>mybatis-spring-boot-starter</artifactId>-->
+            <!--<version>${mybatis-spring-boot-starter.version}</version>-->
             <!--</dependency>-->
 
             <!--<dependency>-->
-                <!--<groupId>com.github.pagehelper</groupId>-->
-                <!--<artifactId>pagehelper-spring-boot-starter</artifactId>-->
-                <!--<version>${mybatis-pageHelper-spring-boot-starter.version}</version>-->
+            <!--<groupId>com.github.pagehelper</groupId>-->
+            <!--<artifactId>pagehelper-spring-boot-starter</artifactId>-->
+            <!--<version>${mybatis-pageHelper-spring-boot-starter.version}</version>-->
             <!--</dependency>-->
 
             <dependency>
@@ -164,9 +166,9 @@
             </dependency>
 
             <!--<dependency>-->
-                <!--<groupId>com.alibaba</groupId>-->
-                <!--<artifactId>druid-spring-boot-starter</artifactId>-->
-                <!--<version>${druid-spring-boot-starter.version}</version>-->
+            <!--<groupId>com.alibaba</groupId>-->
+            <!--<artifactId>druid-spring-boot-starter</artifactId>-->
+            <!--<version>${druid-spring-boot-starter.version}</version>-->
             <!--</dependency>-->
 
             <dependency>
@@ -312,12 +314,15 @@
 
         <plugins>
 
+            <!-- 注意单独执行findbugs 命令前要先把项目的依赖模块的jar都发布到本地仓库中 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <configuration>
                     <effort>default</effort>
-                    <failOnError>true</failOnError>
+                    <failOnError>false</failOnError>
+                    <findbugsXmlOutputDirectory>${project.basedir}</findbugsXmlOutputDirectory>
+                    <!--<skip>true</skip>-->
                     <!--<excludeFilterFile>${project.basedir}/etc/findbug/excludeFilter.xml</excludeFilterFile>-->
                 </configuration>
                 <executions>

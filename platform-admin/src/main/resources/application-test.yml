@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: platform
+    name: platform-admin
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource

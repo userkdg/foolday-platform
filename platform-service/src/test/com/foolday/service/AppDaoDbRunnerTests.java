@@ -1,4 +1,4 @@
-package com.foolday.wechat;
+package com.foolday.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.cloud.serviceweb.dto.TestServiceWebDto;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
-import com.foolday.service.api.wechat.TestServiceApi;
 import org.apache.commons.dbutils.AsyncQueryRunner;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanMapHandler;
@@ -14,9 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Controller;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -28,14 +25,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * web端的测试类
+ * service 层服务测试
+ * 设计上是没有web层的配置文件，要是测试配置文件，要到web层的测试类，目前只允许web和service之间通过公共的javabean 或Java原生对象或者common包等基础包实体来进行数据传输
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PlatformWechatApplication.class, properties = {"application.yml"})
-@Controller
+@SpringBootTest(properties = {"application.yml"}, classes = PlatformServiceApplication.class)
 public class AppDaoDbRunnerTests {
-    @Autowired
-    TestMapper testMapper;
 
     @Test
     public void testDto(){
@@ -43,19 +38,14 @@ public class AppDaoDbRunnerTests {
         System.out.println(testServiceWebDto);
     }
 
+    @Autowired
+    TestMapper testMapper;
+
     @Test
     public void test() {
-        List<TestEntity> testEntity = testMapper.selectList(null);
+        TestEntity testEntity = testMapper.selectOne(null);
         System.out.println(testEntity);
 
-    }
-
-    @Autowired
-    private TestServiceApi testService;
-
-    @GetMapping("/test")
-    public void test2() {
-        testService.test();
     }
 
     @Test
