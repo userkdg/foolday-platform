@@ -4,9 +4,10 @@ package com.foolday.common.util;
 import com.foolday.common.exception.PlatformException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import lombok.Data;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,14 +29,14 @@ public class PlatformTreeUtils {
         Map<Object, E> dataMap = Maps.newLinkedHashMap();
         List<E> retList = Lists.newArrayList();
 
-        Object parentId;
+        String parentId;
         E parent;
         for (E data : datas) {
             try {
-                parentId = PropertyUtils.getProperty(data, idProperty);
+                parentId = ObjectUtils.toString(PropertyUtils.getProperty(data, idProperty));
             } catch (Exception var13) {
                 logger.error("无法读取id属性", var13);
-                throw new PlatformException();
+                throw new PlatformException("无法读取id属性,e=>"+ ExceptionUtils.getMessage(var13));
             }
 
             try {
@@ -43,12 +44,12 @@ public class PlatformTreeUtils {
                 dataMap.put(parentId, parent);
             } catch (Exception var12) {
                 logger.error("无法复制数据", var12);
-                throw new PlatformException();
+                throw new PlatformException("无法复制数据,e=>" + ExceptionUtils.getMessage(var12));
             }
         }
         try {
             for (E data : dataMap.values()) {
-                parentId = PropertyUtils.getProperty(data, parentIdProperty);
+                parentId = ObjectUtils.toString(PropertyUtils.getProperty(data, parentIdProperty));
                 if (parentId != null && dataMap.containsKey(parentId)) {
                     parent = dataMap.get(parentId);
                     Object children = PropertyUtils.getProperty(parent, childrenProperty);
@@ -85,6 +86,7 @@ public class PlatformTreeUtils {
     }
 
 }
+
 class TreeVo implements Serializable {
     private static final long serialVersionUID = 1L;
     private String id;

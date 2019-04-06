@@ -2,9 +2,7 @@ package com.foolday.admin.controller;
 
 import com.foolday.common.util.PlatformTreeUtils;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Api("测试")
 @RestController
 @RequestMapping("test")
 public class TestController {
@@ -24,13 +23,12 @@ public class TestController {
     }
 
     /**
-     *
      * @return
      */
-    @ApiOperation("树")
+    @ApiOperation("树的描述,测试异常返回的处理器")
     @ApiResponses(@ApiResponse(code = 200, message = "正常返回", response = List.class))
     @GetMapping("/tree")
-    public List<TreeVo> getTree() {
+    public List<TreeVo> tree() {
         List<TreeVo> treeVos = new ArrayList<TreeVo>() {{
             add(TreeVo.builder().id("1").parentId("0").name("node1").build());
             add(TreeVo.builder().id("2").parentId("0").name("node2").build());
@@ -45,11 +43,15 @@ public class TestController {
 
     @Data
     @Builder
+    @ApiModel("树对象")
     static class TreeVo implements Serializable {
         private static final long serialVersionUID = 1L;
+        @ApiModelProperty(name = "主键id", hidden = false, required = true, value = "", dataType = "string")
         private String id;
+        @ApiModelProperty(name = "树名称", hidden = false, required = true, value = "", dataType = "string")
         private String name;
         private String parentId;
+        @ApiModelProperty(name = "子树名称", hidden = true, required = false, value = "", dataType = "list")
         private List<TreeVo> children = Lists.newArrayList();
         private String parentName;
     }
