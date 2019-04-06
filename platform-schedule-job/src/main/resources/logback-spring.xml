@@ -16,9 +16,9 @@
 	<!-- 文件输出，保存30天的日志 -->
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log.dir}/foolday-wechat-log.log</file>
+		<file>${log.dir}/foolday-schedule-job-log.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log.dir}/wechat-log.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+			<fileNamePattern>${log.dir}/schedule-job-log.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 		<encoder>
@@ -36,7 +36,7 @@
 
 		<File>${log.dir}/log-error.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log.dir}/wechat-log-error.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+			<fileNamePattern>${log.dir}/schedule-job-log-error.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 		<encoder>

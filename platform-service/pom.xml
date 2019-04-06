@@ -41,6 +41,17 @@
             <groupId>com.foolday.cloud</groupId>
             <artifactId>platform-service-dto</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <!-- service中目前不允许使用 swagger -->
+            <exclusions>
+                <exclusion>
+                        <groupId>io.springfox</groupId>
+                        <artifactId>springfox-swagger2</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-swagger-ui</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- 提供给service层做测试启动类使用-->
