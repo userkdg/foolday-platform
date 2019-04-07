@@ -12,14 +12,76 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PlatformTreeUtils {
     static final Logger logger = LoggerFactory.getLogger(PlatformTreeUtils.class);
 
     public PlatformTreeUtils() {
+    }
+
+    public static <E> List<E> createTree(List<E> datas, String idProperty, String parentIdProperty, String childrenProperty) {
+        PlatformAssert.notNull(idProperty);
+        PlatformAssert.notNull(parentIdProperty);
+        PlatformAssert.notNull(childrenProperty);
+        Map<Object, E> dataMap = new LinkedHashMap();
+        List<E> retList = new ArrayList();
+        Iterator var6 = datas.iterator();
+
+        E data;
+        Object parentId;
+        E parent;
+        while (var6.hasNext()) {
+            data = (E) var6.next();
+
+            try {
+                parentId = PropertyUtils.getProperty(data, idProperty);
+            } catch (Exception var13) {
+                logger.error("无法读取id属性", var13);
+                throw new PlatformException("无法读取id属性" + var13);
+            }
+
+            try {
+                parent = (E) BeanUtils.cloneBean(data);
+                dataMap.put(parentId, parent);
+            } catch (Exception var12) {
+                logger.error("无法复制数据", var12);
+                throw new PlatformException("无法复制数据" + var12);
+            }
+        }
+
+        try {
+            var6 = dataMap.values().iterator();
+
+            do {
+                while (var6.hasNext()) {
+                    data = (E) var6.next();
+                    parentId = PropertyUtils.getProperty(data, parentIdProperty);
+                    if (parentId != null && dataMap.containsKey(parentId)) {
+                        parent = dataMap.get(parentId);
+                        Object children = PropertyUtils.getProperty(parent, childrenProperty);
+                        if (children == null) {
+                            children = new ArrayList();
+                            PropertyUtils.setProperty(parent, childrenProperty, children);
+                        }
+
+                        if (!(children instanceof List)) {
+                            throw new ClassCastException("属性" + childrenProperty + "不是有效的子级数据属性");
+                        }
+
+                        List<E> list = (List) children;
+                        list.add(data);
+                    } else {
+                        retList.add(data);
+                    }
+                }
+
+                return retList;
+            } while (true);
+        } catch (Exception var14) {
+            logger.error("父节点Id或则子节点列表属性字段异常", var14);
+            throw new PlatformException("树节点配置异常");
+        }
     }
 
     public static <E> List<E> createTrees(List<E> datas, String idProperty, String parentIdProperty, String childrenProperty) {
@@ -36,7 +98,7 @@ public class PlatformTreeUtils {
                 parentId = ObjectUtils.toString(PropertyUtils.getProperty(data, idProperty));
             } catch (Exception var13) {
                 logger.error("无法读取id属性", var13);
-                throw new PlatformException("无法读取id属性,e=>"+ ExceptionUtils.getMessage(var13));
+                throw new PlatformException("无法读取id属性,e=>" + ExceptionUtils.getMessage(var13));
             }
 
             try {
@@ -76,13 +138,13 @@ public class PlatformTreeUtils {
     }
 
     public static void main(String[] args) {
-        List<TreeVo> treeVos = new ArrayList<TreeVo>() {{
-            add(new TreeVo("1", "0", "node1", null, null));
-            add(new TreeVo("2", "0", "node2", null, null));
-            add(new TreeVo("3", "1", "node2", null, null));
-            add(new TreeVo("4", "2", "node2", null, null));
-        }};
-        List<TreeVo> trees = PlatformTreeUtils.createTrees(treeVos, "id", "parentId", "children");
+//        List<TreeVo> treeVos = new ArrayList<TreeVo>() {{
+//            add(new TreeVo("1", "0", "node1", null, null));
+//            add(new TreeVo("2", "0", "node2", null, null));
+//            add(new TreeVo("3", "1", "node2", null, null));
+//            add(new TreeVo("4", "2", "node2", null, null));
+//        }};
+//        List<TreeVo> trees = PlatformTreeUtils.createTree(treeVos, "id", "parentId", "children");
     }
 
 }

@@ -64,6 +64,7 @@
     <orderEntry type="module" module-name="platform-service-api" />
     <orderEntry type="module" module-name="platform-service-dto" />
     <orderEntry type="module" module-name="platform-common" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.3" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />

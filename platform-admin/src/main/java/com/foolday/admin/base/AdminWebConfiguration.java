@@ -1,12 +1,17 @@
 package com.foolday.admin.base;
 
+import com.foolday.admin.base.intercepter.PlatformAuthTokenInterceptor;
+import com.foolday.admin.base.property.WebInterceptorPatternProperties;
+import com.foolday.admin.base.property.WebLoginUserMvcProperties;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.exception.PlatformException;
 import com.google.common.net.HttpHeaders;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -18,6 +23,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +37,35 @@ import java.util.stream.Collectors;
 /**
  * 用来管理admin web异常的相应给前端的全局异常处理配置
  * 可后续增加其他类型的异常类处理
+ * 2019年4月7日 16点06分：增加拦截授权
+ *
  */
 @Configuration
-public class AdminWebConfiguration {
+@EnableConfigurationProperties(value = {WebLoginUserMvcProperties.class, WebInterceptorPatternProperties.class})
+public class AdminWebConfiguration implements WebMvcConfigurer {
+    private static final Logger logger = LoggerFactory.getLogger(AdminWebConfiguration.class);
+
+    @Autowired
+    private WebLoginUserMvcProperties webLoginUserMvcProperties;
+
+    @Autowired
+    private WebInterceptorPatternProperties webInterceptorPatternProperties;
+
+    /**
+     * 注入拦截
+     *
+     * @param registry
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        if (this.webLoginUserMvcProperties.getLoginUser() != null &&
+                this.webLoginUserMvcProperties.getLoginUser().isValid()) {
+            logger.debug("启用登录测试用户：{}", this.webLoginUserMvcProperties.getLoginUser());
+            registry.addInterceptor(new PlatformAuthTokenInterceptor(this.webLoginUserMvcProperties.getLoginUser()))
+                    .excludePathPatterns(webInterceptorPatternProperties.getExcludePathPatternsList());
+        }
+    }
+
     @ControllerAdvice
     public static class FantResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
         private Logger logger = LoggerFactory.getLogger(this.getClass());
