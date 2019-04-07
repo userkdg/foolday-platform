@@ -25,7 +25,7 @@ public class LoginService implements LoginServiceApi {
     @Override
     public boolean checkLoginAccount(LoginVo loginVo) {
         AdminEntity adminEntity = new AdminEntity();
-        adminEntity.setName(loginVo.getAccount());
+        adminEntity.setAccount(loginVo.getAccount());
         adminEntity.setPassword(LoginServiceApi.md5DigestAsHex(loginVo.getPassword()));
         return adminMapper.selectCount(Wrappers.query(adminEntity)) >= 1;
     }

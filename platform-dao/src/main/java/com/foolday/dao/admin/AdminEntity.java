@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class AdminEntity extends Model<AdminEntity> {
     private Integer id;
-    private String name;
+    private String account;
     private String password;
     private String roleId;
     private Integer status;
