@@ -37,10 +37,9 @@ public class LoginController {
     @ApiResponses(@ApiResponse(code = 200, message = "正常返回", response = FantResult.class))
     @PostMapping
     public FantResult<String> login(@RequestBody LoginVo loginVo, HttpServletRequest request) {
-        System.out.println(loginVo);
-        boolean checkLoginAccount = loginServiceApi.checkLoginAccount(loginVo);
-        final String captcha = loginVo.getCaptcha();
-        return checkLoginAccount && Objects.equals(request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY), captcha) ?
+        return loginServiceApi.checkLoginAccount(loginVo) && // 判断是否存在
+                request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY) != null && // 必须有获取验证码到session中
+                Objects.equals(request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY), loginVo.getCaptcha()) ? // 验证码有效性
                 FantResult.ok("登录成功") :
                 FantResult.fail("账号或密码错误，登录失败");
     }
