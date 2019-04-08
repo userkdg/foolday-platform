@@ -4,6 +4,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.cloud.serviceweb.dto.TestServiceWebDto;
+import com.foolday.core.enums.GoodsStatus;
+import com.foolday.core.enums.TagType;
+import com.foolday.dao.goods.GoodsEntity;
+import com.foolday.dao.goods.GoodsMapper;
+import com.foolday.dao.tags.TagsEntity;
+import com.foolday.dao.tags.TagsMapper;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
 import org.apache.commons.dbutils.AsyncQueryRunner;
@@ -12,11 +18,7 @@ import org.apache.commons.dbutils.handlers.BeanMapHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -24,8 +26,10 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -41,8 +45,44 @@ public class AppDaoDbRunnerTests {
     RedisTemplate redisTemplate;
 
     @Test
-    public void getYaml(){
+    public void getYaml() {
 
+    }
+
+    @Resource
+    TagsMapper tagsMapper;
+
+    @Resource
+    GoodsMapper goodsMapper;
+
+    @Test
+    public void goods() {
+        GoodsEntity goodsEntity = new GoodsEntity();
+        goodsEntity.setName("可乐");
+        goodsEntity.setShopId(UUID.randomUUID().toString().replaceAll("-",""));
+        goodsEntity.setStatus(GoodsStatus.ON);
+        goodsEntity.setDescription("可口可乐的口感");
+        goodsEntity.setPrice(5.0F);
+        goodsEntity.setDiscntPrice(4.5F);
+        goodsEntity.setKccnt(100);
+        goodsEntity.setImgId(UUID.randomUUID().toString().replaceAll("-",""));
+        TagsEntity tagsEntity = tagsMapper.selectOne(Wrappers.lambdaQuery());
+        goodsEntity.setTagId(tagsEntity.getId());
+        goodsEntity.setCreateTime(LocalDateTime.now());
+        System.out.println(goodsEntity);
+        goodsMapper.insert(goodsEntity);
+        System.out.println(goodsEntity);
+    }
+
+    @Test
+    public void tags() {
+        TagsEntity tagsEntity = new TagsEntity();
+        tagsEntity.setName("热门推荐");
+        tagsEntity.setType(TagType.GOODS);
+        tagsEntity.setCreateTime(LocalDateTime.now());
+        System.out.println(tagsEntity);
+        tagsMapper.insert(tagsEntity);
+        System.out.println(tagsEntity);
     }
 
     /**

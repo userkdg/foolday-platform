@@ -4,14 +4,15 @@ import com.baomidou.mybatisplus.core.enums.IEnum;
 
 import java.io.Serializable;
 
-public enum AgeEnum implements IEnum {
-    ONE(1, "一岁"),
-    TWO(2, "二岁");
+public enum GoodsStatus implements IEnum {
+    ON(1, "上架"),
+    OFF(0, "下架"),
+    DELETE(-1, "删除");
 
     private int value;
     private String desc;
 
-    AgeEnum(final int value, final String desc) {
+    GoodsStatus(final int value, final String desc) {
         this.value = value;
         this.desc = desc;
     }
