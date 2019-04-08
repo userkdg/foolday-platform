@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.cloud.serviceweb.dto.TestServiceWebDto;
 import com.foolday.core.enums.GoodsStatus;
 import com.foolday.core.enums.TagType;
+import com.foolday.core.enums.UnitType;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.dao.tags.TagsEntity;
@@ -33,6 +34,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import static com.foolday.common.util.UuidUtils.uuid32;
+
 /**
  * service 层服务测试
  * 设计上是没有web层的配置文件，要是测试配置文件，要到web层的测试类，目前只允许web和service之间通过公共的javabean 或Java原生对象或者common包等基础包实体来进行数据传输
@@ -58,17 +61,19 @@ public class AppDaoDbRunnerTests {
     @Test
     public void goods() {
         GoodsEntity goodsEntity = new GoodsEntity();
-        goodsEntity.setName("可乐");
-        goodsEntity.setShopId(UUID.randomUUID().toString().replaceAll("-",""));
+        goodsEntity.setName("雪碧");
+        goodsEntity.setShopId(uuid32());
         goodsEntity.setStatus(GoodsStatus.ON);
-        goodsEntity.setDescription("可口可乐的口感");
+        goodsEntity.setDescription("雪的口感");
         goodsEntity.setPrice(5.0F);
-        goodsEntity.setDiscntPrice(4.5F);
+        goodsEntity.setDiscntPrice(4.0F);
         goodsEntity.setKccnt(100);
-        goodsEntity.setImgId(UUID.randomUUID().toString().replaceAll("-",""));
+        goodsEntity.setImgId(uuid32());
         TagsEntity tagsEntity = tagsMapper.selectOne(Wrappers.lambdaQuery());
+        System.out.println(tagsEntity);
         goodsEntity.setTagId(tagsEntity.getId());
         goodsEntity.setCreateTime(LocalDateTime.now());
+        goodsEntity.setUnit(UnitType.瓶);
         System.out.println(goodsEntity);
         goodsMapper.insert(goodsEntity);
         System.out.println(goodsEntity);

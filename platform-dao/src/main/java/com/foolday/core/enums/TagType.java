@@ -1,10 +1,10 @@
 package com.foolday.core.enums;
 
-import com.baomidou.mybatisplus.core.enums.IEnum;
+import com.foolday.core.base.BaseEnum;
 
 import java.io.Serializable;
 
-public enum TagType implements IEnum {
+public enum TagType implements BaseEnum {
     GOODS(1, "商品类"),
     ORDER(0, "订单类"),
     DELETE(-1, "删除");
@@ -22,7 +22,7 @@ public enum TagType implements IEnum {
         return this.value;
     }
 
-    public String getDesc(){
+    public String getDesc() {
         return this.desc;
     }
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.foolday.core.base.BaseEntity;
 import com.foolday.core.enums.GoodsStatus;
+import com.foolday.core.enums.UnitType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -52,6 +53,12 @@ public class GoodsEntity extends BaseEntity<GoodsEntity> {
     库存数量
      */
     private Integer kccnt;
+
+    /*
+    商品单位类型
+     */
+    @EnumValue
+    private UnitType unit;
 
     /*
     描述内容

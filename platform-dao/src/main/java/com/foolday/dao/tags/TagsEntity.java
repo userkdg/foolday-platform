@@ -14,7 +14,17 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TagsEntity extends BaseEntity<TagsEntity> {
+    /*
+    名称
+     */
     private String name;
+    /*
+    类型
+     */
     @EnumValue
     private TagType type;
+    /*
+    标签优先级/来控制一级分类的排序
+     */
+    private Integer priorityLevel;
 }
