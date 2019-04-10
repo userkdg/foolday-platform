@@ -1,5 +1,7 @@
 package com.foolday.common.dto;
 
+import com.foolday.common.handler.HandlerManager;
+import com.foolday.common.handler.IHandler;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -66,6 +68,18 @@ public class FantResult<T> implements Serializable {
         }
 
         this.moreData.put(key, value);
+        return this;
+    }
+
+
+    /**
+     * 异步处理事务
+     *
+     * @param handler
+     * @return
+     */
+    public FantResult<T> addAsyncHanlder(IHandler handler) {
+        HandlerManager.executeSingle(handler);
         return this;
     }
 

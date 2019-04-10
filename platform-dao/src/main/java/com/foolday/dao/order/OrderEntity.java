@@ -2,10 +2,10 @@ package com.foolday.dao.order;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.foolday.common.enums.EatType;
+import com.foolday.common.enums.OrderStatus;
+import com.foolday.common.enums.OrderType;
 import com.foolday.core.base.BaseEntity;
-import com.foolday.core.enums.EatType;
-import com.foolday.core.enums.OrderStatus;
-import com.foolday.core.enums.OrderType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -38,25 +38,73 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class OrderEntity extends BaseEntity<OrderEntity> {
     private String shopId;
+    /*
+    店名 和 店地址 字段冗余，便于前端显示
+     */
     private String shopName;
     private String shopAddress;
+    /*
+    就餐类型
+     */
     @EnumValue
     private EatType eatType;
+    /*
+    单独商品数量
+     */
     private Integer goodsNum;
+    /*
+    总价格
+     */
     private Float allPrice;
+    /*
+    折扣价（有优惠券等产生的价格）
+     */
     private Float discntPrice;
+    /*
+    其他优惠价
+     */
     private Float otherDiscntPrice;
+    /*
+    实际价格= allPrice - discntPrice - otherDiscntPrice
+     */
     private Float realPayPrice;
     private String remark;
+    /*
+    订单人数 餐具提供支持
+     */
     private Integer peopleCnt;
+    /*
+    客户id
+     */
     private String userId;
+    /*
+    团购id 默认为'' 若有值为团购/拼团产生的订单
+     */
     private String groupbuyId;
+    /*
+    使用优惠券 验证用户卷的有效性！
+     */
     private String couponId;
+    /*
+    订单状态
+     */
     @EnumValue
     private OrderStatus status;
+    /**
+     * 订单编号 规则生成
+     */
     private String orderNo;
+    /*
+    订单类型
+     */
     @EnumValue
     private OrderType orderType;
+    /*
+    订单座位号
+     */
     private Integer seatNo;
+    /*
+    排队号
+     */
     private String queueNo;
 }

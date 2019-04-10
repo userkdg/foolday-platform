@@ -1,18 +1,16 @@
-package com.foolday.core.enums;
+package com.foolday.common.enums;
 
-import com.foolday.core.base.BaseEnum;
+import com.foolday.common.base.BaseEnum;
 
 import java.io.Serializable;
 
-public enum UserStatus implements BaseEnum {
-    在线(0),
+public enum CommentStatus implements BaseEnum {
     有效(1),
     无效(2),
-    禁用(3),
-    拉黑(4);
+    删除(3);
     private int value;
 
-    UserStatus(int value) {
+    CommentStatus(int value) {
         this.value = value;
     }
 

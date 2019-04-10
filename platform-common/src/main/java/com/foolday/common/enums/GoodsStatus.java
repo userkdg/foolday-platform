@@ -1,13 +1,13 @@
-package com.foolday.core.enums;
+package com.foolday.common.enums;
 
-import com.foolday.core.base.BaseEnum;
+import com.foolday.common.base.BaseEnum;
 
 import java.io.Serializable;
 
 public enum GoodsStatus implements BaseEnum {
-    ON(1, "上架"),
-    OFF(0, "下架"),
-    DELETE(-1, "删除");
+    上架(1, "上架"),
+    下架(0, "下架"),
+    删除(-1, "删除");
 
     private int value;
     private String desc;

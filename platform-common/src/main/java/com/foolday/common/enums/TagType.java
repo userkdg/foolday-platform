@@ -1,6 +1,6 @@
-package com.foolday.core.enums;
+package com.foolday.common.enums;
 
-import com.foolday.core.base.BaseEnum;
+import com.foolday.common.base.BaseEnum;
 
 import java.io.Serializable;
 

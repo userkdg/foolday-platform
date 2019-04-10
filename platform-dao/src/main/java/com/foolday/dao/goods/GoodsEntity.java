@@ -2,9 +2,9 @@ package com.foolday.dao.goods;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.foolday.common.enums.GoodsStatus;
+import com.foolday.common.enums.UnitType;
 import com.foolday.core.base.BaseEntity;
-import com.foolday.core.enums.GoodsStatus;
-import com.foolday.core.enums.UnitType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
