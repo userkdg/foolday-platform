@@ -41,6 +41,7 @@ public class GoodsEntity extends BaseEntity<GoodsEntity> {
     后续不确定是否调整为多对多关系
     增加索引
      */
+    @Deprecated
     private String tagId;
 
     /*
