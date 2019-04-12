@@ -1,4 +1,4 @@
-package com.foolday.cloud.serviceweb.dto.admin.base;
+package com.foolday.serviceweb.dto.admin.base;
 
 /**
  * 本地内存存储用户信息

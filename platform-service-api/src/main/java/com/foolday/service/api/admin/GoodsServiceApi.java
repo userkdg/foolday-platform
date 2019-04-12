@@ -1,7 +1,7 @@
 package com.foolday.service.api.admin;
 
-import com.foolday.cloud.serviceweb.dto.admin.goods.GoodsVo;
 import com.foolday.dao.goods.GoodsEntity;
+import com.foolday.serviceweb.dto.admin.goods.GoodsVo;
 
 /**
  * 商品接口

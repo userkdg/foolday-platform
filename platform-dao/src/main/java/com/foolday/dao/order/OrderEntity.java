@@ -8,6 +8,7 @@ import com.foolday.common.enums.OrderType;
 import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * id varchar(64) not null PRIMARY key,
@@ -36,6 +37,7 @@ import lombok.EqualsAndHashCode;
 @TableName("t_order")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class OrderEntity extends BaseEntity<OrderEntity> {
     private String shopId;
     /*

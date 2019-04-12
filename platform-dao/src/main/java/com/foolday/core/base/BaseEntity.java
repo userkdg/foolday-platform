@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
  */
 @Setter
 @Getter
+@ToString
 public abstract class BaseEntity<T extends Model<T>> extends Model<T> {
     @TableId(type = IdType.UUID)
     private String id;

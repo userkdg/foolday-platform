@@ -1,4 +1,4 @@
-package com.foolday.cloud.serviceweb.dto;
+package com.foolday.serviceweb.dto;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;

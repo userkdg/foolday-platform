@@ -1,10 +1,10 @@
 package com.foolday.admin.controller;
 
 import com.foolday.admin.base.AdminBaseController;
-import com.foolday.cloud.serviceweb.dto.admin.goods.GoodsVo;
 import com.foolday.common.dto.FantResult;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.service.api.admin.GoodsServiceApi;
+import com.foolday.serviceweb.dto.admin.goods.GoodsVo;
 import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

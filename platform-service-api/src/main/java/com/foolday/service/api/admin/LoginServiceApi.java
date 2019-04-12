@@ -1,6 +1,6 @@
 package com.foolday.service.api.admin;
 
-import com.foolday.cloud.serviceweb.dto.admin.login.LoginVo;
+import com.foolday.serviceweb.dto.admin.login.LoginVo;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 

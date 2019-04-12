@@ -6,10 +6,12 @@ import com.foolday.common.enums.UserStatus;
 import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @TableName("t_admin")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class AdminEntity extends BaseEntity<AdminEntity> {
     /*
     后台管理员账号（目前已手机号码为账号)

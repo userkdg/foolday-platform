@@ -1,6 +1,6 @@
 package com.foolday.admin.base.property;
 
-import com.foolday.cloud.serviceweb.dto.admin.base.LoginUser;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

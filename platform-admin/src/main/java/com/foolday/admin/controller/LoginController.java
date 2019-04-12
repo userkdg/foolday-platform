@@ -1,9 +1,9 @@
 package com.foolday.admin.controller;
 
 import com.foolday.admin.base.AdminBaseController;
-import com.foolday.cloud.serviceweb.dto.admin.login.LoginVo;
 import com.foolday.common.dto.FantResult;
 import com.foolday.service.api.admin.LoginServiceApi;
+import com.foolday.serviceweb.dto.admin.login.LoginVo;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.Api;

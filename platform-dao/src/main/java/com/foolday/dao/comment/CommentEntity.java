@@ -7,6 +7,7 @@ import com.foolday.common.enums.CommentType;
 import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * 订单评论
@@ -15,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @TableName("t_comment")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class CommentEntity extends BaseEntity<CommentEntity> {
     private String shopId;
     /*

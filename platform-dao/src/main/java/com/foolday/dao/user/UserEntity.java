@@ -6,10 +6,12 @@ import com.foolday.common.enums.UserStatus;
 import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @TableName("t_user")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class UserEntity extends BaseEntity<UserEntity> {
     /*
     客户名称

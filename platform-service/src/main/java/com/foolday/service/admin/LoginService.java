@@ -1,10 +1,10 @@
 package com.foolday.service.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.foolday.cloud.serviceweb.dto.admin.login.LoginVo;
 import com.foolday.dao.admin.AdminEntity;
 import com.foolday.dao.admin.AdminMapper;
 import com.foolday.service.api.admin.LoginServiceApi;
+import com.foolday.serviceweb.dto.admin.login.LoginVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

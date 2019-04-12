@@ -7,12 +7,14 @@ import com.foolday.common.enums.UnitType;
 import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 
 @TableName("t_goods")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class GoodsEntity extends BaseEntity<GoodsEntity> {
 
     @NotNull(message = "商品状态，上下架，删除，不为空")
@@ -24,6 +26,14 @@ public class GoodsEntity extends BaseEntity<GoodsEntity> {
 
     @NotNull(message = "商品名称不为空")
     private String name;
+    /*
+    商品关联的分类
+    目前 每个商品只能打一个分类
+    后续不确定是否调整为多对多关系
+    增加索引
+   （一对多）
+     */
+    private String categoryId;
 
     /*
     商品关联的标签id

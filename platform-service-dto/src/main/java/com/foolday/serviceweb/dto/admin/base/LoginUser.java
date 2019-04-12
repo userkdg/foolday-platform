@@ -1,4 +1,4 @@
-package com.foolday.cloud.serviceweb.dto.admin.base;
+package com.foolday.serviceweb.dto.admin.base;
 
 import lombok.Getter;
 import lombok.Setter;

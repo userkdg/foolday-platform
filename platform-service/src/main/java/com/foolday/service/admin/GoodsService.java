@@ -1,9 +1,9 @@
 package com.foolday.service.admin;
 
-import com.foolday.cloud.serviceweb.dto.admin.goods.GoodsVo;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.service.api.admin.GoodsServiceApi;
+import com.foolday.serviceweb.dto.admin.goods.GoodsVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

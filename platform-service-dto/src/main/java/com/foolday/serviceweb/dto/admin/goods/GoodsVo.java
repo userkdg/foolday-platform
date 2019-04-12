@@ -1,4 +1,4 @@
-package com.foolday.cloud.serviceweb.dto.admin.goods;
+package com.foolday.serviceweb.dto.admin.goods;
 
 import com.foolday.common.enums.GoodsStatus;
 import com.foolday.common.enums.UnitType;

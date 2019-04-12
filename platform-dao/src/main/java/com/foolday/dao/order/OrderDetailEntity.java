@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  *
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
 @TableName("t_order_detail")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class OrderDetailEntity extends BaseEntity<OrderDetailEntity> {
     /*
     商品名称
