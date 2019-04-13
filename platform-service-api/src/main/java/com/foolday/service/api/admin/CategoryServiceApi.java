@@ -19,5 +19,4 @@ public interface CategoryServiceApi {
 
     boolean updateStatus(CategoryStatus status, String categoryId);
 
-    CategoryEntity checkOneById(String categoryId);
 }

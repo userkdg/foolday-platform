@@ -1,6 +1,6 @@
 package com.foolday.admin.controller;
 
-import com.foolday.admin.base.AdminBaseController;
+import com.foolday.common.base.AdminBaseDataUtils;
 import com.foolday.common.dto.FantResult;
 import com.foolday.service.api.admin.LoginServiceApi;
 import com.foolday.serviceweb.dto.admin.login.LoginVo;
@@ -25,7 +25,7 @@ import java.util.Objects;
 @Api("登陆控制器")
 @RequestMapping("/admin")
 @RestController
-public class LoginController implements AdminBaseController {
+public class LoginController {
     @Resource(name = "captchaProducer")
     private Producer captchaProducer;
 
@@ -33,7 +33,7 @@ public class LoginController implements AdminBaseController {
     private LoginServiceApi loginServiceApi;
 
     @Resource
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      *
@@ -48,7 +48,7 @@ public class LoginController implements AdminBaseController {
         return loginServiceApi.checkLoginAccount(loginVo) ? // 判断是否存在
                 FantResult.ok("登录成功").addAsyncHanlder(() -> {
                     System.out.println("把登录成功信息异步存到redis中");
-                    setShopId2Redis(redisTemplate, "userId", "shopId");
+                    AdminBaseDataUtils.setShopId2Redis(redisTemplate, "userId", "shopId");
                 }) :
                 FantResult.fail("账号或密码错误，登录失败");
     }

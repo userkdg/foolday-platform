@@ -1,6 +1,5 @@
 package com.foolday.admin.controller;
 
-import com.foolday.admin.base.AdminBaseController;
 import com.foolday.common.dto.FantResult;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.service.api.admin.GoodsServiceApi;
@@ -18,7 +17,7 @@ import static com.foolday.common.constant.WebConstant.RESPONSE_RESULT_MSG;
 @Api(value = "商品接口", tags = {"商品操作接口"})
 @RestController
 @RequestMapping("/goods")
-public class GoodsController implements AdminBaseController {
+public class GoodsController {
 
     @Resource
     private GoodsServiceApi goodsServiceApi;
@@ -29,7 +28,7 @@ public class GoodsController implements AdminBaseController {
     @PostMapping("/add")
     public FantResult<String> add(@ApiParam(name = "goodsVo", value = "商品对象", required = true)
                                   @RequestBody GoodsVo goodsVo) {
-        GoodsEntity goodsEntity = goodsServiceApi.newGoods(goodsVo);
+        GoodsEntity goodsEntity = goodsServiceApi.newGoodsUnionCategoryId(goodsVo, goodsVo.getCategoryId());
         return FantResult.ok(goodsEntity.getId());
     }
 }

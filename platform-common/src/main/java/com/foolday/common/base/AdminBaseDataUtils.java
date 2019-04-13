@@ -1,4 +1,4 @@
-package com.foolday.admin.base;
+package com.foolday.common.base;
 
 import com.foolday.common.exception.PlatformException;
 import org.apache.commons.lang3.ObjectUtils;
@@ -16,7 +16,7 @@ import static com.foolday.common.constant.WebConstant.USER_SHOP_ID_FROM_SESSION;
 /**
  * 可以提取抽象常量或抽象静态方法或本地方法
  */
-public interface AdminBaseController {
+public final class AdminBaseDataUtils {
 
     /**
      * 登录的时候写入userId和shopId到redis
@@ -25,7 +25,7 @@ public interface AdminBaseController {
      * @param userId
      * @param shopId
      */
-    default void setShopId2Redis(RedisTemplate<String, String> redisTemplate, @NotNull String userId, @NotNull String shopId) {
+    public static void setShopId2Redis(RedisTemplate<String, String> redisTemplate, @NotNull String userId, @NotNull String shopId) {
         if (redisTemplate == null)
             throw new PlatformException("缺少redisTemplate实例");
         if (StringUtils.isBlank(userId))
@@ -49,7 +49,7 @@ public interface AdminBaseController {
      * @return
      */
     @SuppressWarnings("unchecked")
-    default Optional<String> getShopId4Redis(RedisTemplate<String, String> redisTemplate, @NotNull String userId) {
+    public static Optional<String> getShopId4Redis(RedisTemplate<String, String> redisTemplate, @NotNull String userId) {
         if (redisTemplate == null)
             throw new PlatformException("缺少redisTemplate实例");
         if (StringUtils.isBlank(userId))
