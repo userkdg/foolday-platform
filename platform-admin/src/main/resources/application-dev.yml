@@ -26,8 +26,8 @@ spring:
       max-active: 50
       test-on-borrow: true
   servlet:
-    multipart.max-file-size: 10Mb
     multipart:
+      max-file-size: 10Mb
       max-request-size: 100Mb
   redis:
     database: 0
@@ -91,7 +91,17 @@ platform:
         # 跳过拦截
         interceptor-config:
           excludePathPatterns:
-            - /api/**
-            - /v2/api-docs
-#          includePathPatterns:
-#            -
+          - /api/**
+          - /v2/api-docs
+  #          includePathPatterns:
+  #            -
+  # 图片定制
+  image:
+    # 支持的文件类型
+    enable-content-type:
+    - png
+    - jpeg
+    - jpg
+    - gif
+    # 存储在磁盘目录
+    store-path: /home/image

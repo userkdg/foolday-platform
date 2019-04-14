@@ -4,7 +4,6 @@ import com.foolday.common.enums.ThreadPoolType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.concurrent.*;
 
@@ -56,6 +55,17 @@ public class ThreadPoolConfiguration {
                 new RejectHandler());
     }
 
+
+    @Bean(ThreadPoolType.SingleThreadPool)
+    public static ExecutorService singleExecutor() {
+        return new ThreadPoolExecutor(1,
+                1,
+                0L,
+                TimeUnit.MILLISECONDS,
+                new SynchronousQueue<>(),
+                (r) -> new Thread(r, "异步非阻塞线程池" + Thread.currentThread().getName()),
+                new RejectHandler());
+    }
 
     /**
      * 报错拒绝

@@ -1,6 +1,8 @@
 package com.foolday.common.util;
 
+import com.foolday.common.constant.WebConstant;
 import com.foolday.common.exception.PlatformException;
+import com.google.common.io.Files;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +15,11 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Path;
+import java.util.Base64;
 import java.util.Iterator;
+import java.util.Optional;
+import java.util.Properties;
 
 /**
  * 图片工具
@@ -35,6 +41,86 @@ public class ImageUtils {
         } catch (IOException ex) {
             return false;
         }
+    }
+
+
+    /**
+     * 1.94M jpg -Base64.getMimeEncoder()->2.66M byte[]
+     * -ImageUtils.optimize()->
+     * 1) quality=0.9F =>837.54k
+     * 2) quality=0.8F => 577.81k
+     * 3) quality=0.85F => 674.9K
+     * 注意：质量太高包太大会MySQL会max_pack 过大异常
+     * so: 原图字段存储为压缩质量选0.9F
+     * 缩略图存储压缩质量定为0.75F
+     *
+     * @param sourceFile
+     * @param quality    图片质量 在（0F-1F）之间 不包含0F,1F
+     * @return
+     * @throws IOException
+     */
+    public static byte[] getOptimizeBase64Bytes(File sourceFile, float quality) {
+        /*
+        基于源文件创建临时文件，提取完进行清除
+         */
+        File tempFile = null;
+        try {
+            tempFile = java.nio.file.Files.createTempFile(sourceFile.getName(), null).toFile();
+            ImageUtils.optimize(sourceFile, tempFile, quality);
+            return Base64.getMimeEncoder().encode(Files.toByteArray(tempFile));
+        } catch (IOException e) {
+//            e.printStackTrace();
+            logger.error("创建临时文件或压缩文件异常，e:{}", e);
+        } finally {
+            if (tempFile != null) {
+                tempFile.delete();
+            }
+        }
+        // 默认为空
+        return null;
+    }
+
+    /**
+     * base64转为图片
+     *
+     * @return
+     */
+    public static Optional<File> base642ImageFile(byte[] base64Data) {
+        byte[] decodeBase64Data = Base64.getMimeDecoder().decode(base64Data);
+        try {
+            Path tempFile = java.nio.file.Files.createTempFile(System.getProperty(WebConstant.SystemProperty.user_dir), "base64img.jpg");
+            java.nio.file.Files.write(tempFile, decodeBase64Data);
+            return Optional.ofNullable(tempFile.toFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("base64转图片失败");
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * base64转为图片
+     *
+     * @return
+     */
+    public static Optional<OutputStream> base642ImageStream(byte[] base64Data) {
+        byte[] decodeBase64Data = Base64.getMimeDecoder().decode(base64Data);
+        try {
+            Path tempFile = java.nio.file.Files.createTempFile(System.getProperty(WebConstant.SystemProperty.user_dir), "base64img.jpg");
+            java.nio.file.Files.write(tempFile, decodeBase64Data);
+            try (OutputStream outputStream = java.nio.file.Files.newOutputStream(tempFile)) {
+                return Optional.ofNullable(outputStream);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("base64转图片失败");
+        }
+        return Optional.empty();
+    }
+
+    public static void main(String[] args) {
+        Properties properties = System.getProperties();
+        properties.forEach((key, value) -> System.out.println("public static final String " + key + " = " + "\"" + key + "\"" + ";"));
     }
 
     /**
@@ -201,6 +287,18 @@ public class ImageUtils {
      * @param width    新的宽度，小于1则忽略，按原图比例缩放
      * @param height   新的高度，小于1则忽略，按原图比例缩放
      */
+    public static void resize(Path srcFile, Path destFile, int width, int height) {
+        resize(srcFile.toFile(), destFile.toFile(), width, height, -1, -1);
+    }
+
+    /**
+     * 重调图片尺寸
+     *
+     * @param srcFile  原图路径
+     * @param destFile 目标文件
+     * @param width    新的宽度，小于1则忽略，按原图比例缩放
+     * @param height   新的高度，小于1则忽略，按原图比例缩放
+     */
     public static void resize(File srcFile, File destFile, int width, int height) {
         resize(srcFile, destFile, width, height, -1, -1);
     }
@@ -221,18 +319,13 @@ public class ImageUtils {
         } else if (!destFile.getParentFile().exists()) {
             PlatformAssert.isTrue(destFile.getParentFile().mkdirs(), "文件系统异常,请稍后重试");
         }
-        InputStream input = null;
-        OutputStream output = null;
-        try {
-            input = new BufferedInputStream(new FileInputStream(srcFile));
-            output = new FileOutputStream(destFile);
+        try (InputStream input = new BufferedInputStream(new FileInputStream(srcFile));
+             OutputStream output = new FileOutputStream(destFile)) {
             resize(input, output, width, height, maxWidth, maxHeight);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+//            e.printStackTrace();
             logger.error("找不到原图", e);
             throw new PlatformException("找不到原图");
-        } finally {
-            IOUtils.closeQuietly(input);
-            IOUtils.closeQuietly(output);
         }
     }
 
@@ -254,7 +347,7 @@ public class ImageUtils {
             if (!writers.hasNext())
                 throw new IllegalStateException("No writers found");
 
-            writer = (ImageWriter) writers.next();
+            writer = writers.next();
             ios = ImageIO.createImageOutputStream(output);
 
             writer.setOutput(ios);
@@ -298,6 +391,14 @@ public class ImageUtils {
 
     /**
      * 压缩图片
+     * 1.94M jpg -Base64.getMimeEncoder()->2.66M byte[]
+     * -ImageUtils.optimize()->
+     * 1) quality=0.9F =>837.54k
+     * 2) quality=0.8F => 577.81k
+     * 3) quality=0.85F => 674.9K
+     * 注意：质量太高包太大会MySQL会max_pack 过大异常
+     * so: 原图字段存储为压缩质量选0.9F
+     * 缩略图存储压缩质量定为0.75F
      *
      * @param source  a {@link File} object.
      * @param target  a {@link File} object.
@@ -306,22 +407,17 @@ public class ImageUtils {
     public static void optimize(File source, File target, float quality) {
         if (target.exists()) {
             PlatformAssert.isTrue(target.delete(), "文件系统异常,请稍后重试");
-        } else if (!target.getParentFile().exists()) {
+        }
+        if (!target.getParentFile().exists()) {
             PlatformAssert.isTrue(target.getParentFile().mkdirs(), "文件系统异常,请稍后重试");
         }
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = new BufferedInputStream(new FileInputStream(source));
-            os = new BufferedOutputStream(new FileOutputStream(target));
+        try (InputStream is = new BufferedInputStream(new FileInputStream(source));
+             OutputStream os = new BufferedOutputStream(new FileOutputStream(target))) {
             optimize(is, os, quality);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
             logger.error("找不到原图", e);
             throw new PlatformException("找不到原图");
-        } finally {
-            IOUtils.closeQuietly(is);
-            IOUtils.closeQuietly(os);
         }
     }
-
 }

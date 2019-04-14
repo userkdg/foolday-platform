@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.sql.Blob;
-
 /**
  * 存储图片
  */
@@ -18,21 +16,23 @@ import java.sql.Blob;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class ImageEntity extends BaseEntity<ImageEntity> {
+    /*
+    文件名称（有后缀）通过id+name 来获取磁盘中对应的文件
+     */
+    private String name;
 
     /*
-    原图
+    图片大小
      */
-    private byte[] imgData;
+    private Integer width;
 
-    /**
-     * 缩略图
-     */
-    private Blob imgMinData;
-
+    private Integer height;
     /**
      * 文件类型
+     * MediaType.valueOf(firmFile.getContentType()
+     *
      */
-    private ImageType fileType;
+    private ImageType type;
 
     /**
      * 来源

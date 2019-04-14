@@ -70,3 +70,15 @@ logging:
   level:
     ROOT: INFO
     com.foolday: DEBUG
+
+platform:
+  # 图片定制
+  image:
+    # 支持的文件类型
+    enableContentType:
+    - png
+    - jpeg
+    - jpg
+    - gif
+    # 存储在磁盘目录
+    storePath: /home/image

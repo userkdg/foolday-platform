@@ -9,6 +9,7 @@ public final class ThreadPoolType {
      */
     public static final String CommonBlockThreadPool = "commonBlockThreadPool";
     public static final String CommonNonBlockThreadPool = "commonNonBlockThreadPool";
+    public static final String SingleThreadPool = "singleThreadPool";
     public static final String AsyncQueryRunnerThreadPool = "asyncQueryRunnerThreadPool";
 
 }
