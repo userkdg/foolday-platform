@@ -48,16 +48,6 @@ public class Image2diskService implements Image2DiskServiceApi {
     @Resource(name = ThreadPoolType.SingleThreadPool)
     private ExecutorService singleThreadPool;
 
-    /**
-     * @param file
-     * @return
-     */
-    @Override
-    public Optional<String> upload(File file) {
-
-        return Optional.empty();
-    }
-
     @Override
     public File download(String imageId) {
         ImageEntity imageEntity = BaseServiceUtils.checkOneById(imageMapper, imageId);
@@ -78,6 +68,7 @@ public class Image2diskService implements Image2DiskServiceApi {
             return createThumbnail(oldImage, width, height);
         }
     }
+
 
     public Path filePathByImageIdAndName(String imageId, String name) {
         Path path = Paths.get(imageConfigProperty.getStorePath(), (imageId + name));
@@ -118,6 +109,22 @@ public class Image2diskService implements Image2DiskServiceApi {
             log.info("文件{}写入数据库,结果为{}", newImgId, (insert == 1));
         });
         return FileDto.builder().file(newImgPath.toFile()).imageId(newImgId).build();
+    }
+
+    /**
+     * 上传一张
+     *
+     * @param fileDto
+     * @return
+     */
+    @Override
+    public Optional<String> uploadImage(FileDto fileDto) {
+        if (fileDto != null && fileDto.getFile() != null) {
+            List<String> imageIds = uploadImages(Collections.singletonList(fileDto));
+            if (!imageIds.isEmpty())
+                return Optional.ofNullable(imageIds.get(0));
+        }
+        return Optional.empty();
     }
 
     @Override

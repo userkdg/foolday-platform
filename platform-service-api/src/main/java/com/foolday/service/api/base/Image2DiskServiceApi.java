@@ -8,10 +8,11 @@ import java.util.Optional;
 
 public interface Image2DiskServiceApi {
 
-    Optional<String> upload(File file);
-
     File download(String imageId);
 
+    /*
+    下载
+     */
     FileDto download(String imageId, int width, int height);
 
     /**
@@ -23,6 +24,14 @@ public interface Image2DiskServiceApi {
      * @return
      */
     FileDto getThumbnail(String imageId, int width, int height);
+
+    /**
+     * 上传图片
+     *
+     * @param fileDto
+     * @return
+     */
+    Optional<String> uploadImage(FileDto fileDto);
 
     /**
      * 上传图片

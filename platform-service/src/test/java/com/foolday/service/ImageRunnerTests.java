@@ -30,7 +30,7 @@ public class ImageRunnerTests {
     @Test
     public void category() {
         File file = new File("C:\\Users\\Administrator\\Pictures\\login1.jpg");
-        Optional<String> upload = image2DiskServiceApi.upload(file);
+        Optional<String> upload = image2DiskServiceApi.uploadImage(null);
         System.out.println(upload);
     }
 

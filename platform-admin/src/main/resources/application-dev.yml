@@ -29,6 +29,7 @@ spring:
     multipart:
       max-file-size: 10Mb
       max-request-size: 100Mb
+      file-size-threshold: 10
   redis:
     database: 0
     host: localhost
