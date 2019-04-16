@@ -27,14 +27,15 @@ public class GoodsController {
     @Resource
     private Image2DiskServiceApi image2DiskServiceApi;
 
+    /*
+    , produces = {MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_STREAM_JSON_VALUE, MediaType.TEXT_EVENT_STREAM_VALUE})
+        @RequestBody 两种ContextType会导致springmvc异常
+     */
     //    @ApiIgnore
     @ApiOperation(value = "新增商品", notes = "传入json格式")
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
     @PostMapping(value = "/add")
-//    , produces = {MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_STREAM_JSON_VALUE, MediaType.TEXT_EVENT_STREAM_VALUE})
-    public FantResult<String> add(@ApiParam(name = "goodsVo", value = "商品对象", required = true)
-//                                  @RequestBody 两种ContextType会导致springmvc异常
-                                          GoodsVo goodsVo,
+    public FantResult<String> add(@ApiParam(name = "goodsVo", value = "商品对象", required = true) GoodsVo goodsVo,
                                   @ApiParam(name = "file", value = "商品图片")
                                   @RequestParam(value = "file", required = false) MultipartFile multipartFile) {
         if (multipartFile != null && !multipartFile.isEmpty()) {
@@ -49,7 +50,7 @@ public class GoodsController {
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
     @PostMapping(value = "/add2")
     public FantResult<String> add2(@ApiParam(name = "goodsVo", value = "商品对象2", required = true)
-                                    @RequestBody GoodsVo goodsVo) {
+                                   @RequestBody GoodsVo goodsVo) {
         GoodsEntity goodsEntity = goodsServiceApi.newGoodsUnionCategoryId(goodsVo, goodsVo.getCategoryId());
         return FantResult.ok(goodsEntity.getId());
     }

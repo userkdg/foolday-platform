@@ -7,10 +7,12 @@ import com.foolday.common.exception.PlatformException;
 import com.foolday.dao.category.CategoryMapper;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
+import com.foolday.dao.image.ImageMapper;
 import com.foolday.service.api.admin.GoodsServiceApi;
 import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.goods.GoodsVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,9 @@ public class GoodsService implements GoodsServiceApi {
 
     @Resource
     private GoodsMapper goodsMapper;
+
+    @Resource
+    private ImageMapper imageMapper;
 
     @Resource
     private CategoryMapper categoryMapper;
@@ -63,7 +68,11 @@ public class GoodsService implements GoodsServiceApi {
         goodsEntity.setCreateTime(LocalDateTime.now());
         goodsEntity.setCategoryId(categoryId);
         final String imgId = goodsEntity.getImgId();
-        // todo 预留图片id的判断
+        if (StringUtils.isBlank(imgId))
+            log.warn("商品没有图片信息");
+        if (StringUtils.isNotBlank(imgId) && BaseServiceUtils.checkOneById(imageMapper, imgId) == null) {
+            log.warn("商品没有找到图片信息");
+        }
         int insert = goodsMapper.insert(goodsEntity);
         log.info("新增商品{}为{}", goodsEntity, insert == 1);
         return goodsEntity;
@@ -84,8 +93,11 @@ public class GoodsService implements GoodsServiceApi {
         BeanUtils.copyProperties(goodsVo, goodsEntity);
         goodsEntity.setUpdateTime(LocalDateTime.now());
         final String imgId = goodsEntity.getImgId();
-        // todo 预留图片id的判断
-//        BaseServiceUtils.checkOneById()
+        if (StringUtils.isBlank(imgId))
+            log.warn("商品没有图片信息");
+        if (StringUtils.isNotBlank(imgId) && BaseServiceUtils.checkOneById(imageMapper, imgId) == null) {
+            log.warn("商品没有找到图片信息,图片可能已被删除");
+        }
         int update = goodsMapper.updateById(goodsEntity);
         log.info("修改商品{}为{}", goodsEntity, update == 1);
         return update == 1;

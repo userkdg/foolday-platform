@@ -1,6 +1,7 @@
 package com.foolday.common.base;
 
 import com.foolday.common.exception.PlatformException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,6 +17,7 @@ import static com.foolday.common.constant.WebConstant.USER_SHOP_ID_FROM_SESSION;
 /**
  * 可以提取抽象常量或抽象静态方法或本地方法
  */
+@Slf4j
 public final class AdminBaseDataUtils {
 
     /**
@@ -35,6 +37,7 @@ public final class AdminBaseDataUtils {
         redisTemplate.opsForHash().put(ADMIN_USER_SHOPID_KEY, userId, shopId);
         // 指定时间
         redisTemplate.expire(ADMIN_USER_SHOPID_KEY, 1L, TimeUnit.HOURS);
+        log.info("用户{}写入店铺{}{}Redis成功", userId, shopId);
     }
 
     /**

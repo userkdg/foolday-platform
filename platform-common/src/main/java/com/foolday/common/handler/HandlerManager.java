@@ -12,16 +12,18 @@ public class HandlerManager {
      */
     public static void executeSingle(IHandler handler) {
         if (handler != null) {
-            /**
-             * 开一条线程取异步处理事务
+            /*
+              开一条线程取异步处理事务
              */
-            ExecutorService single = Executors.newSingleThreadExecutor();
+            ExecutorService single = null;
             try {
-                CompletableFuture.runAsync(handler::handler, single);
+                single = Executors.newSingleThreadExecutor();
+                single.execute(handler::handler);
             } finally {
-                if (!single.isShutdown())
+                if (single != null)
                     single.shutdown();
             }
+
         }
     }
 
