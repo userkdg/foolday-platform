@@ -5,6 +5,7 @@ import com.foolday.admin.base.property.WebInterceptorPatternProperties;
 import com.foolday.admin.base.property.WebLoginUserMvcProperties;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.exception.PlatformException;
+import com.foolday.service.common.FantJackson2ObjectMapperBuilderCustomizer;
 import com.google.common.net.HttpHeaders;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
