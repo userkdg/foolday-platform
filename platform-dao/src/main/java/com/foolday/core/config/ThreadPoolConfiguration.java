@@ -1,13 +1,13 @@
 package com.foolday.core.config;
 
 import com.foolday.common.enums.ThreadPoolType;
+import com.foolday.common.util.DateUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.concurrent.*;
 
-import static com.foolday.common.util.DateUtils.formatStandard;
 
 @Configuration
 public class ThreadPoolConfiguration {
@@ -75,7 +75,7 @@ public class ThreadPoolConfiguration {
 
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-            throw new RejectedExecutionException("线程池" + executor.toString() + "的线程被拒绝，当前时间为" + formatStandard(new Date()));
+            throw new RejectedExecutionException("线程池" + executor.toString() + "的线程被拒绝，当前时间为" + DateUtils.ofStandardLocalDateTime(LocalDateTime.now()));
         }
     }
 }

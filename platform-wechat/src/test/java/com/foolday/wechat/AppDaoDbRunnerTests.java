@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
 import com.foolday.service.api.TestServiceApi;
+import com.foolday.service.config.WechatProperties;
 import com.foolday.serviceweb.dto.TestServiceWebDto;
 import org.apache.commons.dbutils.AsyncQueryRunner;
 import org.apache.commons.dbutils.QueryRunner;
@@ -37,8 +38,16 @@ public class AppDaoDbRunnerTests {
     @Autowired
     TestMapper testMapper;
 
+    @Autowired
+    private WechatProperties wechatProperties;
+
     @Test
-    public void testDto(){
+    public void t() {
+        System.out.println(wechatProperties);
+    }
+
+    @Test
+    public void testDto() {
         TestServiceWebDto testServiceWebDto = new TestServiceWebDto();
         System.out.println(testServiceWebDto);
     }

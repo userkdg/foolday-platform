@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -22,8 +24,14 @@ public class DateUtils {
     private DateUtils() {
     }
 
-    public static String formatStandard(@NotNull Date date) {
+    public static String ofStandardDate(@NotNull Date date) {
+        PlatformAssert.notNull(date, "时间不可为空！");
         return DateFormatUtils.format(date, yyyy_MM_dd_HH_mm_ss);
     }
 
+
+    public static String ofStandardLocalDateTime(@NotNull LocalDateTime date) {
+        PlatformAssert.notNull(date, "时间不可为空！");
+        return date.format(DateTimeFormatter.ofPattern(yyyy_MM_dd_HH_mm_ss));
+    }
 }

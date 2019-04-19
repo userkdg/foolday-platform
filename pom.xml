@@ -35,6 +35,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <jackson.version>2.9.0</jackson.version>
+        <weixin-java-miniapp.version>3.3.0</weixin-java-miniapp.version>
         <!--<spring-cloud.version>Finchley.SR1</spring-cloud.version>-->
         <mybatis-spring-boot-starter.version>1.3.2</mybatis-spring-boot-starter.version>
         <mybatis-pageHelper-spring-boot-starter.version>1.2.5</mybatis-pageHelper-spring-boot-starter.version>
@@ -309,6 +310,17 @@
                 <version>${jackson.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-miniapp</artifactId>
+                <version>${weixin-java-miniapp.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

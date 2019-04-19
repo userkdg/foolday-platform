@@ -1,7 +1,7 @@
-1.目前未考虑把admin-web和wechat-web的权限统一
-2.目前只允许web和service之间通过公共的javabean 或Java原生对象或者common包等基础包实体来进行数据传输
+1. 目前未考虑把admin-web和wechat-web的权限统一
+2. 目前只允许web和service之间通过公共的javabean 或Java原生对象或者common包等基础包实体来进行数据传输
 （为了保持模块的依赖合理，不希望web和service的模块被相互依赖倒置）
-3.模块说明
+3. 模块说明
 ```
     <modules>
         <module>platform-admin</module> 后台管理web平台，可以使用service/service-dto/service-job/common模块的代码（可用spring技术）,注尽可能不要在web层调用/注入dao层的接口
@@ -14,9 +14,9 @@
         <module>platform-common</module>（不可用spring容器管理技术，目的为了后续把common部分解耦出来通用）
     </modules>
  ```
-4.目前技术：spring boot, mybatis, mybatis-plus, commons-dbutils, redis
-5.父模块的pom的findbugs可以调整为skip=true 跳过扫bug
-6.redis的db选择，目前wechat 的默认配置选择db1 而admin 选择db0 而schedule-job 选择db2
+4. 目前技术：spring boot, mybatis, mybatis-plus, commons-dbutils, redis
+5. 父模块的pom的findbugs可以调整为skip=true 跳过扫bug
+6. redis的db选择，目前wechat 的默认配置选择db1 而admin 选择db0 而schedule-job 选择db2
 
 7.具有业务逻辑内容记录：
 > platform-admin
@@ -35,26 +35,32 @@
 
 > platform-common
 
+***
 ### 2019年4月14日
-后端开发进度方面
-1.项目搭建和表设计已完成，通过git进行项目管理和开发
-2.目前在开发模块
-店铺管理（50% 完成店铺crud和地址管理)
-桌位管理(5% 开发ing)
-商品模块(90% 缺业务关联接入)
-订单管理(5% 开发ing)
-后台登录(30%,目前后台基于测试用户)
-图片管理(50% 完成了图片的上传下载和定制图片大小,查看图片等)
+####后端开发进度方面
+1. 项目搭建和表设计已完成，通过git进行项目管理和开发
+2. 目前在开发模块
+ - 店铺管理（50% 完成店铺crud和地址管理)
+ - 桌位管理(5% 开发ing)
+ - 商品模块(90% 缺业务关联接入)
+ - 订单管理(5% 开发ing)
+ - 后台登录(30%,目前后台基于测试用户)
+ - 图片管理(50% 完成了图片的上传下载和定制图片大小,查看图片等)
 
-后台架构方面
-1.基础框架：spring boot2.x(spring mvc, spring,...),mybatis(orm),commons-dbutils(jdbc)
-2.持久化：mysql
-3.缓存：ehcache(本地缓存),redis(分布式缓存)
-4.项目管理用github，项目搭建基于maven管理
-5....后续小程序sdk工具等
-服务器方面
-1.目前搭建了mysql数据库,其他用本地服务器
+####后台架构方面
+1. 基础框架：spring boot2.x(spring mvc, spring,...),mybatis(orm),commons-dbutils(jdbc)
+2. 持久化：mysql
+3. 缓存：ehcache(本地缓存),redis(分布式缓存)
+4. 项目管理用github，项目搭建基于maven管理
+5. ...后续小程序sdk工具等
+####服务器方面
+1. 目前搭建了mysql数据库,其他用本地服务器
 2....
-小程序方面
-1.目前设定先基本完成后台管理系统，再开发
-2....
+
+####小程序方面
+1. 目前设定先基本完成后台管理系统，再开发
+2. ...
+
+### swagger2 访问 
+ 1. admin-web : http://localhost/system/swagger-ui.html
+ 2. wechat-web : http://localhost:8080/wehat/swagger-ui.html

@@ -26,12 +26,13 @@ import lombok.ToString;
  * user_id varchar(36) not null comment '微信小程序用户系统id,非wxid',
  * groupbuy_id varchar(36) default '' comment '拼团id',
  * coupon_id varchar(36) default '' comment '使用优惠券的id,控制优惠券的状态',
+ * other_coupon_id varchar(36) default '' comment '其他优惠价对应的优惠标识',
  * status TINYINT(2) default 0 comment '普通订单类型:0待付款,1待确认,2待评价,3已完成(已评价);通用:4退款,-1删除,拼团类型:10拼团中,11拼团成功,12拼团失败',
  * order_no varchar(50) default '' comment '订单编号',
  * order_type TINYINT(2) default 0 comment '0点餐订单 1拼团订单',
  * seat_no int(10) default 0 comment '座位号，目前只录入数值 不计号,为了按数值排序',
  * queue_no varchar(10) default '' comment '排队号',
- * create_time datetime not null,
+ * create_time datetime not null, 目前下单时间以创建时间为准 目前下单时间以创建时间为准!!
  * update_time datetime comment '状态更新时间'
  */
 @TableName("t_order")
@@ -88,6 +89,10 @@ public class OrderEntity extends BaseEntity<OrderEntity> {
      */
     private String couponId;
     /*
+    其他优惠价的标识（认证有效性）
+     */
+    private String otherCouponId;
+    /*
     订单状态
      */
     @EnumValue
@@ -109,4 +114,8 @@ public class OrderEntity extends BaseEntity<OrderEntity> {
     排队号
      */
     private String queueNo;
+
+    /*
+    目前下单时间以创建时间为准
+     */
 }

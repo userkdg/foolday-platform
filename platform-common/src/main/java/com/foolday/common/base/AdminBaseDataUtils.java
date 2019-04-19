@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.foolday.common.constant.WebConstant.ADMIN_USER_SHOPID_KEY;
+import static com.foolday.common.constant.WebConstant.RedisKey.ADMIN_USER_SHOPID_KEY;
 import static com.foolday.common.constant.WebConstant.USER_SHOP_ID_FROM_SESSION;
 
 /**
@@ -44,7 +44,7 @@ public final class AdminBaseDataUtils {
      * 根据客户端和用户id获取shopId
      * <p>
      * 注意 redisTemplate中返回非原生类型，如果 Unboxing 存在exception隐患
-     * //        Unboxing of 'redisTemplate.hasKey(WebConstant.ADMIN_USER_SHOPID_KEY)' may produce 'java.lang.NullPointerException' more... (Ctrl+F1)
+     * //        Unboxing of 'redisTemplate.hasKey(WebConstant.RedisKey.ADMIN_USER_SHOPID_KEY)' may produce 'java.lang.NullPointerException' more... (Ctrl+F1)
      * //        if (redisTemplate.hasKey(WebConstant.ADMIN_USER_SHOPID_KEY))
      *
      * @param redisTemplate

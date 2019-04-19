@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.foolday.common.base.RedisBeanNameApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -23,14 +24,14 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
  */
 @Configuration
-public class RedisConfiguration {
+public class RedisConfiguration implements RedisBeanNameApi {
 
-    @Bean("redisTemplateString")
+    @Bean(REDIS_TEMPLATE_S_S)
     public RedisTemplate<String, String> redisTemplateString(RedisConnectionFactory redisConnectionFactory) {
         return redisTemplateKeyString(redisConnectionFactory);
     }
 
-    @Bean
+    @Bean(REDIS_TEMPLATE_S_O)
     public <T> RedisTemplate<String, T> redisTemplateKeyString(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, T> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
@@ -58,7 +59,7 @@ public class RedisConfiguration {
     /**
      * 配置其他类型的redisTemplate
      ***/
-    @Bean
+    @Bean(REDIS_TEMPLATE_O_O)
     public RedisTemplate<Object, Object> redisTemplateKeyObject(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
