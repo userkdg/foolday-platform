@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 import static com.foolday.common.constant.WebConstant.RESPONSE_RESULT_MSG;
 
@@ -37,7 +36,7 @@ public class AdminOrderController {
     @ApiOperation(value = "后台人员获取订单分页列表")
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
     @PostMapping(value = "/page")
-    public FantPage<List<OrderEntity>> page(@ApiParam(name = "searchVo", value = "查询条件对象")
+    public FantPage<OrderEntity> page(@ApiParam(name = "searchVo", value = "查询条件对象")
                                             @RequestBody OrderQueryVo queryVo) {
         return adminOrderServiceApi.page(queryVo);
     }

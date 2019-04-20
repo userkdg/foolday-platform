@@ -2,6 +2,14 @@ package com.foolday.common.base;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.foolday.common.util.PlatformAssert;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 不允许通过本接口来注入实例！！
@@ -9,6 +17,7 @@ import com.foolday.common.util.PlatformAssert;
  * 如果不要求判断id的实体是否存在可以不实现
  * <p>
  */
+@Slf4j
 public final class BaseServiceUtils {
     /**
      * 通用判断所给的id是否存在对应实体
@@ -19,11 +28,36 @@ public final class BaseServiceUtils {
      * @return
      */
     public static <Model> Model checkOneById(BaseMapper<Model> modelBaseMapper, String id) {
+        PlatformAssert.isTrue(StringUtils.isNotBlank(id), "传递的标识为空，无法获取处理对象");
         Model entity = modelBaseMapper.selectById(id);
-        PlatformAssert.notNull(entity, "无法获取处理对象,信息已被删除,结束操作");
+        PlatformAssert.notNull(entity, "无法获取处理对象,信息已被删除,请刷新页面");
         return entity;
     }
 
+    /**
+     * 本方法为通过唯一标识判断数据库中是否存在，不存在着不在往下执行，（快速失败）fast fail
+     *
+     * @param modelBaseMapper
+     * @param id
+     * @param <Model>
+     * @return
+     */
+    public static <Model> List<Model> checkAllByIds(BaseMapper<Model> modelBaseMapper, String... id) {
+        List<Model> models = Stream.of(id).map(modelBaseMapper::selectById)
+                .peek(model -> {
+                    if (Objects.isNull(model)) {
+                        log.error("{}中存在已被删的数据信息，请刷新系统");
+                    }
+                })
+                .filter(Objects::nonNull).collect(Collectors.toList());
+        PlatformAssert.isTrue(models.size() == Arrays.stream(id).count(), "无法获取处理对象,信息已被删除,请刷新系统");
+        return models;
+    }
 
+    public static String idOfInsert(BaseMapper modelBaseMapper, BaseEntity model) {
+        int insert = modelBaseMapper.insert(model);
+        if (insert == 1) log.debug("写入成功");
+        return model.getId();
+    }
 
 }

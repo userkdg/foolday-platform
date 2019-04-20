@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @Data
 @ToString
 public class OrderQueryVo extends PageVo implements Serializable {
-    @ApiModelProperty(name = "订单的创建开始时间", example = "1997-10-10 22:22:22")
+    @ApiModelProperty(value = "订单的创建开始时间", example = "1997-10-10 22:22:22")
     private LocalDateTime orderStartTime;
 
-    @ApiModelProperty(name = "订单的创建结束时间", example = "1997-10-10 22:22:22")
+    @ApiModelProperty(value = "订单的创建结束时间", example = "1997-10-10 22:22:22")
     private LocalDateTime orderEndTime;
 
-    @ApiModelProperty(name = "订单的描述内容，模糊匹配")
+    @ApiModelProperty(value = "订单的描述内容，模糊匹配")
     private String description;
 }

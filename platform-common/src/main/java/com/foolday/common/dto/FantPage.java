@@ -143,7 +143,7 @@ public class FantPage<T> implements Serializable {
             return new FantPage<>(getRows(), getTotalCount(), getPageSize(), getPageNo());
         }
 
-        public static <T> FantPage<List<T>> ofPage(IPage<T> selectPage) {
+        public static <T> FantPage<T> ofPage(IPage<T> selectPage) {
             return new FantPage.Builder()
                     .setPageNo(selectPage.getCurrent())
                     .setPageSize(selectPage.getSize()).setRows(selectPage.getRecords()).build();
