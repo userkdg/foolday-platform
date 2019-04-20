@@ -2,6 +2,7 @@ package com.foolday.dao.shop;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.foolday.common.enums.ShopStatus;
 import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,14 +22,14 @@ public class ShopEntity extends BaseEntity<ShopEntity> {
 
     private String contact;
 
-    private String desc;
+    private String description;
 
     private Float lnt;
 
     private Float lat;
 
     @EnumValue
-    private Integer status;
+    private ShopStatus status;
 
     private Date createtime;
 

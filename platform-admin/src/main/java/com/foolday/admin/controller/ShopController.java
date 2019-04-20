@@ -1,6 +1,6 @@
 package com.foolday.admin.controller;
 
-import com.foolday.cloud.serviceweb.dto.admin.shop.ShopVo;
+import com.foolday.serviceweb.dto.admin.shop.ShopVo;
 import com.foolday.common.dto.FantResult;
 import com.foolday.service.api.admin.ShopServiceApi;
 import io.swagger.annotations.*;

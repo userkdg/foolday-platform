@@ -1,5 +1,6 @@
-package com.foolday.cloud.serviceweb.dto.admin.shop;
+package com.foolday.serviceweb.dto.admin.shop;
 
+import com.foolday.common.enums.ShopStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class ShopVo implements Serializable {
     private String contact;
 
     @ApiModelProperty(value = "描述", required = false)
-    private String desc;
+    private String description;
 
     @ApiModelProperty(value = "经度", required = false)
     private Float lnt;
@@ -31,7 +32,7 @@ public class ShopVo implements Serializable {
     private Float lat;
 
     @ApiModelProperty(value = "状态", required = false)
-    private Integer status;
+    private ShopStatus status;
 
     @ApiModelProperty(value = "创建时间", required = false)
     private Date createtime;
