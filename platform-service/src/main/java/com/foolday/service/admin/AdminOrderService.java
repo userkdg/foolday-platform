@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -42,7 +41,7 @@ public class AdminOrderService implements AdminOrderServiceApi {
     }
 
     @Override
-    public FantPage<List<OrderEntity>> page(OrderQueryVo queryVo) {
+    public FantPage<OrderEntity> page(OrderQueryVo queryVo) {
         Page<OrderEntity> page = new Page<>(queryVo.getCurrentPage(), queryVo.getPageSize());
         page.setDesc("create_time");
         QueryWrapper<OrderEntity> queryWrapper = new QueryWrapper<>();
@@ -51,8 +50,8 @@ public class AdminOrderService implements AdminOrderServiceApi {
                 .le(queryVo.getOrderEndTime() != null, OrderEntity::getCreateTime, queryVo.getOrderEndTime())
                 .like(StringUtils.isNotBlank(queryVo.getDescription()), OrderEntity::getOtherDiscntPrice, queryVo.getDescription());
         IPage<OrderEntity> selectPage = orderMapper.selectPage(page, queryWrapper);
-        // todo check
         return FantPage.Builder.ofPage(selectPage);
     }
+
 
 }
