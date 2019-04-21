@@ -7,7 +7,7 @@ import com.foolday.serviceweb.dto.admin.OrderQueryVo;
 
 import javax.validation.constraints.NotNull;
 
-public interface AdminOrderServiceApi {
+public interface OrderServiceApi {
 
     void updateOrderStatus(@NotNull String orderId, OrderStatus status);
 

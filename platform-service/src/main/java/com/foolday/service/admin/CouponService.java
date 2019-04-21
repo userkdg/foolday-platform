@@ -7,7 +7,7 @@ import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.coupon.CouponEntity;
 import com.foolday.dao.coupon.CouponMapper;
-import com.foolday.service.api.admin.AdminCouponServiceApi;
+import com.foolday.service.api.admin.CouponServiceApi;
 import com.foolday.serviceweb.dto.coupon.CouponVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +25,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @Transactional
-public class AdminCouponService implements AdminCouponServiceApi {
+public class CouponService implements CouponServiceApi {
     @Resource
     private CouponMapper couponMapper;
 

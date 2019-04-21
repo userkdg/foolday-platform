@@ -5,13 +5,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.common.enums.GoodsStatus;
 import com.foolday.common.enums.TagType;
-import com.foolday.common.enums.UnitType;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.dao.tags.TagsEntity;
 import com.foolday.dao.tags.TagsMapper;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
+import com.foolday.service.api.TestServiceApi;
 import com.foolday.serviceweb.dto.TestServiceWebDto;
 import org.apache.commons.dbutils.AsyncQueryRunner;
 import org.apache.commons.dbutils.QueryRunner;
@@ -45,7 +45,6 @@ public class AppDaoDbRunnerTests {
 
     @Autowired
     RedisTemplate redisTemplate;
-
     @Test
     public void getYaml() {
 
@@ -57,8 +56,12 @@ public class AppDaoDbRunnerTests {
     @Resource
     GoodsMapper goodsMapper;
 
+    @Resource
+    private TestServiceApi testServiceApi;
+
     @Test
     public void goods() {
+        testServiceApi.test();
         GoodsEntity goodsEntity = new GoodsEntity();
         goodsEntity.setName("雪碧");
         goodsEntity.setShopId(uuid32());
@@ -68,14 +71,13 @@ public class AppDaoDbRunnerTests {
         goodsEntity.setDiscntPrice(4.0F);
         goodsEntity.setKccnt(100);
         goodsEntity.setImgId(uuid32());
-        TagsEntity tagsEntity = tagsMapper.selectOne(Wrappers.lambdaQuery());
-        System.out.println(tagsEntity);
-        goodsEntity.setTagId(tagsEntity.getId());
         goodsEntity.setCreateTime(LocalDateTime.now());
-        goodsEntity.setUnit(UnitType.瓶);
-        System.out.println(goodsEntity);
         goodsMapper.insert(goodsEntity);
+        GoodsEntity goodsEntity1 = goodsMapper.selectById(goodsEntity.getId());
+
         System.out.println(goodsEntity);
+        goodsEntity.setStatus(GoodsStatus.下架);
+        goodsMapper.updateById(goodsEntity);
     }
 
     @Test

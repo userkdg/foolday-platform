@@ -20,7 +20,7 @@ public class WxOrderVo implements Serializable {
 
     @ApiModelProperty(value = "订单列表信息", required = true)
     @NotEmpty(message = "订单商品不可为空")
-    private List<OrderDetailViewVo> orderDetails = Lists.newArrayList();
+    private List<OrderDetailVo> orderDetails = Lists.newArrayList();
 
     @ApiModelProperty(value = "店铺id必填，为查看订单使用", required = true)
     @NotNull(message = "店铺id必填")
@@ -74,10 +74,10 @@ public class WxOrderVo implements Serializable {
     @NotNull(message = "订单状态必填")
     private OrderStatus status;
     /**
-     * 订单编号 规则生成
+     * 下订单后的编号 规则生成
      */
-    @ApiModelProperty(value = "提交订单时提供的订单编号必填", required = true)
-    @NotNull(message = "提交订单时提供的订单编号必填")
+    @ApiModelProperty(value = "提交订单时提供的订单编号必填", required = false, hidden = true)
+//    @NotNull(message = "提交订单时提供的订单编号必填")
     private String orderNo;
     /*
     订单类型

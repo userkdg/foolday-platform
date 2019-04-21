@@ -7,7 +7,7 @@ import com.foolday.serviceweb.dto.coupon.CouponVo;
 import java.util.List;
 import java.util.Optional;
 
-public interface AdminCouponServiceApi {
+public interface CouponServiceApi {
 
     List<CouponEntity> list();
 
@@ -23,6 +23,12 @@ public interface AdminCouponServiceApi {
 
     boolean delete(String... couponId);
 
+    /**
+     * 针对优惠券来说
+     *
+     * @param couponId
+     * @param status
+     */
     void updateStatus(String couponId, CommonStatus status);
 
     void edit(String couponId, CouponVo couponVo);

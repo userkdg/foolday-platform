@@ -1,6 +1,7 @@
 package com.foolday.wechat.controller;
 
 import com.foolday.common.dto.FantResult;
+import com.foolday.service.api.wechat.WxOrderServiceApi;
 import com.foolday.serviceweb.dto.wechat.order.OrderDetailViewVo;
 import com.foolday.serviceweb.dto.wechat.order.WxOrderViewVo;
 import com.foolday.serviceweb.dto.wechat.order.WxOrderVo;
@@ -8,6 +9,7 @@ import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static com.foolday.common.constant.WebConstant.RESPONSE_RESULT_MSG;
@@ -17,12 +19,15 @@ import static com.foolday.common.constant.WebConstant.RESPONSE_RESULT_MSG;
 @RestController
 @RequestMapping("/order")
 public class WxOrderController {
+    @Resource
+    private WxOrderServiceApi wxOrderServiceApi;
 
     @ApiOperation(value = "提交订单", notes = "传入json格式")
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
     @PostMapping(value = "/add")
     public FantResult<String> add(@ApiParam(value = "订单对象", required = true)
                                   @RequestBody WxOrderVo orderVo) {
+        wxOrderServiceApi.submitOrder(orderVo);
         return FantResult.ok();
     }
 
@@ -68,8 +73,11 @@ public class WxOrderController {
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
     @PostMapping(value = "/pay")
     public FantResult<String> pay(@ApiParam(name = "orderId", value = "订单id", required = true)
-                                  @RequestParam(value = "orderId") String orderId) {
+                                  @RequestParam(value = "orderId") String orderId,
+                                  @ApiParam(name = "userId", value = "用户id", required = true)
+                                  @RequestParam(value = "userId") String userId) {
         //
+        wxOrderServiceApi.toPay(userId, orderId);
         return FantResult.ok();
     }
 

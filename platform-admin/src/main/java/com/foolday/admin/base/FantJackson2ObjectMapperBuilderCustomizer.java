@@ -1,4 +1,4 @@
-package com.foolday.service.common;
+package com.foolday.admin.base;
 
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

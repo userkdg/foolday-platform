@@ -3,7 +3,7 @@ spring:
     active:
     - dev
   auto:
-    openUrl: true
+    openUrl: false
   web:
     loginUrl: http://localhost:port/context/swagger-ui.html
     blowserExecute: C://Program Files (x86)//Google//Chrome//Application//chrome.exe

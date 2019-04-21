@@ -2,6 +2,7 @@ package com.foolday.dao.category;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.foolday.common.enums.CategoryStatus;
 import com.foolday.common.enums.TopDownStatus;
 import com.foolday.core.base.BaseEntity;
@@ -24,7 +25,8 @@ public class CategoryEntity extends BaseEntity<CategoryEntity> {
     /*
     分类的优先级/来控制一级分类+更新时间的排序desc
      */
-    @EnumValue
+//    @EnumValue
+    @JsonValue
     private TopDownStatus topDownStatus;
     /*
     状态

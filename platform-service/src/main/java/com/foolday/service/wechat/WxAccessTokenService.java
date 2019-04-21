@@ -2,6 +2,7 @@ package com.foolday.service.wechat;
 
 import com.foolday.common.base.RedisBeanNameApi;
 import com.foolday.common.constant.WebConstant;
+import com.foolday.common.exception.PlatformException;
 import com.foolday.common.util.DateUtils;
 import com.foolday.service.api.schedule.WxAccessTokenServiceApi;
 import com.foolday.service.config.WechatProperties;
@@ -124,8 +125,8 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
      * @return
      */
     @Override
-    public Optional<String> activeRefreshAccessToken() {
-        return refreshAccessToken();
+    public String activeRefreshAccessToken() {
+        return refreshAccessToken().orElseThrow(()->new PlatformException("主动获取微信的认证信息失败，请联系管理员"));
     }
 
     /**
@@ -134,8 +135,8 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
      * @return
      */
     @Override
-    public Optional<String> forceRefreshAccessToken() {
-        return refreshAccessToken();
+    public String forceRefreshAccessToken() {
+        return activeRefreshAccessToken();
     }
 
 }

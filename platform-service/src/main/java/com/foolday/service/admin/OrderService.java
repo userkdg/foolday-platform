@@ -8,7 +8,7 @@ import com.foolday.common.dto.FantPage;
 import com.foolday.common.enums.OrderStatus;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.dao.order.OrderMapper;
-import com.foolday.service.api.admin.AdminOrderServiceApi;
+import com.foolday.service.api.admin.OrderServiceApi;
 import com.foolday.serviceweb.dto.admin.OrderQueryVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Service
 @Slf4j
 @Transactional
-public class AdminOrderService implements AdminOrderServiceApi {
+public class OrderService implements OrderServiceApi {
     @Resource
     private OrderMapper orderMapper;
 

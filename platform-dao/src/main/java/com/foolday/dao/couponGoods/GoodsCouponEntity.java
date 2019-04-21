@@ -10,13 +10,12 @@ import lombok.ToString;
  * 优惠券
  * 哪些商品可用优惠券
  * 多对多（优惠券<-> 商品）
- *
  */
 @TableName("t_coupon_goods")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class CouponGoodsEntity extends BaseEntity<CouponGoodsEntity> {
+public class GoodsCouponEntity extends BaseEntity<GoodsCouponEntity> {
     /*
     商品id
      */

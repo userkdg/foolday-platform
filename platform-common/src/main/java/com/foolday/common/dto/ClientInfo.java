@@ -18,12 +18,10 @@ public class ClientInfo {
     public static final String BROWSER_SAFARI = "safari";
     public static final String BROWSER_CHROME = "chrome";
     public static final String BROWSER_NETSCAPE = "netscape";
-    public static final String BROWSER_FANTMOBILE = "fantmobile";
     public static final String BROWSER_UNKNOWN = "unknown";
     public static final String APP_BROWSER = "browser";
     public static final String APP_WECHAT = "wechat";
     public static final String APP_DINGTALK = "dingtalk";
-    public static final String APP_FANTMOBILE = "fantmobile";
     public static final String APP_UNKNOWN = "unknown";
     private String os;
     private String browser;

@@ -4,7 +4,7 @@ import com.foolday.common.dto.FantPage;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.OrderStatus;
 import com.foolday.dao.order.OrderEntity;
-import com.foolday.service.api.admin.AdminOrderServiceApi;
+import com.foolday.service.api.admin.OrderServiceApi;
 import com.foolday.serviceweb.dto.admin.OrderQueryVo;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import static com.foolday.common.constant.WebConstant.RESPONSE_RESULT_MSG;
 @RequestMapping("/order")
 public class AdminOrderController {
     @Resource
-    private AdminOrderServiceApi adminOrderServiceApi;
+    private OrderServiceApi adminOrderServiceApi;
 
     @ApiOperation(value = "后台人员订单状态修改")
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))

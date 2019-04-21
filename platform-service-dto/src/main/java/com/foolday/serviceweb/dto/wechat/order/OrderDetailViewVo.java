@@ -32,14 +32,15 @@ public class OrderDetailViewVo implements Serializable {
     @ApiModelProperty(value = "商品图片id")
     private String goodsImgId;
 
-    @ApiModelProperty(value = "商品id必填")
+    @ApiModelProperty(value = "商品id必填", required = true)
+    @NotNull(message = "商品id必填")
     private String goodsId;
     /*
     下单的商品数量
      */
     @ApiModelProperty(value = "下单数量", required = true, dataType = "int")
     @NotNull(message = "下单数量必填")
-    @Min(value = 1)
+    @Min(value = 1, message = "数量最少为1")
     private Integer cnt;
     /*
     商品单价

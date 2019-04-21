@@ -2,7 +2,7 @@ package com.foolday.admin.controller;
 
 import com.foolday.common.dto.FantResult;
 import com.foolday.dao.coupon.CouponEntity;
-import com.foolday.service.api.admin.AdminCouponServiceApi;
+import com.foolday.service.api.admin.CouponServiceApi;
 import com.foolday.serviceweb.dto.coupon.CouponVo;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import static com.foolday.common.constant.WebConstant.RESPONSE_RESULT_MSG;
 public class AdminCouponController {
 
     @Resource
-    private AdminCouponServiceApi adminCouponServiceApi;
+    private CouponServiceApi adminCouponServiceApi;
 
     @ApiOperation(value = "新增优惠券", notes = "传入json格式")
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))

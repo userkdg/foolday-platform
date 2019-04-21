@@ -36,15 +36,6 @@ public class GoodsEntity extends BaseEntity<GoodsEntity> {
     private String categoryId;
 
     /*
-    商品关联的标签id
-    目前 每个商品只能打一个标签
-    后续不确定是否调整为多对多关系
-    增加索引
-     */
-    @Deprecated
-    private String tagId;
-
-    /*
     价格
      */
     private Float price;
@@ -59,6 +50,15 @@ public class GoodsEntity extends BaseEntity<GoodsEntity> {
     折扣价
      */
     private Float discntPrice;
+
+    /**
+     *
+     * 获取实际价格
+     * @return
+     */
+    public Float getRealPrice() {
+        return Math.max((getPrice() - getDiscntPrice()), 0F);
+    }
 
     /*
     库存数量

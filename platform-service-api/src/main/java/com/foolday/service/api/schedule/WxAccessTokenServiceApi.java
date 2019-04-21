@@ -13,7 +13,7 @@ public interface WxAccessTokenServiceApi {
      *
      * @return
      */
-    Optional<String> activeRefreshAccessToken();
+    String activeRefreshAccessToken();
 
     /**
      * json string 2 map
@@ -30,5 +30,5 @@ public interface WxAccessTokenServiceApi {
 
     Optional<String> returnAccessToken();
 
-    Optional<String> forceRefreshAccessToken();
+    String forceRefreshAccessToken();
 }

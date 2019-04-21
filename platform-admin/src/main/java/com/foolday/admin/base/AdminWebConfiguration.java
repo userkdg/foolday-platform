@@ -5,7 +5,6 @@ import com.foolday.admin.base.property.WebInterceptorPatternProperties;
 import com.foolday.admin.base.property.WebLoginUserMvcProperties;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.exception.PlatformException;
-import com.foolday.service.common.FantJackson2ObjectMapperBuilderCustomizer;
 import com.google.common.net.HttpHeaders;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -39,7 +38,6 @@ import java.util.stream.Collectors;
  * 用来管理admin web异常的相应给前端的全局异常处理配置
  * 可后续增加其他类型的异常类处理
  * 2019年4月7日 16点06分：增加拦截授权
- *
  */
 @Configuration
 @EnableConfigurationProperties(value = {WebLoginUserMvcProperties.class, WebInterceptorPatternProperties.class})
