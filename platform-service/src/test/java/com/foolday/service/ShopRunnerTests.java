@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -27,7 +28,7 @@ public class ShopRunnerTests {
         shopEntity.setContact("xxx");
         shopEntity.setName("xxx");
         shopEntity.setStatus(ShopStatus.生效);
-        shopEntity.setCreatetime(new Date());
+        shopEntity.setCreateTime(LocalDateTime.now());
         shopMapper.insert(shopEntity);
         System.out.println(shopEntity);
     }
