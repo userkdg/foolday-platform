@@ -2,9 +2,10 @@ server:
   port: 80
   servlet:
     context-path: /system
+
 spring:
   application:
-    name: platform-service-test
+    name: platform-admin
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
@@ -25,11 +26,12 @@ spring:
       max-active: 50
       test-on-borrow: true
   servlet:
-    multipart.max-file-size: 10Mb
     multipart:
+      max-file-size: 10Mb
       max-request-size: 100Mb
+      file-size-threshold: 10
   redis:
-    database: 1
+    database: 0
     host: localhost
     password:
     port: 6379
@@ -40,10 +42,10 @@ mybatis-plus:
   mapper-locations: classpath:/com/foolday/dao/*/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔 com.yourpackage.*.entity
   typeAliasesPackage: com.foolday.dao.* # todo
-  # 支持统配符 * 或者 ; 分割
+  # 支持统配符 * 或者 :  分割
   typeEnumsPackage: com.foolday.common.enums
   global-config:
-    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID": 
     id-type: 3
     #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
     field-strategy: 2
@@ -66,21 +68,41 @@ mybatis-plus:
     cache-enabled: false
     #配置JdbcTypeForNull, oracle数据库必须配置
     jdbc-type-for-null: 'null'
-    default-enum-type-handler: org.apache.ibatis.type.EnumTypeHandler
 
 logging:
   level:
     ROOT: INFO
     com.foolday: DEBUG
 
+#  platform.spring.web.mvc.loginUser
 platform:
+  spring:
+    web:
+      mvc:
+        loginUser:
+          # isValid来控制当前配置是否有效，无效则取前端提供的base64
+          valid: true
+          userId: testUserId
+          userName: testUserName
+          shopId: testShopId
+          browser: testBrowser
+          app: testApp
+          os: testOs
+          ip: testIp
+        # 跳过拦截
+        interceptor-config:
+          excludePathPatterns:
+          - /api/**
+          - /v2/api-docs
+  #          includePathPatterns:
+  #            -
   # 图片定制
   image:
     # 支持的文件类型
-    enableContentType:
+    enable-content-type:
     - png
     - jpeg
     - jpg
     - gif
     # 存储在磁盘目录
-    storePath: /home/image
+    store-path: /home/image
