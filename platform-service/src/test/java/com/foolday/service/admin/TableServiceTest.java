@@ -33,7 +33,7 @@ public class TableServiceTest {
         LoginUserHolder.set(user);
 
         tableVo = new TableVo();
-        tableVo.setName("第002号桌");
+        tableVo.setName("第005号桌");
     }
 
     @Test

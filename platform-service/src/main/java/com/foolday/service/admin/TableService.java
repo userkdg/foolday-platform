@@ -65,7 +65,7 @@ public class TableService implements TableServiceApi {
     public boolean bindQrcode(TableVo tableVo, String url) {
         TableEntity tableEntity = new TableEntity();
         BeanUtils.copyProperties(tableVo, tableEntity);
-        tableEntity.setQrcode(url);
+//        tableEntity.setQrcode(url);
 //        1. 保存二维码信息
 //            2. 保存二维码图片
 
