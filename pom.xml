@@ -68,6 +68,8 @@
         <joda.time.version>2.9.9</joda.time.version>
         <mybatis.plus.boot.version>3.1.0</mybatis.plus.boot.version>
         <google.kaptcha.version>2.3.2</google.kaptcha.version>
+        <!-- qrcode -->
+        <com.google.zxing.version>3.3.3</com.google.zxing.version>
         <!-- Sonar -->
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -298,6 +300,17 @@
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>weixin-java-miniapp</artifactId>
                 <version>${weixin-java-miniapp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>${com.google.zxing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>javase</artifactId>
+                <version>${com.google.zxing.version}</version>
             </dependency>
 
             <dependency>

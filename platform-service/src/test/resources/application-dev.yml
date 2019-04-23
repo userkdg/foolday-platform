@@ -82,3 +82,7 @@ platform:
     - gif
     # 存储在磁盘目录
     storePath: /home/image
+
+  # 二维码定制
+  qrcode:
+    storePath: e:/qrcode

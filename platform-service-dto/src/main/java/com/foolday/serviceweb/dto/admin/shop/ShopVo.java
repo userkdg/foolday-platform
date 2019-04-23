@@ -1,16 +1,19 @@
 package com.foolday.serviceweb.dto.admin.shop;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.foolday.common.enums.ShopStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
 
 @ApiModel(value = "店铺对象")
 @Data
 public class ShopVo implements Serializable {
+
+    private String id;
 
     @NotNull(message = "店铺名称不能为空")
     @ApiModelProperty(value = "店铺名称", required = true)
@@ -32,14 +35,14 @@ public class ShopVo implements Serializable {
     private Float lat;
 
     @ApiModelProperty(value = "状态", required = false)
+    @EnumValue
     private ShopStatus status;
 
-    @ApiModelProperty(value = "创建时间", required = false)
-    private Date createtime;
-
-    @ApiModelProperty(value = "更新时间", required = false)
-    private Date updatetime;
-
+//    @ApiModelProperty(value = "创建时间", required = false)
+//    private Date createtime;
+//
+//    @ApiModelProperty(value = "更新时间", required = false)
+//    private Date updatetime;
 
 
 }

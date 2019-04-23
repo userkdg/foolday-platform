@@ -31,8 +31,4 @@ public class ShopEntity extends BaseEntity<ShopEntity> {
     @EnumValue
     private ShopStatus status;
 
-    private Date createtime;
-
-    private Date updatetime;
-
 }
