@@ -9,9 +9,9 @@ spring:
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/foolday_platform?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://47.92.64.11:3306/foolday_platform?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
-    password: root
+    password: dc@tiny401
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
       data-source-properties:
@@ -106,3 +106,26 @@ platform:
     - gif
     # 存储在磁盘目录
     store-path: /home/image
+
+
+# 基于weixin-sdk的配置
+wx:
+  miniapp:
+    configs:
+    - appid: #微信小程序的appid
+      secret: #微信小程序的Secret
+      token: #微信小程序消息服务器配置的token
+      aesKey: #微信小程序消息服务器配置的EncodingAESKey
+  pay:
+    appId: #微信公众号或者小程序等的appid
+    mchId: #微信支付商户号
+    mchKey: #微信支付商户密钥
+    subAppId: #服务商模式下的子商户公众账号ID
+    subMchId: #服务商模式下的子商户号
+    keyPath: # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
+  mp:
+    configs:
+    - appId: 1111 （一个公众号的appid）
+      secret: 1111（公众号的appsecret）
+      token: 111 （接口配置里的Token值）
+      aesKey: 111 （接口配置里的EncodingAESKey值）

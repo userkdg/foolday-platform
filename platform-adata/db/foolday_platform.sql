@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50720
+Source Server Version : 50725
 Source Host           : localhost:3306
 Source Database       : foolday_platform
 
 Target Server Type    : MYSQL
-Target Server Version : 50720
+Target Server Version : 50725
 File Encoding         : 65001
 
-Date: 2019-04-17 01:25:42
+Date: 2019-04-22 23:04:00
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -110,10 +110,18 @@ CREATE TABLE `t_goods` (
 -- ----------------------------
 -- Records of t_goods
 -- ----------------------------
+INSERT INTO `t_goods` VALUES ('3acb51698cc1fbf5534f4e723bc2f6b2', '48fea0a0d879490cbd1d39e337e7d004', '雪碧', '5', '4', 'f6a6f0edb9ed432c82c853653d805d3b', '100', '雪的口感', '0', '2019-04-21 12:56:36', null, null, null);
+INSERT INTO `t_goods` VALUES ('3e99f859d26825f02c701b0ecc3c3071', 'b656bd087029467f8648f1b5d58f9e36', '雪碧', '5', '4', '4a537397fac64e349fe9b19105b8f01e', '100', '雪的口感', '1', '2019-04-20 23:47:49', null, null, null);
+INSERT INTO `t_goods` VALUES ('5430171824d9004228da377ef94c631d', '8aa19be83c354ace8857c577cf21c1c6', '雪碧', '5', '4', '82dda451d65241a698f8bdbc5d1be34a', '100', '雪的口感', '1', '2019-04-20 23:33:35', null, null, null);
+INSERT INTO `t_goods` VALUES ('5606398a34787e00f157647e2612b2e1', 'd359fcdd6e4348aba7ebb7ea8de068d6', '雪碧', '5', '4', 'da713ed2b5fc4718944aa54077bdce24', '100', '雪的口感', '0', '2019-04-21 13:12:53', null, null, null);
 INSERT INTO `t_goods` VALUES ('70b1d215e122ab0182b62eb98a525057', '53bcdf2893264db6afda26696a500e41', '雪碧', '5', '4', '21f855db321b49fc97d8a10838b62d63', '100', '雪的口感', '1', '2019-04-08 23:54:52', null, '5273afad6930f06cb63a4e13113520fd', '6');
+INSERT INTO `t_goods` VALUES ('8812fcf45485526cedd28b9766c67c56', '0e8224a69ab54c67b45248bcf52da1bd', '雪碧', '5', '4', 'b902f7d74c26428cbd8ca9c997b7bd15', '100', '雪的口感', '1', '2019-04-21 11:31:52', null, null, null);
+INSERT INTO `t_goods` VALUES ('8cb35e32d351469b3333963f73086ebe', '341601248820411588ec65605d70cd65', '雪碧', '5', '4', '070346ca5a7748b8b2a9b5803845a999', '100', '雪的口感', '0', '2019-04-21 11:33:24', null, null, null);
 INSERT INTO `t_goods` VALUES ('a1ac4181fa6e3e319ac8af0aee4ec8cb', '22ea0531f5aa4d49b6b7238e9e22957c', '大雪碧', '10', '8', '35978f754af2453e837a8509b7c73099', '100', '大雪的口感', '1', '2019-04-09 00:09:16', null, '5273afad6930f06cb63a4e13113520fe', '6');
 INSERT INTO `t_goods` VALUES ('a702b6d2e0951ed8893832df3ebb81fe', 'a7a30102ce454a85b949f8008d6f63e0', '可乐', '5', '4.5', '44f395e6cef444d58656de99c3ef9619', '100', '可口可乐的口感', '1', '2019-04-08 23:13:04', null, '5273afad6930f06cb63a4e13113520fd', '6');
 INSERT INTO `t_goods` VALUES ('b12b4867b38ddfbf3fce925ac49e98e8', 'testShopId', '雪碧', '12', '10', '1cd5e00450924ed49e545f830935f118', '100', 'string', '1', '2019-04-16 01:21:20', null, 'd7bf960e8951ff618c157ecbea5ad3bd', '0');
+INSERT INTO `t_goods` VALUES ('cf1d5849ada54b277c63c674f42e6bde', '975a8cb7f18b408a9b9401a9ee00f8d3', '雪碧', '5', '4', 'dcd90d157d9e4ba9a9dd51130b30894a', '100', '雪的口感', '0', '2019-04-21 10:54:37', null, null, null);
+INSERT INTO `t_goods` VALUES ('eb99ccced3ee04f287730228a8d0e49d', 'ce915b9df2884e73b5cccc54866c52aa', '雪碧', '5', '4', 'dbe00413c4474dcabf224c7d2ab1e336', '100', '雪的口感', '0', '2019-04-21 12:55:19', null, null, null);
 
 -- ----------------------------
 -- Table structure for t_goods_category
@@ -132,8 +140,10 @@ CREATE TABLE `t_goods_category` (
 -- ----------------------------
 -- Records of t_goods_category
 -- ----------------------------
-INSERT INTO `t_goods_category` VALUES ('d7bf960e8951ff618c157ecbea5ad3bd', '热门推荐', '2019-04-12 23:50:56', '2019-04-12 23:50:57', '1', '9');
+INSERT INTO `t_goods_category` VALUES ('d7bf960e8951ff618c157ecbea5ad3bd', '热门推荐', '2019-04-12 23:50:56', '2019-04-12 23:50:57', '1', '5');
+INSERT INTO `t_goods_category` VALUES ('e97c76cd1a816e4b1a56192734ff3ef7', '热门推荐', '2019-04-21 11:05:27', '2019-04-21 11:05:34', '0', '9');
 INSERT INTO `t_goods_category` VALUES ('ee57963c22ad23201e60720c4a58f04f', '今日热推', '2019-04-12 23:50:57', '2019-04-12 23:50:58', '1', '9');
+INSERT INTO `t_goods_category` VALUES ('f3e55e0d3cebdd66fa27fabfca38f908', '今日热推', '2019-04-21 11:05:31', '2019-04-21 11:05:34', '1', '9');
 
 -- ----------------------------
 -- Table structure for t_image
@@ -223,6 +233,37 @@ CREATE TABLE `t_order_detail` (
 -- ----------------------------
 -- Records of t_order_detail
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_shop
+-- ----------------------------
+DROP TABLE IF EXISTS `t_shop`;
+CREATE TABLE `t_shop` (
+  `id` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺名称',
+  `addr` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '地址',
+  `contact` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系方式',
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
+  `lnt` float DEFAULT NULL COMMENT '经度',
+  `lat` float DEFAULT NULL COMMENT '纬度',
+  `status` tinyint(2) DEFAULT '0' COMMENT '状态，0-正常，1-停用',
+  `createtime` datetime DEFAULT NULL,
+  `updatetime` datetime DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of t_shop
+-- ----------------------------
+INSERT INTO `t_shop` VALUES ('0a77dbc729ad2b72ae9714b290e5fcb5', 'string', 'string', 'string', 'string', '0', '0', '0', '2019-04-21 14:17:00', '2019-04-21 14:17:00', null, null);
+INSERT INTO `t_shop` VALUES ('213de879c44b14c3d78d5accbe21ae2d', 'xxx', null, 'xxx', null, null, null, '0', '2019-04-21 00:00:57', null, null, null);
+INSERT INTO `t_shop` VALUES ('2195dc2348488b17fc4cefe8d7ee8e90', 'xxx', null, 'xxx', null, null, null, '0', '2019-04-21 10:36:08', null, null, null);
+INSERT INTO `t_shop` VALUES ('280763b0bc926997b5d0708a6d9db73b', 'xxx', null, 'xxx', null, null, null, '0', '2019-04-21 00:20:18', null, null, null);
+INSERT INTO `t_shop` VALUES ('640fcb878c4095a77778cc83c5933249', 'string', 'string', 'string', 'string', '0', '0', '0', '2019-04-21 14:14:26', '2019-04-21 14:14:26', null, null);
+INSERT INTO `t_shop` VALUES ('b32e145cac6c58ef33ac6171a0b3356f', 'string', 'string', 'string', 'string', '0', '0', '0', '2019-04-21 17:40:28', '2019-04-21 17:40:28', null, null);
+INSERT INTO `t_shop` VALUES ('dd2cdd5f8b396cd357388b7b320d449e', 'xxx', null, 'xxx', null, null, null, '0', '2019-04-21 02:55:02', null, null, null);
 
 -- ----------------------------
 -- Table structure for t_tags

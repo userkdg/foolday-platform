@@ -2,14 +2,18 @@ package com.foolday.service.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.common.base.BaseServiceUtils;
 import com.foolday.common.dto.FantPage;
 import com.foolday.common.enums.OrderStatus;
+import com.foolday.common.handler.HandlerManager;
+import com.foolday.common.handler.IHandler;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.dao.order.OrderMapper;
 import com.foolday.service.api.admin.OrderServiceApi;
 import com.foolday.serviceweb.dto.admin.OrderQueryVo;
+import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -51,6 +59,48 @@ public class OrderService implements OrderServiceApi {
                 .like(StringUtils.isNotBlank(queryVo.getDescription()), OrderEntity::getOtherDiscntPrice, queryVo.getDescription());
         IPage<OrderEntity> selectPage = orderMapper.selectPage(page, queryWrapper);
         return FantPage.Builder.ofPage(selectPage);
+    }
+
+    /**
+     * 后台逻辑删除
+     *
+     * @param orderId
+     */
+    @Override
+    public void delete(String orderId) {
+        OrderEntity orderEntity = BaseServiceUtils.checkOneById(orderMapper, orderId);
+        orderEntity.setStatus(OrderStatus.删除);
+        orderEntity.setUpdateTime(LocalDateTime.now());
+        orderMapper.updateById(orderEntity);
+        log.info("逻辑删除订单{}", orderEntity);
+    }
+
+    /**
+     * 获取退单列表
+     *
+     * @return
+     */
+    @Override
+    public List<OrderEntity> findCancelOrders() {
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setStatus(OrderStatus.退款);
+        orderEntity.setShopId(LoginUserHolder.get().getShopId());
+        return orderMapper.selectList(Wrappers.lambdaQuery(orderEntity))
+                .stream()
+                .filter(Objects::nonNull)
+                .sorted(Comparator.comparing(OrderEntity::getUpdateTime))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void auditOrder(String orderId, boolean success, IHandler handler) {
+        OrderEntity orderEntity = BaseServiceUtils.checkOneById(orderMapper, orderId);
+        orderEntity.setStatus(success ? OrderStatus.同意退款 : OrderStatus.不同意退款);
+        orderEntity.setUpdateTime(LocalDateTime.now());
+        orderMapper.updateById(orderEntity);
+        log.info("审核订单{}的退款情况{},开始异步通知客户", orderId, success ? OrderStatus.同意退款 : OrderStatus.不同意退款);
+        //web层具体实现，service中异步处理
+        HandlerManager.executeSingle(handler);
     }
 
 

@@ -49,8 +49,12 @@ public class WeChatWebConfiguration {
         }
 
         @ExceptionHandler({Exception.class})
-        @SuppressWarnings("unchecked")
         public ResponseEntity<Object> handleGlobalException(HttpServletRequest request, Exception ex) {
+            return getObjectResponseEntity(request, ex);
+        }
+
+        @SuppressWarnings("unchecked")
+        ResponseEntity<Object> getObjectResponseEntity(HttpServletRequest request, Exception ex) {
             if (PlatformException.class.isAssignableFrom(ex.getClass())) {
                 this.logger.warn("业务校验异常[{}]...", request.getRequestURI(), ex);
                 return new ResponseEntity(FantResult.fail(ex.getMessage()), HttpStatus.OK);

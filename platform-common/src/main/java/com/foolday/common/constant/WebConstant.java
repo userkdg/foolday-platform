@@ -4,6 +4,11 @@ package com.foolday.common.constant;
  * web层常理
  */
 public final class WebConstant {
+    /**
+     * jwt的密钥
+     */
+    public static final String Admin_JWT_SECERT = "this is a jwt secret";
+
     private WebConstant() {
     }
 

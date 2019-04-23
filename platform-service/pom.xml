@@ -44,8 +44,8 @@
             <!-- service中目前不允许使用 swagger -->
             <exclusions>
                 <exclusion>
-                        <groupId>io.springfox</groupId>
-                        <artifactId>springfox-swagger2</artifactId>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-swagger2</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>io.springfox</groupId>
@@ -61,15 +61,15 @@
             <scope>test</scope>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-web</artifactId>-->
-            <!--<version>5.0.1.RELEASE</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.mybatis</groupId>-->
-                    <!--<artifactId>mybatis-spring</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
+        <!--<groupId>org.springframework</groupId>-->
+        <!--<artifactId>spring-web</artifactId>-->
+        <!--<version>5.0.1.RELEASE</version>-->
+        <!--<exclusions>-->
+        <!--<exclusion>-->
+        <!--<groupId>org.mybatis</groupId>-->
+        <!--<artifactId>mybatis-spring</artifactId>-->
+        <!--</exclusion>-->
+        <!--</exclusions>-->
         <!--</dependency>-->
     </dependencies>
 

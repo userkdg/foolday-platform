@@ -44,6 +44,11 @@
         </dependency>
 
         <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
@@ -143,10 +148,20 @@
             <!--<optional>true</optional>-->
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.github.binarywang</groupId>-->
-            <!--<artifactId>weixin-java-miniapp</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-mp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-pay</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

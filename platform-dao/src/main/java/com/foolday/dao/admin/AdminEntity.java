@@ -34,4 +34,9 @@ public class AdminEntity extends BaseEntity<AdminEntity> {
     手机号码 非必需
      */
     private String telphone;
+
+    /**
+     * 店铺id必需
+     */
+    private String shopId;
 }

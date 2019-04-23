@@ -35,6 +35,9 @@ public class PlatformAuthTokenInterceptor implements HandlerInterceptor, Ordered
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        /*
+          前端需要在请求头带有 WebConstant.AUTH_AUTHED_TOKEN=token
+         */
         String authToken = request.getHeader(WebConstant.AUTH_AUTHED_TOKEN);
         logger.debug("读取权限Token：{}", authToken);
         if (StringUtils.isNotBlank(authToken)) {

@@ -1,6 +1,11 @@
 package com.foolday.service.admin;
 
+import com.foolday.common.base.BaseServiceUtils;
 import com.foolday.common.enums.ShopStatus;
+import com.foolday.common.enums.UserStatus;
+import com.foolday.common.util.PlatformAssert;
+import com.foolday.dao.admin.AdminEntity;
+import com.foolday.dao.admin.AdminMapper;
 import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.shop.ShopMapper;
 import com.foolday.service.api.admin.ShopServiceApi;
@@ -12,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -19,6 +25,9 @@ import java.util.Date;
 public class ShopService implements ShopServiceApi {
     @Resource
     private ShopMapper shopMapper;
+
+    @Resource
+    private AdminMapper adminMapper;
 
     @Override
     public boolean createShop(ShopVo shopVo){
@@ -37,5 +46,20 @@ public class ShopService implements ShopServiceApi {
             log.error("店铺{}创建失败",shopVo.getName());
         }
         return ret;
+    }
+
+
+    /**
+     * 根据后台人员id获取对应的店铺信息
+     *
+     * @param adminId
+     * @return
+     */
+    @Override
+    public ShopEntity findByAdminId(String adminId) {
+        AdminEntity adminEntity = BaseServiceUtils.checkOneById(adminMapper, adminId);
+        PlatformAssert.isTrue(Objects.equals(UserStatus.有效, adminEntity.getStatus()), "用户账号" + adminEntity.getAccount() + "已无效");
+        String shopId = adminEntity.getShopId();
+        return BaseServiceUtils.checkOneById(shopMapper, shopId);
     }
 }

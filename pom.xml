@@ -299,6 +299,19 @@
                 <artifactId>weixin-java-miniapp</artifactId>
                 <version>${weixin-java-miniapp.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-pay</artifactId>
+                <version>${weixin-java-miniapp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-mp</artifactId>
+                <version>${weixin-java-miniapp.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
