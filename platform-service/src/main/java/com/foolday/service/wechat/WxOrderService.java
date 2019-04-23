@@ -12,6 +12,7 @@ import com.foolday.service.api.admin.CouponServiceApi;
 import com.foolday.service.api.admin.OrderDetailServiceApi;
 import com.foolday.service.api.wechat.WxOrderServiceApi;
 import com.foolday.service.api.wechat.WxUserCouponServiceApi;
+import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.wechat.order.OrderDetailVo;
 import com.foolday.serviceweb.dto.wechat.order.WxOrderVo;
 import lombok.extern.slf4j.Slf4j;
@@ -55,9 +56,8 @@ public class WxOrderService implements WxOrderServiceApi {
         OrderEntity orderEntity = new OrderEntity();
         BeanUtils.copyProperties(orderVo, orderEntity);
         orderEntity.setCreateTime(LocalDateTime.now());
-
+        orderEntity.setShopId(LoginUserHolder.get().getShopId());
         String userId = orderVo.getUserId();
-        String shopId = orderVo.getShopId();// todo 是否前端提供
         // 判断订单类型
         if (StringUtils.isNotBlank(orderVo.getGroupbuyId())) {
             // 判断团购id是否存在
@@ -93,6 +93,8 @@ public class WxOrderService implements WxOrderServiceApi {
 
         int insert = orderMapper.insert(orderEntity);
         log.info("写入订单{}", (insert == 1));
+        // 异步消息发送 todo
+
         // 写入明细
         orderDetailsVo.forEach(orderDetailVo -> orderDetailServiceApi.add(orderDetailVo, orderEntity.getId()));
         return orderEntity;
