@@ -4,6 +4,7 @@ import com.foolday.common.dto.FantResult;
 import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.table.TableEntity;
 import com.foolday.service.api.TestServiceApi;
+import com.foolday.service.api.admin.QrCodeServiceApi;
 import com.foolday.service.api.admin.ShopServiceApi;
 import com.foolday.service.api.admin.TableServiceApi;
 import com.foolday.serviceweb.dto.admin.shop.ShopVo;
@@ -23,6 +24,9 @@ public class TableController {
 
     @Resource
     private TableServiceApi tableServiceApi;
+
+    @Resource
+    private QrCodeServiceApi qrCodeServiceApi;
 
     @ApiOperation(value = "新增桌位", notes = "传入json格式")
     @PostMapping("/add")
@@ -61,16 +65,22 @@ public class TableController {
         return flag ? FantResult.ok() : FantResult.fail();
     }
 
-    @ApiOperation(value = "绑定二维码", notes = "form-data")
-    @PostMapping("/bindQrcode")
-    public FantResult bindQrcode(
-            @ApiParam(name="url", value="链接", required = true)
-            @RequestParam String url,
+    @ApiOperation(value = "创建桌位并绑定二维码", notes = "json")
+    @PostMapping("/addAndBindQrcode")
+    public FantResult addAndBindQrcode(
+            @ApiParam(name="content", value="二维码内容", required = true)
+            @RequestParam String content,
             @ApiParam(name="tableVo", value = "桌位对象", required = true)
             @RequestBody TableVo tableVo
     ){
-        boolean flag = tableServiceApi.bindQrcode(tableVo, url);
-        return flag ? FantResult.ok() : FantResult.fail();
+        FantResult result = FantResult.fail();
+        boolean addFlag = tableServiceApi.add(tableVo);
+        if(addFlag){
+            String id = qrCodeServiceApi.createQrcodeImg(content);
+            boolean bFlag = tableServiceApi.bindQrcode(tableVo, id);
+            result =  bFlag ? FantResult.ok() : FantResult.fail();
+        }
+        return result;
     }
 
 }

@@ -9,6 +9,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -22,5 +25,11 @@ public class QrCodeServiceTest {
     public void createQrcodeImg() {
         String url = "http://www.baidu.com";
         qrCodeServiceApi.createQrcodeImg(url);
+    }
+
+    @Test
+    public void batchCreateQrcodeImg() {
+        List<String> list = Arrays.asList("http://www.alipay.com", "http://www.google.com");
+        qrCodeServiceApi.batchCreateQrcodeImg(list);
     }
 }

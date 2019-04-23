@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,12 +31,12 @@ public class QrCodeService implements QrCodeServiceApi {
      * 生成二维码
      *
      * @param content 内容
-     * @return id
+     * @return id 二维码id
      */
     @Override
     public String createQrcodeImg(String content) {
         String id = "";
-        //生成二维码
+        // 生成二维码
         try {
             String imgName = "/"+UuidUtils.uuid32()+".png";
             Path path = new File(qrcodeConfigProperty.getStorePath()+imgName).toPath();
@@ -51,5 +54,14 @@ public class QrCodeService implements QrCodeServiceApi {
             e.printStackTrace();
         }
         return id;
+    }
+
+    @Override
+    public List<String> batchCreateQrcodeImg(List<String> contents) {
+        List<String> ids = new ArrayList<>();
+        if(contents!=null){
+            ids = contents.stream().map(content -> this.createQrcodeImg(content)).collect(Collectors.toList());
+        }
+        return ids;
     }
 }
