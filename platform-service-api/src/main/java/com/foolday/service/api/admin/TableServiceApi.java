@@ -16,5 +16,6 @@ public interface TableServiceApi {
 
     boolean delete(String ids);
 
-    boolean bindQrcode(TableVo tableVo, String url);
+    boolean bindQrcode(TableVo tableVo, String id);
+
 }

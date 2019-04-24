@@ -61,14 +61,19 @@ public class TableService implements TableServiceApi {
         return count > 0;
     }
 
+    /**
+     * 绑定二维码
+     * @param tableVo 桌位
+     * @param id 二维码id
+     * @return
+     */
     @Override
-    public boolean bindQrcode(TableVo tableVo, String url) {
+    public boolean bindQrcode(TableVo tableVo, String id) {
         TableEntity tableEntity = new TableEntity();
         BeanUtils.copyProperties(tableVo, tableEntity);
-//        tableEntity.setQrcode(url);
-//        1. 保存二维码信息
-//            2. 保存二维码图片
-
-        return false;
+        tableEntity.setQrcodeId(id);
+        boolean ret = tableEntity.updateById();
+        return ret;
     }
+
 }
