@@ -31,6 +31,7 @@ public class WxMessageController {
     public FantResult<String> notifyOrderPaySuccessTemplate(HttpServletRequest request) {
         WxMpTemplateMessage orderPaySuccessTemplate = WxMpTemplateMessage.builder().build();
         orderPaySuccessTemplate.setToUser(request.getParameter("openid"));
+        // 在公共平台定义的模板的id
         orderPaySuccessTemplate.setTemplateId("ENp7UwpOtlhvieebUvDm0mK4n0hTvbH0Me83HdBUvC0");
         orderPaySuccessTemplate.setUrl(request.getParameter("url"));
         WxMpTemplateData firstData = new WxMpTemplateData("first", "订单支付成功", TEMPLATE_FRONT_COLOR);
@@ -55,6 +56,7 @@ public class WxMessageController {
     public FantResult<String> notifyOrderStatusUpdateTemplate(HttpServletRequest request) {
         WxMpTemplateMessage orderPaySuccessTemplate = WxMpTemplateMessage.builder().build();
         orderPaySuccessTemplate.setToUser(request.getParameter("openid"));
+        // 在公共平台定义的模板的id
         orderPaySuccessTemplate.setTemplateId("X8ccwRF4EAx7VHFQGzi78Gl0C3GcpGpYgWk-HFFOWA0");
         orderPaySuccessTemplate.setUrl(request.getParameter("url"));
         WxMpTemplateData firstData = new WxMpTemplateData("first", "订单状态更新", TEMPLATE_FRONT_COLOR);

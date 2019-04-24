@@ -73,7 +73,7 @@ public class AdminOrderController {
         adminOrderServiceApi.auditOrder(orderId, success, () -> {
             // 异步通知客户
             WxMpTemplateMessage wxMpTemplateMessage = new WxMpTemplateMessage();
-            wxMpTemplateMessage.setTemplateId("");
+            wxMpTemplateMessage.setTemplateId("");// 微信公号的模板的id
             try {
                 wxMpService.getTemplateMsgService().sendTemplateMsg(wxMpTemplateMessage);
             } catch (WxErrorException e) {

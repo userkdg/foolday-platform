@@ -36,15 +36,15 @@ public class GoodsSpecEntity extends BaseEntity<GoodsSpecEntity> {
     private String name;
 
     /*
-    是否重置商品价格（1为是，代表商品的价格以规格定义的价格为准，0为以商品的真实价格为准（若有折扣价，则以更新到真实价格realPrice为准）
+    是否重置商品价格（1为是，代表商品的价格以规格定义的价格为准，0为以商品的真实价格+goodsAppendPrice为准（若有折扣价，则以更新到真实价格realPrice为准）
     默认为0
      */
-    private Boolean resetGoodsPrice;
+    private Boolean adjustPrice;
     /*
     商品
-    若resetGoodsPrice=0则不管本字段内容，若为=1，则本字段为真实商品价格
+    若resetGoodsPrice=0则不管本字段内容，若为=1，则本字段为本值+真实商品价格
      */
-    private String goodsRealPrice;
+    private Float goodsAppendPrice;
 
     /*
     规格状态

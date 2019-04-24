@@ -2,7 +2,9 @@ package com.foolday.wechat.base;
 
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.exception.PlatformException;
+import com.github.binarywang.wxpay.exception.WxPayException;
 import com.google.common.net.HttpHeaders;
+import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +68,12 @@ public class WeChatWebConfiguration {
                     Set<ConstraintViolation<?>> constraintViolations = ((ConstraintViolationException) throwable).getConstraintViolations();
                     List validMessages = constraintViolations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toList());
                     return this.buildValidateResponse(validMessages, request.toString());
+                } else if (WxPayException.class.isAssignableFrom(ex.getClass())) {
+                    this.logger.error(request.getRequestURI(), ex);
+                    return new ResponseEntity("请求微信服务异常" + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+                } else if (WxErrorException.class.isAssignableFrom(ex.getClass())) {
+                    this.logger.error(request.getRequestURI(), ex);
+                    return new ResponseEntity("请求微信服务异常" + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
                 } else {
                     this.logger.error(request.getRequestURI(), ex);
                     return new ResponseEntity("系统异常，请稍候重试", HttpStatus.INTERNAL_SERVER_ERROR);

@@ -35,18 +35,18 @@ public class GoodsSpecVo implements Serializable {
     private String name;
 
     /*
-    是否重置商品价格（1为是，代表商品的价格以规格定义的价格为准，0为以商品的真实价格为准（若有折扣价，则以更新到真实价格realPrice为准）
+    是否调整商品价格（1为是，代表商品的价格以规格定义的价格为准，0为以商品的真实价格+goodsAppendPrice为准（若有折扣价，则以更新到真实价格realPrice为准）
     默认为0
      */
-    @ApiModelProperty(value = "是否重置商品价格", required = true)
-    @NotNull(message = "是否重置商品价格 必填")
-    private Boolean resetGoodsPrice;
+    @ApiModelProperty(value = "是否调整商品价格", required = true)
+    @NotNull(message = "是否调整商品价格 必填")
+    private Boolean adjustPrice;
     /*
     商品
-    若resetGoodsPrice=0则不管本字段内容，若为=1，则本字段为真实商品价格
+    若resetGoodsPrice=0则不管本字段内容，若为=1，则本字段为本值+真实商品价格
      */
-    @ApiModelProperty(value = "若重置价格，则必填（单位为元）", required = true)
-    private String goodsRealPrice;
+    @ApiModelProperty(value = "调整的价格,为商品原价+本价(可为正负0)")
+    private Float goodsAppendPrice;
 
     /*
     规格状态
