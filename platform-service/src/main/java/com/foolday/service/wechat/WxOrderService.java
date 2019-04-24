@@ -65,10 +65,18 @@ public class WxOrderService implements WxOrderServiceApi {
             orderEntity.setOrderType(OrderType.拼团订单);
             // 订单与拼团的关联 todo
         }
+        // todo 增加规格计算判断价格
         List<OrderDetailVo> orderDetailsVo = orderVo.getOrderDetails();
         // 计算价格
         Float sumPrice = orderDetailsVo.stream().map(orderDetail -> {
             GoodsEntity goodsEntity = BaseServiceUtils.checkOneById(goodsMapper, orderDetail.getGoodsId());
+            List<String> goodsSpecIds = orderDetail.getGoodsSpecIds();
+            // todo 增加规格计算判断价格
+            if (goodsSpecIds.isEmpty()) {
+                log.debug("本商品没有选择规格信息");
+            } else {
+                log.debug("本商品进行规格信息计算");
+            }
             Float price = goodsEntity.getRealPrice();
             Integer cnt = orderDetail.getCnt();
             return price * cnt;
