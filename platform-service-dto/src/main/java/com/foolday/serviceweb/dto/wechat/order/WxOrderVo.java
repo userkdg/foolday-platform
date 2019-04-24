@@ -22,9 +22,9 @@ public class WxOrderVo implements Serializable {
     @NotEmpty(message = "订单商品不可为空")
     private List<OrderDetailVo> orderDetails = Lists.newArrayList();
 
-    @ApiModelProperty(value = "店铺id必填，为查看订单使用", required = true)
-    @NotNull(message = "店铺id必填")
-    private String shopId;
+//    @ApiModelProperty(value = "店铺id必填，为查看订单使用", required = true)
+//    @NotNull(message = "店铺id必填")
+//    private String shopId;
 
     /*
     就餐类型

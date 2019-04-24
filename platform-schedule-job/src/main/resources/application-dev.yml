@@ -1,11 +1,11 @@
 server:
-  port: 8888
+  port: 80
   servlet:
-    context-path: /schedule-job
+    context-path: /wechat
 
 spring:
   application:
-    name: platform-schedule-job
+    name: platform-wechat
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
@@ -30,7 +30,7 @@ spring:
     multipart:
       max-request-size: 100Mb
   redis:
-    database: 2
+    database: 1
     host: localhost
     password:
     port: 6379
@@ -43,6 +43,7 @@ mybatis-plus:
   typeAliasesPackage: com.foolday.dao.* # todo
   # 支持统配符 * 或者 ; 分割
   typeEnumsPackage: com.foolday.common.enums
+  # 自动配置中已Map来存储
   global-config:
     #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
     id-type: 3
@@ -73,18 +74,19 @@ logging:
     ROOT: INFO
     com.foolday: DEBUG
 
+
+# 平台配置
 platform:
   # 图片定制
   image:
     # 支持的文件类型
     enable-content-type:
     - png
-    - jpeg
-    - jpg
-    - gif
+      jpeg
+      jpg
+      gif
     # 存储在磁盘目录
-    store-path: D://home/image
-
+    store-path: /home/image
 
 # 下面是微信相关的配置
 wechat:
@@ -103,7 +105,24 @@ wechat:
   templateId:
     orderStatus: GoCullfix05R-rCibvoyI87ZUg50cyieKA5AyX7pPzo
 
-projectUrl:
-  wechatMpAuthorize: http://sqmax.natapp1.cc
-  wechatOpenAuthorize: http://sqmax.natapp1.cc
-  sell: http://sqmax.natapp1.cc
+# 基于weixin-sdk的配置
+wx:
+  miniapp:
+    configs:
+    - appid: #微信小程序的appid
+      secret: #微信小程序的Secret
+      token: #微信小程序消息服务器配置的token
+      aesKey: #微信小程序消息服务器配置的EncodingAESKey
+  pay:
+    appId: #微信公众号或者小程序等的appid
+    mchId: #微信支付商户号
+    mchKey: #微信支付商户密钥
+    subAppId: #服务商模式下的子商户公众账号ID
+    subMchId: #服务商模式下的子商户号
+    keyPath: # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
+  mp:
+    configs:
+    - appId: wx6ad144e54af67d87 #（一个公众号的appid）
+      secret: 91a2ff6d38a2bbccfb7e9f9079108e2e #（公众号的appsecret）
+      token: 111 #（接口配置里的Token值）
+      aesKey: 111 #（接口配置里的EncodingAESKey值）

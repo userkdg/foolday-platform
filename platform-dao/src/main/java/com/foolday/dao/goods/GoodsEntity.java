@@ -36,6 +36,11 @@ public class GoodsEntity extends BaseEntity<GoodsEntity> {
     private String categoryId;
 
     /*
+    // 2019/4/24 增加商品规格 去规格表获取
+     */
+//    private String goodsSpecId;
+
+    /*
     价格
      */
     private Float price;
@@ -52,8 +57,8 @@ public class GoodsEntity extends BaseEntity<GoodsEntity> {
     private Float discntPrice;
 
     /**
-     *
      * 获取实际价格
+     *
      * @return
      */
     public Float getRealPrice() {

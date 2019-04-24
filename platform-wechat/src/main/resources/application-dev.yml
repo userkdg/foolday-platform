@@ -122,7 +122,7 @@ wx:
     keyPath: # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
   mp:
     configs:
-    - appId: 1111 （一个公众号的appid）
-      secret: 1111（公众号的appsecret）
-      token: 111 （接口配置里的Token值）
-      aesKey: 111 （接口配置里的EncodingAESKey值）
+    - appId: wx6ad144e54af67d87 #（一个公众号的appid）
+      secret: 91a2ff6d38a2bbccfb7e9f9079108e2e #（公众号的appsecret）
+      token: 20_XaxAhzH3HF0iwBpY5ubHAHhXxcu_B3dekuUyGJxbdoXKt-DllipTNWYokb7y4yLIxTRL-yvFzAADEwnfP_9SZ_bRbBZj8Vuw2Db3gggPufywT2bWwlzxS4yqsO8OuijBZxtGrpIz--YGhQrZBUIfAIANGU （接口配置里的Token值）
+      aesKey: 111 #（接口配置里的EncodingAESKey值）
