@@ -3,8 +3,10 @@ package com.foolday.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.foolday.common.base.RedisBeanNameApi;
 import com.foolday.common.enums.GoodsStatus;
 import com.foolday.common.enums.TagType;
+import com.foolday.common.util.KeyUtils;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.dao.tags.TagsEntity;
@@ -43,10 +45,23 @@ import static com.foolday.common.util.UuidUtils.uuid32;
 @SpringBootTest(properties = {"application.yml"}, classes = PlatformServiceApplication.class)
 public class AppDaoDbRunnerTests {
 
-    @Autowired
+    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
     RedisTemplate redisTemplate;
+
     @Test
     public void getYaml() {
+        String l = KeyUtils.generateOrderNo(redisTemplate);
+        System.out.println(l);
+        l = KeyUtils.generateOrderNo(redisTemplate);
+        System.out.println(l);
+        l = KeyUtils.generateOrderNo(redisTemplate);
+        System.out.println(l);
+        l = KeyUtils.generateOrderNo(redisTemplate);
+        System.out.println(l);
+        l = KeyUtils.generateOrderNo(redisTemplate);
+        System.out.println(l);
+        l = KeyUtils.generateOrderNo(redisTemplate);
+        System.out.println(l);
 
     }
 
