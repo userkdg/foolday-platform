@@ -50,17 +50,17 @@ public class AppDaoDbRunnerTests {
 
     @Test
     public void getYaml() {
-        String l = KeyUtils.generateOrderNo(redisTemplate);
+        String l = KeyUtils.generateOrderNoOfDay(redisTemplate);
         System.out.println(l);
-        l = KeyUtils.generateOrderNo(redisTemplate);
+        l = KeyUtils.generateOrderNoOfDay(redisTemplate);
         System.out.println(l);
-        l = KeyUtils.generateOrderNo(redisTemplate);
+        l = KeyUtils.generateOrderNoOfDay(redisTemplate);
         System.out.println(l);
-        l = KeyUtils.generateOrderNo(redisTemplate);
+        l = KeyUtils.generateOrderNoOfDay(redisTemplate);
         System.out.println(l);
-        l = KeyUtils.generateOrderNo(redisTemplate);
+        l = KeyUtils.generateOrderNoOfDay(redisTemplate);
         System.out.println(l);
-        l = KeyUtils.generateOrderNo(redisTemplate);
+        l = KeyUtils.generateOrderNoOfDay(redisTemplate);
         System.out.println(l);
 
     }
