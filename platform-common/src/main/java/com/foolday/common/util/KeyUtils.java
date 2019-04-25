@@ -7,7 +7,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
+import static com.foolday.common.constant.WebConstant.RedisKey.REDIS_ORDER_NO_EXPIRE_DAY;
+import static com.foolday.common.constant.WebConstant.RedisKey.REDIS_ORDER_NO_KEY;
+
 public final class KeyUtils {
+
     private KeyUtils() {
     }
 
@@ -43,7 +47,7 @@ public final class KeyUtils {
             return redisTemplate.opsForValue().get(yyyyMMdd);
         } else {
             String dayFirstNo = (yyyyMMdd + "00000000" + 1);
-            redisTemplate.opsForValue().set(yyyyMMdd, dayFirstNo, 1L, TimeUnit.DAYS);
+            redisTemplate.opsForValue().set(REDIS_ORDER_NO_KEY + yyyyMMdd, dayFirstNo, REDIS_ORDER_NO_EXPIRE_DAY, TimeUnit.DAYS);
             return dayFirstNo;
         }
     }

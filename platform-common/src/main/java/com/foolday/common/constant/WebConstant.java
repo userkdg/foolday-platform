@@ -39,7 +39,17 @@ public final class WebConstant {
         /**
          * 统一前缀
          */
-        private static final String REDIS_PREFFIX = "platform:";
+        public static final String REDIS_PREFFIX = "platform:";
+
+        /**
+         * 订单号前key
+         */
+        public static final String REDIS_ORDER_NO_KEY = REDIS_PREFFIX + "orderNo:";
+
+        /**
+         * 订单号的存活时间一年
+         */
+        public static final long REDIS_ORDER_NO_EXPIRE_DAY = 365L;
 
         /**
          * 定制access_token
