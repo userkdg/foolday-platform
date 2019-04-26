@@ -1,7 +1,9 @@
 package com.foolday.dao.specification;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.foolday.common.enums.CommonStatus;
+import com.foolday.common.enums.GoodsSpecType;
 import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,6 +37,9 @@ public class GoodsSpecEntity extends BaseEntity<GoodsSpecEntity> {
     @Max(value = 100)
     private String name;
 
+    @NotNull(message = "规格大类 必填")
+    private GoodsSpecType type;
+
     /*
     是否重置商品价格（1为是，代表商品的价格以规格定义的价格为准，0为以商品的真实价格+goodsAppendPrice为准（若有折扣价，则以更新到真实价格realPrice为准）
     默认为0
@@ -49,5 +54,9 @@ public class GoodsSpecEntity extends BaseEntity<GoodsSpecEntity> {
     /*
     规格状态
      */
+    @EnumValue
     private CommonStatus status;
+
+
+    private String shopId;
 }

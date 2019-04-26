@@ -1,10 +1,12 @@
 package com.foolday.service.admin;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.AdminBaseDataUtils;
 import com.foolday.common.base.BaseServiceUtils;
+import com.foolday.common.base.BeanFactory;
 import com.foolday.common.enums.GoodsStatus;
 import com.foolday.common.exception.PlatformException;
-import com.foolday.dao.category.CategoryMapper;
+import com.foolday.dao.category.GoodsCategoryMapper;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.dao.image.ImageMapper;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,18 +40,10 @@ public class GoodsService implements GoodsServiceApi {
     private ImageMapper imageMapper;
 
     @Resource
-    private CategoryMapper categoryMapper;
+    private GoodsCategoryMapper categoryMapper;
 
     @Resource
     private RedisTemplate<String, String> redisTemplate;
-
-    @Override
-    public GoodsEntity newGoods(GoodsVo goodsVo) {
-        GoodsEntity goodsEntity = new GoodsEntity();
-        BeanUtils.copyProperties(goodsVo, goodsEntity);
-        goodsMapper.insert(goodsEntity);
-        return goodsEntity;
-    }
 
     /**
      * 分类+商品
@@ -58,7 +53,7 @@ public class GoodsService implements GoodsServiceApi {
      * @return
      */
     @Override
-    public GoodsEntity newGoodsUnionCategoryId(GoodsVo goodsVo, String categoryId) {
+    public GoodsEntity newGoods(GoodsVo goodsVo, String categoryId) {
         BaseServiceUtils.checkOneById(categoryMapper, categoryId);
         GoodsEntity goodsEntity = new GoodsEntity();
         BeanUtils.copyProperties(goodsVo, goodsEntity);
@@ -118,6 +113,25 @@ public class GoodsService implements GoodsServiceApi {
         int update = goodsMapper.updateById(goodsEntity);
         log.info("更新商品id:{}状态为{}为{}", goodsId, goodsStatus, update == 1);
         return update == 1;
+    }
+
+    private static final BeanFactory<GoodsEntity> beanFactory = GoodsEntity::new;
+
+    /**
+     * 根据分类获取对应的商品列表
+     *
+     * @param goodsCategoryId
+     * @param shopId
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<GoodsEntity> findByGoodsCategoryId(String goodsCategoryId, String shopId) {
+        GoodsEntity goodsEntity = beanFactory.newInstance();
+        goodsEntity.setShopId(shopId);
+        goodsEntity.setCategoryId(goodsCategoryId);
+        goodsEntity.setStatus(GoodsStatus.上架);
+        return goodsMapper.selectList(Wrappers.lambdaQuery(goodsEntity).orderByDesc(GoodsEntity::getUpdateTime));
     }
 
 

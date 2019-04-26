@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * 标签实体 -> 调整为分类实体 左边为分类 右边为商品 @see CategoryEntity
+ * 标签实体 -> 调整为分类实体 左边为分类 右边为商品 @see GoodsCategoryEntity
  */
 @Deprecated
 @TableName("t_tags")

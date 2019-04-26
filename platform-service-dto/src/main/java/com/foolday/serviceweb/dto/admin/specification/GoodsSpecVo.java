@@ -1,6 +1,7 @@
 package com.foolday.serviceweb.dto.admin.specification;
 
 import com.foolday.common.enums.CommonStatus;
+import com.foolday.common.enums.GoodsSpecType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,6 +34,10 @@ public class GoodsSpecVo implements Serializable {
     @Max(value = 100)
     @ApiModelProperty(value = "规则名称不可为空", required = true)
     private String name;
+
+    @NotNull(message = "规格父类型必填")
+    @ApiModelProperty(value = "规格的父类或属于什么类型，用于做规格的大类，而name为小类名称", required = true)
+    private GoodsSpecType type;
 
     /*
     是否调整商品价格（1为是，代表商品的价格以规格定义的价格为准，0为以商品的真实价格+goodsAppendPrice为准（若有折扣价，则以更新到真实价格realPrice为准）

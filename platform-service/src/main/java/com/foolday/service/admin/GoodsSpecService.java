@@ -3,11 +3,12 @@ package com.foolday.service.admin;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseServiceUtils;
+import com.foolday.common.enums.GoodsSpecType;
+import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.specification.GoodsSpecEntity;
 import com.foolday.dao.specification.GoodsSpecMapper;
 import com.foolday.service.api.admin.GoodsSpecServiceApi;
 import com.foolday.serviceweb.dto.admin.specification.GoodsSpecVo;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 商品规格管理
@@ -52,33 +54,50 @@ public class GoodsSpecService implements GoodsSpecServiceApi {
      * @param goodsSpecId
      */
     @Override
-    public void edit(GoodsSpecVo goodsSpecVo, String goodsSpecId) {
+    public boolean edit(GoodsSpecVo goodsSpecVo, String goodsSpecId) {
         GoodsSpecEntity entity = BaseServiceUtils.checkOneById(goodsSpecMapper, goodsSpecId);
         BeanUtils.copyProperties(goodsSpecVo, entity);
         entity.updateById();
+        return false;
     }
 
     /**
      * 删除
      *
      * @param goodsSpecId
+     * @param shopId
      */
     @Override
-    public void delete(String goodsSpecId) {
+    public boolean delete(String goodsSpecId, String shopId) {
         GoodsSpecEntity entity = BaseServiceUtils.checkOneById(goodsSpecMapper, goodsSpecId);
-        entity.deleteById();
+        PlatformAssert.isTrue(entity.getShopId().equals(shopId), "非本店数据，无法删除");
+        return entity.deleteById();
+    }
+
+    /**
+     * 获取大类数据列表
+     *
+     * @return
+     */
+    @Override
+    public List<GoodsSpecType> findRootSpec() {
+        LambdaQueryWrapper<GoodsSpecEntity> queryWrapper = Wrappers.lambdaQuery(GoodsSpecEntity.newInstance()).select(GoodsSpecEntity::getType);
+        return goodsSpecMapper.selectList(queryWrapper).stream()
+                .map(GoodsSpecEntity::getType)
+                .distinct()
+                .sorted((g1, g2) -> g2.getValue().compareTo(g1.getValue()))
+                .collect(Collectors.toList());
     }
 
     /**
      * 根据商品id获取orderNum 从小到大的规格列表
-     *
-     * @param goodsId
-     * @return
      */
     @Override
-    public List<GoodsSpecEntity> findByGoodsId(@NonNull String goodsId) {
+    public List<GoodsSpecEntity> findByGoodsIdAndBaseInfo(String goodsId, String shopId) {
         LambdaQueryWrapper<GoodsSpecEntity> eq = Wrappers.lambdaQuery(GoodsSpecEntity.newInstance())
-                .eq(GoodsSpecEntity::getGoodsId, goodsId).orderByDesc(GoodsSpecEntity::getOrderNum);
+                .eq(GoodsSpecEntity::getGoodsId, goodsId)
+                .eq(GoodsSpecEntity::getShopId, shopId)
+                .orderByDesc(GoodsSpecEntity::getOrderNum);
         return goodsSpecMapper.selectList(eq);
     }
 

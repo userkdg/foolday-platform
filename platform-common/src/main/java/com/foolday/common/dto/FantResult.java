@@ -83,6 +83,17 @@ public class FantResult<T> implements Serializable {
         return this;
     }
 
+    /**
+     * 针对 非要做else if 判断的抽象
+     *
+     * @param isOk
+     * @param <T>
+     * @return
+     */
+    public static <T> FantResult<T> checkAs(boolean isOk) {
+        return isOk ? ok() : fail();
+    }
+
     public static <T> FantResult<T> ok() {
         return new FantResult(true, (String) null, (Object) null);
     }

@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class PlatformTreeUtils {
     static final Logger logger = LoggerFactory.getLogger(PlatformTreeUtils.class);
@@ -33,7 +33,7 @@ public class PlatformTreeUtils {
         E parent;
         for (E data : datas) {
             try {
-                parentId = ObjectUtils.toString(PropertyUtils.getProperty(data, idProperty));
+                parentId = Objects.toString(PropertyUtils.getProperty(data, idProperty), "");
             } catch (Exception var13) {
                 logger.error("无法读取id属性", var13);
                 throw new PlatformException("无法读取id属性,e=>" + ExceptionUtils.getMessage(var13));
@@ -49,7 +49,7 @@ public class PlatformTreeUtils {
         }
         try {
             for (E data : dataMap.values()) {
-                parentId = ObjectUtils.toString(PropertyUtils.getProperty(data, parentIdProperty));
+                parentId = Objects.toString(PropertyUtils.getProperty(data, parentIdProperty), "");
                 if (parentId != null && dataMap.containsKey(parentId)) {
                     parent = dataMap.get(parentId);
                     Object children = PropertyUtils.getProperty(parent, childrenProperty);

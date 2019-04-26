@@ -1,8 +1,10 @@
 package com.foolday.service.wechat;
 
 import com.foolday.common.base.BaseServiceUtils;
+import com.foolday.common.base.RedisBeanNameApi;
 import com.foolday.common.enums.OrderType;
 import com.foolday.common.exception.PlatformException;
+import com.foolday.common.util.KeyUtils;
 import com.foolday.dao.coupon.CouponEntity;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
@@ -18,6 +20,7 @@ import com.foolday.serviceweb.dto.wechat.order.WxOrderVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +50,9 @@ public class WxOrderService implements WxOrderServiceApi {
     @Resource
     private OrderDetailServiceApi orderDetailServiceApi;
 
+    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
+    private RedisTemplate<String, String> redisTemplate;
+
     /**
      * @param orderVo
      * @return
@@ -57,6 +63,8 @@ public class WxOrderService implements WxOrderServiceApi {
         BeanUtils.copyProperties(orderVo, orderEntity);
         orderEntity.setCreateTime(LocalDateTime.now());
         orderEntity.setShopId(LoginUserHolder.get().getShopId());
+        final String orderNoOfDay = KeyUtils.generateOrderNoOfDay(redisTemplate);
+        orderEntity.setOrderNo(orderNoOfDay);
         String userId = orderVo.getUserId();
         // 判断订单类型
         if (StringUtils.isNotBlank(orderVo.getGroupbuyId())) {

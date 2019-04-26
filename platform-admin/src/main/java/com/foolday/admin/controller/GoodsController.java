@@ -2,10 +2,12 @@ package com.foolday.admin.controller;
 
 import com.foolday.admin.base.MultipartFileUtils;
 import com.foolday.common.dto.FantResult;
+import com.foolday.common.enums.GoodsStatus;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.service.api.admin.GoodsCouponServiceApi;
 import com.foolday.service.api.admin.GoodsServiceApi;
 import com.foolday.service.api.base.Image2DiskServiceApi;
+import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.goods.GoodsVo;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 import static com.foolday.common.constant.WebConstant.RESPONSE_RESULT_MSG;
 
@@ -48,7 +51,7 @@ public class GoodsController {
             String imageId = image2DiskServiceApi.uploadImage(MultipartFileUtils.toFileDto(multipartFile)).orElse(null);
             goodsVo.setImgId(imageId);
         }
-        GoodsEntity goodsEntity = goodsServiceApi.newGoodsUnionCategoryId(goodsVo, goodsVo.getCategoryId());
+        GoodsEntity goodsEntity = goodsServiceApi.newGoods(goodsVo, goodsVo.getCategoryId());
         // 关联优惠券
         goodsCouponServiceApi.relateGoodsCoupons(goodsEntity.getId(), couponIds);
         return FantResult.ok(goodsEntity.getId());
@@ -56,10 +59,47 @@ public class GoodsController {
 
     @ApiOperation(value = "修改商品", notes = "传入json格式")
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
-    @PostMapping(value = "/edit")
+    @PostMapping(value = "/{goodsId}/edit")
     public FantResult<String> edit(@ApiParam(name = "goodsVo", value = "商品对象", required = true)
-                                   @RequestBody GoodsVo goodsVo) {
-        GoodsEntity goodsEntity = goodsServiceApi.newGoodsUnionCategoryId(goodsVo, goodsVo.getCategoryId());
-        return FantResult.ok(goodsEntity.getId());
+                                   @RequestBody GoodsVo goodsVo,
+                                   @ApiParam(name = "goodsId", value = "商品id", required = true)
+                                   @PathVariable("goodsId") String goodsId) {
+        goodsServiceApi.editGoods(goodsVo, goodsVo.getCategoryId(), goodsId);
+        return FantResult.ok();
     }
+
+    @ApiOperation(value = "根据分类id获取商品列表")
+    @PostMapping(value = "/{goodsCategoryId}/list")
+    public FantResult<List<GoodsEntity>> list(@ApiParam(name = "goodsCategoryId", value = "商品分类id", required = true)
+                                              @PathVariable(value = "goodsCategoryId") String goodsCategoryId) {
+        List<GoodsEntity> list = goodsServiceApi.findByGoodsCategoryId(goodsCategoryId, LoginUserHolder.get().getShopId());
+        return FantResult.ok(list);
+    }
+
+    @ApiOperation(value = "商品状态下架")
+    @PostMapping(value = "/{goodsId}/downStatus")
+    public FantResult<String> downStatus(@ApiParam(name = "goodsId", value = "商品分类id", required = true)
+                                         @PathVariable(value = "goodsId") String goodsId) {
+        goodsServiceApi.updateStatus(GoodsStatus.下架, goodsId);
+        return FantResult.ok();
+    }
+
+    @ApiOperation(value = "商品状态上架")
+    @PostMapping(value = "/{goodsId}/upStatus")
+    public FantResult<String> upStatus(@ApiParam(name = "goodsId", value = "商品分类id", required = true)
+                                       @PathVariable(value = "goodsId") String goodsId) {
+        goodsServiceApi.updateStatus(GoodsStatus.上架, goodsId);
+        return FantResult.ok();
+    }
+
+
+    @ApiOperation(value = "商品状态删除")
+    @PostMapping(value = "/{goodsId}/deleteStatus")
+    public FantResult<String> deleteStatus(@ApiParam(name = "goodsId", value = "商品分类id", required = true)
+                                           @PathVariable(value = "goodsId") String goodsId) {
+        goodsServiceApi.updateStatus(GoodsStatus.删除, goodsId);
+        return FantResult.ok();
+    }
+
+
 }

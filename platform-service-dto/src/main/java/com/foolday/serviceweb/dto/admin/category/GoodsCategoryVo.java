@@ -1,7 +1,7 @@
 package com.foolday.serviceweb.dto.admin.category;
 
 
-import com.foolday.common.enums.CategoryStatus;
+import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.enums.TopDownStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,9 +21,9 @@ public class GoodsCategoryVo implements Serializable {
     private String name;
 
     @ApiModelProperty(value = "可定义分类的优先级,默认,置顶,置底+更新时间进行排序")
-    private TopDownStatus topDownStatus;
+    private TopDownStatus topDownStatus = TopDownStatus.置顶;
 
     @ApiModelProperty(value = "分类状态，默认为有效")
-    private CategoryStatus status;
+    private CommonStatus status = CommonStatus.有效;
 
 }
