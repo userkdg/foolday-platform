@@ -1,10 +1,14 @@
 package com.foolday.common.handler;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class HandlerManager {
+
+    private static ExecutorService single = Executors.newSingleThreadExecutor();
+
     /**
      * 利用一个线程执行
      *
@@ -13,15 +17,18 @@ public class HandlerManager {
     public static void executeSingle(IHandler handler) {
         if (handler != null) {
             /*
+            shut down 后
+             */
+            if (single == null) {
+                single = Executors.newSingleThreadExecutor();
+            }
+            /*
               开一条线程取异步处理事务
              */
-            ExecutorService single = null;
             try {
-                single = Executors.newSingleThreadExecutor();
                 single.execute(handler::handler);
             } finally {
-                if (single != null)
-                    single.shutdown();
+                single.shutdown();
             }
 
         }
@@ -32,11 +39,17 @@ public class HandlerManager {
      *
      * @param handler
      */
-    public static void execute(IHandler handler) {
+    public static void asyncExecute(IHandler handler) {
         /**
          * 开默认条线程取异步处理事务
          */
-        if (handler != null)
-            CompletableFuture.runAsync(handler::handler);
+        if (handler != null) {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(handler::handler);
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
