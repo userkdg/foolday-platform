@@ -1,7 +1,7 @@
 server:
-  port: 80
+  port: 8888
   servlet:
-    context-path: /wechat
+    context-path: /schedule
 
 spring:
   application:
@@ -30,7 +30,7 @@ spring:
     multipart:
       max-request-size: 100Mb
   redis:
-    database: 1
+    database: 0
     host: localhost
     password:
     port: 6379
@@ -77,6 +77,14 @@ logging:
 
 # 平台配置
 platform:
+  schedule:
+    weixin:
+      accessToken:
+        refresh:
+          cron: 0 55 * * * ?
+          initialDelay: 1000 # 一秒
+          fixedRate: 71300000 #2*60*60-5*60 *1000 随后一直以几秒执行一次
+
   # 图片定制
   image:
     # 支持的文件类型
@@ -93,15 +101,13 @@ wechat:
   #  mpAppId: wxdcf91e9f784bfad0
   #  mpAppSecret: c467c06d98a2447f5ddef6ca8f47f268 #测试号appId,appSecret
   mpAppId: wx9ee98bd4f8d11ff0
-  mpAppSecret: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #借用号appId,appSecret
-  #  openAppId: wx6ad144e54af67d87
-  #  openAppSecret: 91a2ff6d38a2bbccfb7e9f9079108e2e #开放平台测试号appId,appSecret
+  mpAppSecret: a43e295acc1cbe68a48e8de50c430967 #借用号appId,appSecret
   openAppId: wx6ad144e54af67d87
-  openAppSecret: 91a2ff6d38a2bbccfb7e9f9079108e2e #借用帐号appId,appSecret
+  openAppSecret: 91a2ff6d38a2bbccfb7e9f9079108e2e #开放平台测试号appId,appSecret
   mchId: 1483469312
   mchKey: C5245D70627C1F8E9964D494B0735025
   keyPath: C:/Users/Administrator/Downloads/h5.p12
-  notifyUrl: http://sqmax.natapp1.cc/notify
+  notifyUrl: http://j58v2f.natappfree.cc/wechat/auth
   templateId:
     orderStatus: GoCullfix05R-rCibvoyI87ZUg50cyieKA5AyX7pPzo
 
@@ -109,10 +115,10 @@ wechat:
 wx:
   miniapp:
     configs:
-    - appid: #微信小程序的appid
-      secret: #微信小程序的Secret
-      token: #微信小程序消息服务器配置的token
-      aesKey: #微信小程序消息服务器配置的EncodingAESKey
+    - appid: wx9ee98bd4f8d11ff0 #微信小程序的appid
+      secret: a43e295acc1cbe68a48e8de50c430967 #微信小程序的Secret
+      token: my2019token #微信小程序消息服务器配置的token
+      aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #微信小程序消息服务器配置的EncodingAESKey
   pay:
     appId: #微信公众号或者小程序等的appid
     mchId: #微信支付商户号
@@ -123,6 +129,6 @@ wx:
   mp:
     configs:
     - appId: wx6ad144e54af67d87 #（一个公众号的appid）
-      secret: 91a2ff6d38a2bbccfb7e9f9079108e2e #（公众号的appsecret）
-      token: 111 #（接口配置里的Token值）
-      aesKey: 111 #（接口配置里的EncodingAESKey值）
+      secret: a43e295acc1cbe68a48e8de50c430967 #（公众号的appsecret）
+      token: my2019token #（接口配置里的Token值）
+      aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #（接口配置里的EncodingAESKey值）

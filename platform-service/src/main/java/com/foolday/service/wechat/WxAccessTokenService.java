@@ -7,6 +7,7 @@ import com.foolday.common.util.DateUtils;
 import com.foolday.service.api.schedule.WxAccessTokenServiceApi;
 import com.foolday.service.config.WechatProperties;
 import com.google.gson.Gson;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -41,8 +42,10 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
      * https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET
      * <p>
      * 定时主动，刷新access_token微信有效时间为2h
+     * 上锁 不希望同时刷新或说同时被前置刷新
      */
     @Override
+    @Synchronized
     public Optional<String> refreshAccessToken() {
         final LocalDateTime start = LocalDateTime.now();
         log.info("开始刷新access_token....{}", DateUtils.ofStandardLocalDateTime(start));
@@ -118,6 +121,11 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
         return Optional.ofNullable(accessToken);
     }
 
+    @Override
+    public String getAccessToken() {
+        return returnAccessToken().orElseThrow(() -> new PlatformException("主动获取微信的认证信息失败，请联系管理员"));
+    }
+
 
     /**
      * 被动刷新token，eg: 在处理业务中去redis获取token发现为空时，可以主动调用，强制
@@ -126,7 +134,7 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
      */
     @Override
     public String activeRefreshAccessToken() {
-        return refreshAccessToken().orElseThrow(()->new PlatformException("主动获取微信的认证信息失败，请联系管理员"));
+        return refreshAccessToken().orElseThrow(() -> new PlatformException("主动获取微信的认证信息失败，请联系管理员"));
     }
 
     /**

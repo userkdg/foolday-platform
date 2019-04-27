@@ -4,6 +4,7 @@ import com.foolday.service.api.schedule.WxAccessTokenServiceApi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -21,10 +22,25 @@ public class PlatformScheduleJobRunner extends AbstractScheduledJob {
     private WxAccessTokenServiceApi wxAccessTokenServiceApi;
 
     /**
+     * 每小时55分 刷新一次
      * 定期刷新access_token微信有效时间为2h
      */
-    @Scheduled(cron = "*/1 * * * * *")
+    @Profile("prod")
+    @Scheduled(cron = "0 55 * * * ?", initialDelay = -1L)
     public void refreshAccessToken() {
+        wxAccessTokenServiceApi.refreshAccessToken();
+    }
+
+    /**
+     * 定期刷新access_token微信有效时间为2h
+     * cron = "${platform.weixin.accessToken.refresh.cron}",
+     */
+    @Profile(value = {"dev", "test"})
+    @Scheduled(
+            initialDelayString = "${platform.schedule.weixin.accessToken.refresh.initialDelay}",
+            fixedRateString = "${platform.schedule.weixin.accessToken.refresh.fixedRate}"
+    )
+    public void devRefreshAccessToken() {
         wxAccessTokenServiceApi.refreshAccessToken();
     }
 

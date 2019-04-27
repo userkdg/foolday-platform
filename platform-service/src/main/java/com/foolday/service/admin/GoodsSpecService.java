@@ -57,8 +57,7 @@ public class GoodsSpecService implements GoodsSpecServiceApi {
     public boolean edit(GoodsSpecVo goodsSpecVo, String goodsSpecId) {
         GoodsSpecEntity entity = BaseServiceUtils.checkOneById(goodsSpecMapper, goodsSpecId);
         BeanUtils.copyProperties(goodsSpecVo, entity);
-        entity.updateById();
-        return false;
+        return entity.updateById();
     }
 
     /**

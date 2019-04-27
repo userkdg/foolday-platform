@@ -83,7 +83,7 @@ public class OrderService implements OrderServiceApi {
     @Override
     public List<OrderEntity> findCancelOrders() {
         OrderEntity orderEntity = new OrderEntity();
-        orderEntity.setStatus(OrderStatus.退款);
+        orderEntity.setStatus(OrderStatus.申请退款);
         orderEntity.setShopId(LoginUserHolder.get().getShopId());
         return orderMapper.selectList(Wrappers.lambdaQuery(orderEntity))
                 .stream()

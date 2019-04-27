@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface WxAccessTokenServiceApi {
 
+    String getAccessToken();
+
     /**
      * json string
      *

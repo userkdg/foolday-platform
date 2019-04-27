@@ -2,18 +2,25 @@ package com.foolday.service.wechat;
 
 import com.foolday.common.base.BaseServiceUtils;
 import com.foolday.common.base.RedisBeanNameApi;
+import com.foolday.common.enums.ChannelType;
+import com.foolday.common.enums.MessageAction;
+import com.foolday.common.enums.OrderStatus;
 import com.foolday.common.enums.OrderType;
 import com.foolday.common.exception.PlatformException;
 import com.foolday.common.util.KeyUtils;
+import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.coupon.CouponEntity;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
+import com.foolday.dao.message.MessageEntity;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.dao.order.OrderMapper;
 import com.foolday.service.api.admin.CouponServiceApi;
 import com.foolday.service.api.admin.OrderDetailServiceApi;
+import com.foolday.service.api.common.MessageServiceApi;
 import com.foolday.service.api.wechat.WxOrderServiceApi;
 import com.foolday.service.api.wechat.WxUserCouponServiceApi;
+import com.foolday.service.common.SpringContextUtils;
 import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.wechat.order.OrderDetailVo;
 import com.foolday.serviceweb.dto.wechat.order.WxOrderVo;
@@ -133,4 +140,73 @@ public class WxOrderService implements WxOrderServiceApi {
             throw new PlatformException("用户与订单信息关系不符");
         }
     }
+
+    @Override
+    public List<OrderEntity> listByOpenId(String userId) {
+        return null;
+    }
+
+    /**
+     * 获取用户的订单记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<OrderEntity> listByUserId(String userId) {
+        return null;
+    }
+
+    @Override
+    public OrderEntity get(String orderId, String userId) {
+        return null;
+    }
+
+    @Override
+    public boolean cancelOrder(String orderId, String userId) {
+
+        return false;
+    }
+
+    /**
+     * 更新订单状态，通知店铺的后台人员，处理订单
+     *
+     * @param orderId
+     * @param userId
+     * @return
+     */
+    @Override
+    public boolean refund(String orderId, String userId) {
+        OrderEntity order = BaseServiceUtils.checkOneById(orderMapper, orderId);
+        PlatformAssert.isTrue(StringUtils.equals(orderId, order.getUserId()), "非本人订单,结束退款操作");
+        // 通知后台人员 处理退款单子,确认退款后进行退费
+        OrderMessageHandler.notifyShopMsgFormUser(userId, order.getShopId(), orderId, "xxx发起退款申请", MessageAction.申请退款);
+        // 更新状态
+        order.setStatus(OrderStatus.申请退款);
+        order.setUpdateTime(LocalDateTime.now());
+        return order.updateById();
+    }
+
+
+    private static class OrderMessageHandler {
+
+        /**
+         * @param userId
+         * @param shopId
+         * @param orderId
+         */
+        public static void notifyShopMsgFormUser(String userId, String shopId, String orderId, String content, MessageAction messageAction) {
+            MessageEntity messagePo = new MessageEntity();
+            messagePo.setSender(userId);
+            messagePo.setToShopId(shopId);
+            messagePo.setContent(content);
+            messagePo.setBusinessId(orderId);
+            messagePo.setAction(messageAction);
+            messagePo.setCreateTime(LocalDateTime.now());
+            messagePo.setChannelType(ChannelType.订单类);
+            SpringContextUtils.getBean(MessageServiceApi.class).publish(messagePo);
+        }
+    }
+
+
 }

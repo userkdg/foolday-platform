@@ -59,6 +59,15 @@ public final class WebConstant {
          * 存储与redis中的key
          */
         public static final String ADMIN_USER_SHOPID_KEY = "admin:user:shopId";
+        /**
+         * 用来发布消息与订阅消息的key管道
+         */
+        public static final String REDIS_ORDER_MESSAGE_CHANNEL_KEY = "message-order-chanel-topic";
+
+        /**
+         * 评论类管道
+         */
+        public static final String REDIS_COMMENT_MESSAGE_CHANNEL_KEY = "message-order-chanel-topic";
     }
 
     /**
