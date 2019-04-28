@@ -90,6 +90,8 @@ platform:
 
 # 下面是微信相关的配置
 wechat:
+  myOpenId: oxFFT0XhOLz-MeFpTMZ35kWFOaoM # 模拟客户身份1
+  toOpenId: oxFFT0Zfl2w5SWyYTH8bT91FHiYE # 模拟客户身份2
   #  mpAppId: wxdcf91e9f784bfad0
   #  mpAppSecret: c467c06d98a2447f5ddef6ca8f47f268 #测试号appId,appSecret
   mpAppId: wx9ee98bd4f8d11ff0
@@ -107,12 +109,12 @@ wechat:
 wx:
   miniapp:
     configs:
-    - appid: wx9ee98bd4f8d11ff0 #微信小程序的appid
+    - appid: wx9ee98bd4f8d11ff0 #微信小程序的appid 小程序的appid,前端需要提供来确保对应的配置信息
       secret: a43e295acc1cbe68a48e8de50c430967 #微信小程序的Secret
       token: my2019token #微信小程序消息服务器配置的token
       aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #微信小程序消息服务器配置的EncodingAESKey
   pay:
-    appId: #微信公众号或者小程序等的appid
+    appId: wx9ee98bd4f8d11ff0 #微信公众号或者小程序等的appid
     mchId: #微信支付商户号
     mchKey: #微信支付商户密钥
     subAppId: #服务商模式下的子商户公众账号ID
@@ -120,7 +122,7 @@ wx:
     keyPath: # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
   mp:
     configs:
-    - appId: wx6ad144e54af67d87 #（一个公众号的appid）
+    - appId: wx9ee98bd4f8d11ff0 #（一个公众号的appid）
       secret: a43e295acc1cbe68a48e8de50c430967 #（公众号的appsecret）
       token: my2019token #（接口配置里的Token值）
       aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #（接口配置里的EncodingAESKey值）

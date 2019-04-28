@@ -13,6 +13,10 @@ import java.util.Map;
 public class WechatProperties {
 
     /**
+     * 模拟用户的openId
+     */
+    private String myOpenId;
+    /**
      * 公众平台id
      */
     private String mpAppId;

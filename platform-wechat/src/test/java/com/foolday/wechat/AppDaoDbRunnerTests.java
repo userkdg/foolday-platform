@@ -8,6 +8,10 @@ import com.foolday.dao.test.TestMapper;
 import com.foolday.service.api.TestServiceApi;
 import com.foolday.service.config.WechatProperties;
 import com.foolday.serviceweb.dto.TestServiceWebDto;
+import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.commons.dbutils.AsyncQueryRunner;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanMapHandler;
@@ -35,11 +39,40 @@ import java.util.concurrent.Future;
 @SpringBootTest(classes = PlatformWechatApplication.class, properties = {"application.yml"})
 @Controller
 public class AppDaoDbRunnerTests {
+    @Resource
+    private WechatProperties wechatProperties;
+    @Resource
+    private WxMpService wxMpService;
+
+    /**
+     * 测试模板消息
+     *
+     * @throws WxErrorException
+     */
+    @Test
+    public void message() throws WxErrorException {
+        WxMpTemplateMessage orderPaySuccessTemplate = WxMpTemplateMessage.builder().build();
+        orderPaySuccessTemplate.setToUser(wechatProperties.getMyOpenId());
+        // 在公共平台定义的模板的id
+        orderPaySuccessTemplate.setTemplateId("4giGhXGRGb_Ex79lGhbmPhkjvew4aQPRCwGWQt8G2_A");
+        orderPaySuccessTemplate.setUrl(" http://s2wta3.natappfree.cc/wetchat/message/notifyOrderStatusUpdateTemplate");
+        WxMpTemplateData firstData = new WxMpTemplateData("first", "订单支付成功");
+        WxMpTemplateData orderMoneySumData = new WxMpTemplateData("orderMoneySum", "0.01");
+        WxMpTemplateData orderProductNameData = new WxMpTemplateData("orderProductName", "雪碧");
+        WxMpTemplateData remarkData = new WxMpTemplateData("Remark", "无备注");
+        orderPaySuccessTemplate.addData(firstData)
+                .addData(orderMoneySumData)
+                .addData(orderProductNameData)
+                .addData(remarkData);
+        wxMpService.getTemplateMsgService().sendTemplateMsg(orderPaySuccessTemplate);
+    }
+
+
     @Autowired
     TestMapper testMapper;
 
-    @Autowired
-    private WechatProperties wechatProperties;
+//    @Autowired
+//    private WechatProperties wechatProperties;
 
     @Test
     public void t() {

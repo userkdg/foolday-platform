@@ -52,8 +52,8 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
 
         FormBody formBody = new FormBody.Builder()
                 .add("grant_type", "client_credential")
-                .add("appid", wechatProperties.getOpenAppId())
-                .add("secret", wechatProperties.getOpenAppSecret())
+                .add("appid", wechatProperties.getMpAppId())
+                .add("secret", wechatProperties.getMpAppSecret())
                 .build();
         Request request = new Request.Builder()
                 .url("https://api.weixin.qq.com/cgi-bin/token")
@@ -62,11 +62,20 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
         OkHttpClient okHttpClient = new OkHttpClient();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
+            transient int sleepSize = 30;
+
             @Override
             public void onFailure(Call call, IOException e) {
-                int sleepSize = 30;
-                log.error("请求微信服务失败，睡眠{}second 后再次尝试刷新，异常信息为{}", sleepSize, e);
+                log.error("请求微信服务失败，异常信息为{}", e);
+                tryRefreshAccessTokenOutOfSleep();
+            }
+
+            /**
+             * 失败情况 会定时尝试刷新，不然其他小程序接口无法调用微信接口
+             */
+            void tryRefreshAccessTokenOutOfSleep() {
                 try {
+                    log.error("睡眠{}second 后再次尝试刷新", sleepSize);
                     TimeUnit.SECONDS.sleep(sleepSize);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
@@ -94,7 +103,7 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
                     默认为7200 内部提前3min*60=180s
                     微信再切换access_token中回再上一次token有效期内，新旧的token都可以使用，为了避免延迟等
                      */
-                    long expireSecond = 7020L;
+                    long expireSecond = 7200L;
                     try {
                         expireSecond = (long) Math.max(expireSecond, ((double) expiresStr - 180L));
                     } catch (NumberFormatException e) {
@@ -104,6 +113,7 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
                     redisTemplate.opsForValue().set(WebConstant.RedisKey.REDIS_ACCESS_TOKEN_KEY, (String) map.get(access_token_key), expireSecond, TimeUnit.SECONDS);
                 } else {
                     log.error("刷新access_token失败，提示信息为{}", jsonResult);
+                    tryRefreshAccessTokenOutOfSleep();
                 }
             }
         });

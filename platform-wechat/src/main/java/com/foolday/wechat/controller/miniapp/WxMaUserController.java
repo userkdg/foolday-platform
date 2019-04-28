@@ -39,7 +39,7 @@ public class WxMaUserController {
         try {
             WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
             this.logger.info(session.getSessionKey());
-            this.logger.info(session.getOpenid());
+            this.logger.info(session.getOpenid());// 前端开发微信公众号时怎么获取code，然后将code发给后端来换取用户的openid
             //TODO 可以增加自己的逻辑，关联业务相关数据
             return JsonUtils.toJson(session);
         } catch (WxErrorException e) {

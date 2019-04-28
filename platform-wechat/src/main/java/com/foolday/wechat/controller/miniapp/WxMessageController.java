@@ -34,7 +34,7 @@ public class WxMessageController {
 
     @ApiOperation("发送模板消息")
     @PostMapping(value = "notifyOrderPaySuccessTemplate")
-    public FantResult<String> notifyOrderPaySuccessTemplate(HttpServletRequest request) {
+    public FantResult<String> notifyOrderPaySuccessTemplate(HttpServletRequest request) throws WxErrorException {
         WxMpTemplateMessage orderPaySuccessTemplate = WxMpTemplateMessage.builder().build();
         orderPaySuccessTemplate.setToUser(request.getParameter("openid"));
         // 在公共平台定义的模板的id
@@ -48,12 +48,7 @@ public class WxMessageController {
                 .addData(orderMoneySumData)
                 .addData(orderProductNameData)
                 .addData(remarkData);
-        try {
-            wxMpService.getTemplateMsgService().sendTemplateMsg(orderPaySuccessTemplate);
-        } catch (WxErrorException e) {
-            log.error(e.getMessage());
-            return FantResult.fail(e.getMessage());
-        }
+        wxMpService.getTemplateMsgService().sendTemplateMsg(orderPaySuccessTemplate);
         return FantResult.ok();
     }
 
@@ -73,7 +68,6 @@ public class WxMessageController {
         WxMpTemplateMessage orderPaySuccessTemplate = WxMpTemplateMessage.builder().build();
         orderPaySuccessTemplate.setToUser(request.getParameter("openid"));
         // 在公共平台定义的模板的id=ngqIpbwh8bUfcSsECmogfXcV14J0tQlEpBO27izEYtY
-//
         orderPaySuccessTemplate.setTemplateId("X8ccwRF4EAx7VHFQGzi78Gl0C3GcpGpYgWk-HFFOWA0");
         orderPaySuccessTemplate.setUrl(request.getParameter("url"));
         WxMpTemplateData firstData = new WxMpTemplateData("first", "订单状态更新", TEMPLATE_FRONT_COLOR);
