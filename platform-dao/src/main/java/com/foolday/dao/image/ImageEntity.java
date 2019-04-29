@@ -1,9 +1,9 @@
 package com.foolday.dao.image;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.foolday.common.base.BaseEntity;
 import com.foolday.common.enums.ImageType;
 import com.foolday.common.enums.OriginType;
-import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

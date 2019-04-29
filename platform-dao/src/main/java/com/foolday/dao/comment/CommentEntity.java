@@ -2,9 +2,9 @@ package com.foolday.dao.comment;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.foolday.common.base.BaseEntity;
 import com.foolday.common.enums.CommentStatus;
 import com.foolday.common.enums.CommentType;
-import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

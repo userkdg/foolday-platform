@@ -1,7 +1,7 @@
 package com.foolday.dao.couponGoods;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.foolday.core.base.BaseEntity;
+import com.foolday.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

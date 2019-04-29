@@ -1,8 +1,8 @@
 package com.foolday.dao.couponUser;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.foolday.common.base.BaseEntity;
 import com.foolday.common.enums.CommonStatus;
-import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

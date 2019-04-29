@@ -2,10 +2,10 @@ package com.foolday.dao.coupon;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.foolday.common.base.BaseEntity;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.enums.CouponType;
 import com.foolday.common.exception.PlatformException;
-import com.foolday.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
