@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.common.base.BaseServiceUtils;
 import com.foolday.common.dto.FantPage;
+import com.foolday.common.enums.ChannelType;
+import com.foolday.common.enums.MessageAction;
 import com.foolday.common.enums.OrderStatus;
-import com.foolday.common.handler.HandlerManager;
-import com.foolday.common.handler.IHandler;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.dao.order.OrderMapper;
+import com.foolday.dao.user.UserEntity;
+import com.foolday.dao.user.UserMapper;
 import com.foolday.service.api.admin.OrderServiceApi;
+import com.foolday.service.wechat.WxOrderService;
 import com.foolday.serviceweb.dto.admin.OrderQueryVo;
 import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +36,9 @@ import java.util.stream.Collectors;
 public class OrderService implements OrderServiceApi {
     @Resource
     private OrderMapper orderMapper;
+
+    @Resource
+    private UserMapper userMapper;
 
     /**
      * 后台管理员更新订单状态
@@ -93,14 +99,16 @@ public class OrderService implements OrderServiceApi {
     }
 
     @Override
-    public void auditOrder(String orderId, boolean success, IHandler handler) {
+    public void auditOrder(String orderId, boolean success) {
         OrderEntity orderEntity = BaseServiceUtils.checkOneById(orderMapper, orderId);
         orderEntity.setStatus(success ? OrderStatus.同意退款 : OrderStatus.不同意退款);
         orderEntity.setUpdateTime(LocalDateTime.now());
         orderMapper.updateById(orderEntity);
         log.info("审核订单{}的退款情况{},开始异步通知客户", orderId, success ? OrderStatus.同意退款 : OrderStatus.不同意退款);
-        //web层具体实现，service中异步处理
-        HandlerManager.executeSingle(handler);
+        //具体实现，service中异步处理
+        UserEntity userEntity = BaseServiceUtils.checkOneById(userMapper, orderEntity.getUserId());
+        WxOrderService.OrderMessageHandler.notifyShopMsgFormUser(userEntity.getOpenId(), orderEntity.getShopId(), orderId,
+                "系统审核结果", "后台管理员审核你的订单结果为" + orderEntity.getStatus().name(), MessageAction.审核订单, ChannelType.订单类);
     }
 
 

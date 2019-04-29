@@ -2,7 +2,6 @@ package com.foolday.service.api.admin;
 
 import com.foolday.common.dto.FantPage;
 import com.foolday.common.enums.OrderStatus;
-import com.foolday.common.handler.IHandler;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.serviceweb.dto.admin.OrderQueryVo;
 
@@ -19,5 +18,5 @@ public interface OrderServiceApi {
 
     List<OrderEntity> findCancelOrders();
 
-    void auditOrder(String orderId, boolean success, IHandler handler);
+    void auditOrder(String orderId, boolean success);
 }

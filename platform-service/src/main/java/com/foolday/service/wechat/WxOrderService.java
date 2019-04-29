@@ -15,11 +15,13 @@ import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.dao.message.MessageEntity;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.dao.order.OrderMapper;
+import com.foolday.dao.user.UserEntity;
 import com.foolday.service.api.admin.CouponServiceApi;
 import com.foolday.service.api.admin.OrderDetailServiceApi;
 import com.foolday.service.api.common.MessageServiceApi;
 import com.foolday.service.api.wechat.WxOrderServiceApi;
 import com.foolday.service.api.wechat.WxUserCouponServiceApi;
+import com.foolday.service.api.wechat.WxUserServiceApi;
 import com.foolday.service.common.SpringContextUtils;
 import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.wechat.order.OrderDetailVo;
@@ -41,6 +43,9 @@ import java.util.List;
 public class WxOrderService implements WxOrderServiceApi {
     @Resource
     private OrderMapper orderMapper;
+
+    @Resource
+    private WxUserServiceApi userServiceApi;
 
     @Resource
     private GoodsMapper goodsMapper;
@@ -172,15 +177,17 @@ public class WxOrderService implements WxOrderServiceApi {
      * 更新订单状态，通知店铺的后台人员，处理订单
      *
      * @param orderId
-     * @param userId
+     * @param openId
      * @return
      */
     @Override
-    public boolean refund(String orderId, String userId) {
+    public boolean refund(String orderId, String openId) {
         OrderEntity order = BaseServiceUtils.checkOneById(orderMapper, orderId);
         PlatformAssert.isTrue(StringUtils.equals(orderId, order.getUserId()), "非本人订单,结束退款操作");
+        UserEntity user = userServiceApi.findByOpenId(openId);
         // 通知后台人员 处理退款单子,确认退款后进行退费
-        OrderMessageHandler.notifyShopMsgFormUser(userId, order.getShopId(), orderId, "xxx发起退款申请", MessageAction.申请退款);
+        OrderMessageHandler.notifyShopMsgFormUser(openId, order.getShopId(), orderId,
+                "用户【" + user.getName() + "】发起退款", "发起退款申请,请审批是否通过", MessageAction.申请退款, ChannelType.订单类);
         // 更新状态
         order.setStatus(OrderStatus.申请退款);
         order.setUpdateTime(LocalDateTime.now());
@@ -188,22 +195,31 @@ public class WxOrderService implements WxOrderServiceApi {
     }
 
 
-    private static class OrderMessageHandler {
+    /**
+     * 订单消息内部类
+     */
+    public static class OrderMessageHandler {
 
         /**
-         * @param userId
+         * @param wxId
          * @param shopId
          * @param orderId
          */
-        public static void notifyShopMsgFormUser(String userId, String shopId, String orderId, String content, MessageAction messageAction) {
+        public static void notifyShopMsgFormUser(String wxId, String shopId,
+                                                 String orderId, String title, String content,
+                                                 MessageAction messageAction, ChannelType channelType) {
             MessageEntity messagePo = new MessageEntity();
-            messagePo.setSender(userId);
+            messagePo.setSender(wxId);
             messagePo.setToShopId(shopId);
+            messagePo.setTitle(title);
             messagePo.setContent(content);
             messagePo.setBusinessId(orderId);
             messagePo.setAction(messageAction);
             messagePo.setCreateTime(LocalDateTime.now());
-            messagePo.setChannelType(ChannelType.订单类);
+            messagePo.setChannelType(channelType);
+            // 入库db
+            boolean insert = messagePo.insert();
+            log.info("入库数据{},结果{}", messagePo, insert);
             SpringContextUtils.getBean(MessageServiceApi.class).publish(messagePo);
         }
     }

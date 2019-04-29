@@ -25,12 +25,27 @@ public class MessageEntity extends BaseEntity<MessageEntity> implements Serializ
     private String sender;
 
     /**
+     * 消息回调连接
+     */
+    private String callbackUrl;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
      * string -> value-> varchar
      */
     @EnumValue
     private ChannelType channelType;
 
     private String businessId;
+
+    /**
+     * 消息标题
+     */
+    private String title;
 
     private String content;
 

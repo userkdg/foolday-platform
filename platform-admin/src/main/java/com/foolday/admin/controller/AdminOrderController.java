@@ -8,9 +8,6 @@ import com.foolday.service.api.admin.OrderServiceApi;
 import com.foolday.serviceweb.dto.admin.OrderQueryVo;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +22,6 @@ import static com.foolday.common.constant.WebConstant.RESPONSE_RESULT_MSG;
 public class AdminOrderController {
     @Autowired
     private OrderServiceApi adminOrderServiceApi;
-
-    @Autowired
-    private WxMpService wxMpService;
 
     @ApiOperation(value = "后台人员订单状态修改")
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
@@ -70,16 +64,7 @@ public class AdminOrderController {
                                          @RequestParam(value = "orderId") String orderId,
                                          @ApiParam(name = "success", value = "是否同意退款", required = true)
                                          @RequestParam("success") Boolean success) {
-        adminOrderServiceApi.auditOrder(orderId, success, () -> {
-            // 异步通知客户
-            WxMpTemplateMessage wxMpTemplateMessage = new WxMpTemplateMessage();
-            wxMpTemplateMessage.setTemplateId("");// 微信公号的模板的id
-            try {
-                wxMpService.getTemplateMsgService().sendTemplateMsg(wxMpTemplateMessage);
-            } catch (WxErrorException e) {
-                e.printStackTrace();
-            }
-        });
+        adminOrderServiceApi.auditOrder(orderId, success);
         return FantResult.ok();
     }
 

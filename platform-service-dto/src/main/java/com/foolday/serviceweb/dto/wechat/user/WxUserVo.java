@@ -1,26 +1,29 @@
-package com.foolday.dao.user;
+package com.foolday.serviceweb.dto.wechat.user;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.foolday.common.enums.UserStatus;
-import com.foolday.core.base.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@TableName("t_user")
+import java.io.Serializable;
+
+@ApiModel("微信用户信息")
 @Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class UserEntity extends BaseEntity<UserEntity> {
+@ToString
+public class WxUserVo implements Serializable {
+    @ApiModelProperty(hidden = true)
+    private String id;
     /*
     客户名称
      */
+    @ApiModelProperty(value = "微信用户名称",required = true)
     private String name;
     /*
     头像
      */
-    private String imgId;
+    @ApiModelProperty(value = "头像id")
+    private String imgU;
     /*
     微信id
      */
@@ -38,6 +41,5 @@ public class UserEntity extends BaseEntity<UserEntity> {
     /*
     状态
      */
-    @EnumValue
     private UserStatus status;
 }
