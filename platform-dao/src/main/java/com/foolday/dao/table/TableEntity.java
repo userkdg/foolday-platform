@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.foolday.common.enums.TableStatus;
-import com.foolday.core.base.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @TableName("t_table")
 @Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class TableEntity extends Model<TableEntity> {
 
     @TableId(type = IdType.UUID)
