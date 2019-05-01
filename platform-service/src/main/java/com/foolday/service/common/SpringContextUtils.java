@@ -1,9 +1,12 @@
 package com.foolday.service.common;
 
+import com.foolday.common.util.PlatformAssert;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Aware接口的Bean在被初始之后，可以取得一些相对应的资源。
@@ -15,14 +18,13 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SpringContextUtils implements ApplicationContextAware {
 
-    private SpringContextUtils() {
-    }
+    private static AtomicReference<ApplicationContext> applicationContext = new AtomicReference<>();
 
-    private static ApplicationContext applicationContext;
-
+    @SuppressWarnings("NullableProblems")
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SpringContextUtils.applicationContext = applicationContext;
+        PlatformAssert.notNull(applicationContext, "无法使用spring 容器获取实例");
+        SpringContextUtils.applicationContext.set(applicationContext);
     }
 
     /**
@@ -33,7 +35,7 @@ public final class SpringContextUtils implements ApplicationContextAware {
      * @return
      */
     public static <T> T getBean(Class<T> clazz) {
-        return applicationContext.getBean(clazz);
+        return applicationContext.get().getBean(clazz);
     }
 
     /**
@@ -45,7 +47,7 @@ public final class SpringContextUtils implements ApplicationContextAware {
      */
     @SuppressWarnings("unchecked")
     public static Object getBean(String beanName) {
-        return applicationContext.getBean(beanName);
+        return applicationContext.get().getBean(beanName);
     }
 
 }

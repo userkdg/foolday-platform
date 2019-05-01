@@ -6,6 +6,7 @@ import com.foolday.common.base.BaseEntity;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.enums.CouponType;
 import com.foolday.common.exception.PlatformException;
+import com.foolday.common.util.PlatformAssert;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -56,7 +57,7 @@ public class CouponEntity extends BaseEntity<CouponEntity> {
     private Float subPrice = 0F;
 
     /**
-     * 满fullPrice 打discnt折
+     * 满fullPrice 打discnt折 1折 2折(0.2) 8折(80%>0.8)
      */
     private Float discnt = 0F;
 
@@ -66,13 +67,15 @@ public class CouponEntity extends BaseEntity<CouponEntity> {
      * @param sourcePrice
      * @return
      */
-    public float getTargetPriceBySourcePrice(float sourcePrice) {
-        switch (getType()) {
+    public float getTargetPriceBySourcePrice(CouponType type, float sourcePrice) {
+        PlatformAssert.notNull(type, "当前优惠券类型，不提供优惠");
+        switch (type) {
             case 满减券:
                 return (sourcePrice >= getFullPrice()) ? sourcePrice - getSubPrice() : sourcePrice;
             case 折扣券:
-                return (sourcePrice >= getFullPrice()) ? (sourcePrice - getDiscnt() * 0.01F) : sourcePrice;
+                return (sourcePrice >= getFullPrice()) ? sourcePrice * (getDiscnt() * 0.1F) : sourcePrice;
             case 其他优惠券:
+                return sourcePrice;
             default:
                 throw new PlatformException("当前优惠券类型，不提供优惠");
         }

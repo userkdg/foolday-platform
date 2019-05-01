@@ -115,7 +115,7 @@ wx:
       aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #微信小程序消息服务器配置的EncodingAESKey
   pay:
     appId: wx9ee98bd4f8d11ff0 #微信公众号或者小程序等的appid
-    mchId: #微信支付商户号
+    mchId: 1519432861 #微信支付商户号
     mchKey: #微信支付商户密钥
     subAppId: #服务商模式下的子商户公众账号ID
     subMchId: #服务商模式下的子商户号

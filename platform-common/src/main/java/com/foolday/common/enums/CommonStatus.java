@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * 基本状态
  */
-public enum CommonStatus implements BaseEnum {
+public enum CommonStatus implements BaseEnum{
     有效(1), 无效(0), 删除(-1);
     private int value;
 

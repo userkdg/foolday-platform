@@ -39,7 +39,6 @@ public class CommentVo implements Serializable {
     /*
     评论状态
      */
-    @EnumValue
     private CommentStatus status;
 
     /**

@@ -36,6 +36,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static com.foolday.common.util.UuidUtils.uuid32;
+import static com.foolday.service.common.SpringContextUtils.getBean;
 
 /**
  * service 层服务测试
@@ -50,6 +51,10 @@ public class AppDaoDbRunnerTests {
 
     @Test
     public void getYaml() {
+
+        RedisTemplate bean = (RedisTemplate) getBean(RedisBeanNameApi.REDIS_TEMPLATE_S_S);
+        System.out.println();
+
         String l = KeyUtils.generateOrderNoOfDay(redisTemplate);
         System.out.println(l);
         l = KeyUtils.generateOrderNoOfDay(redisTemplate);

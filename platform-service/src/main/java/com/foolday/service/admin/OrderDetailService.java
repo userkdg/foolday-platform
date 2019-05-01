@@ -48,8 +48,8 @@ public class OrderDetailService implements OrderDetailServiceApi {
         orderDetail.setOrderId(orderId);
         // 根据前端标识
         orderDetail.setGoodsDesc(goodsEntity.getDescription());
-        orderDetail.setPrice(goodsEntity.getRealPrice());
-        orderDetail.setAllPrice(goodsEntity.getRealPrice() * orderDetailVo.getCnt());
+        orderDetail.setPrice(goodsEntity.getRealPriceByDiscntCondition());
+        orderDetail.setAllPrice(goodsEntity.getRealPriceByDiscntCondition() * orderDetailVo.getCnt());
         orderDetail.setGoodsImgId(goodsEntity.getImgId());
         orderDetail.setGoodsName(goodsEntity.getName());
         orderDetail.setCreateTime(LocalDateTime.now());

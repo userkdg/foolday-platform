@@ -11,6 +11,7 @@ import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import java.util.Date;
 /**
  * @author Binary Wang
  */
+@Slf4j
 @Api("微信支付")
 @RestController
 @RequestMapping("/pay")
@@ -94,7 +96,7 @@ public class WxPayController {
      * @param <T>     请使用{@link com.github.binarywang.wxpay.bean.order}包下的类
      * @return 返回 {@link com.github.binarywang.wxpay.bean.order}包下的类对象
      */
-    @ApiOperation(value = "统一下单，并组装所需支付参数")
+    @ApiOperation(value = "统一下单，并组装所需支付参数,请求对象，注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）")
     @PostMapping("/createOrder")
     public <T> T createOrder(@RequestBody WxPayUnifiedOrderRequest request) throws WxPayException {
         return this.wxService.createOrder(request);
@@ -107,7 +109,7 @@ public class WxPayController {
      *
      * @param request 请求对象，注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）
      */
-    @ApiOperation(value = "原生的统一下单接口")
+    @ApiOperation(value = "原生的统一下单接口,请求对象，注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）")
     @PostMapping("/unifiedOrder")
     public WxPayUnifiedOrderResult unifiedOrder(@RequestBody WxPayUnifiedOrderRequest request) throws WxPayException {
         return this.wxService.unifiedOrder(request);
@@ -167,6 +169,7 @@ public class WxPayController {
     public String parseOrderNotifyResult(@RequestBody String xmlData) throws WxPayException {
         final WxPayOrderNotifyResult notifyResult = this.wxService.parseOrderNotifyResult(xmlData);
         // TODO 根据自己业务场景需要构造返回对象
+        log.info("微信openId=>{},支付完成{}", notifyResult.getOpenid(), notifyResult.getTransactionId());
         return WxPayNotifyResponse.success("成功");
     }
 
@@ -174,6 +177,8 @@ public class WxPayController {
     @PostMapping("/notify/refund")
     public String parseRefundNotifyResult(@RequestBody String xmlData) throws WxPayException {
         final WxPayRefundNotifyResult result = this.wxService.parseRefundNotifyResult(xmlData);
+        WxPayRefundNotifyResult.ReqInfo reqInfo = result.getReqInfo();
+        log.info("退款{}", result);
         // TODO 根据自己业务场景需要构造返回对象
         return WxPayNotifyResponse.success("成功");
     }
@@ -183,6 +188,8 @@ public class WxPayController {
     public String parseScanPayNotifyResult(String xmlData) throws WxPayException {
         final WxScanPayNotifyResult result = this.wxService.parseScanPayNotifyResult(xmlData);
         // TODO 根据自己业务场景需要构造返回对象
+        String openid = result.getOpenid();
+        log.info("openId=>{}发起扫码支付", openid);
         return WxPayNotifyResponse.success("成功");
     }
 

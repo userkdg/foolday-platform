@@ -33,10 +33,12 @@ public class WxOrderController {
     @ApiOperation(value = "提交订单", notes = "传入json格式")
     @PostMapping(value = "/add")
     public FantResult<String> add(@ApiParam(value = "订单对象", required = true)
-                                  @RequestBody WxOrderVo orderVo) {
-        wxOrderServiceApi.submitOrder(orderVo);
+                                  @RequestBody WxOrderVo orderVo,
+                                  @ApiParam(name = "shopId", value = "用户在哪家店下单", required = true)
+                                  @RequestParam(value = "shopId") String shopId){
+        wxOrderServiceApi.submitOrder(orderVo,shopId);
         return FantResult.ok();
-    }
+}
 
     @ApiOperation(value = "订单列表")
     @GetMapping(value = "/list")

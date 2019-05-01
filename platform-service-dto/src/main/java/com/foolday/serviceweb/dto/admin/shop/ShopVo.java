@@ -1,6 +1,5 @@
 package com.foolday.serviceweb.dto.admin.shop;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.foolday.common.enums.ShopStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,7 +34,6 @@ public class ShopVo implements Serializable {
     private Float lat;
 
     @ApiModelProperty(value = "状态", required = false)
-    @EnumValue
     private ShopStatus status;
 
 //    @ApiModelProperty(value = "创建时间", required = false)

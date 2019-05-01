@@ -59,18 +59,7 @@ public class OrderEntity extends BaseEntity<OrderEntity> {
     总价格
      */
     private Float allPrice;
-    /*
-    折扣价（有优惠券等产生的价格）
-     */
-    private Float discntPrice;
-    /*
-    其他优惠价
-     */
-    private Float otherDiscntPrice;
-    /*
-    实际价格= allPrice - discntPrice - otherDiscntPrice
-     */
-    private Float realPayPrice;
+
     private String remark;
     /*
     订单人数 餐具提供支持
@@ -80,6 +69,12 @@ public class OrderEntity extends BaseEntity<OrderEntity> {
     客户id
      */
     private String userId;
+
+    /**
+     * 用于后台管理中模糊搜索基于用户名
+     */
+    private String userName;
+
     /*
     团购id 默认为'' 若有值为团购/拼团产生的订单
      */

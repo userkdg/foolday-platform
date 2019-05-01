@@ -4,7 +4,7 @@ import com.foolday.common.enums.CommonStatus;
 
 public interface WxUserCouponServiceApi {
 
-    void updateUsedByUserIdAndCouponId(String userId, String couponId);
+    void updateUsedByUserIdAndCouponId(String userId, String couponId, boolean isUsed);
 
     boolean updateStatus(String couponId, CommonStatus status);
 

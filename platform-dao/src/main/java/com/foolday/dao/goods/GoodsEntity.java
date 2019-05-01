@@ -57,12 +57,20 @@ public class GoodsEntity extends BaseEntity<GoodsEntity> {
     private Float discntPrice;
 
     /**
+     * 是否为折扣价商品，是则取折扣价为实格
+     */
+    private Boolean discntGoods;
+
+    /**
      * 获取实际价格
      *
      * @return
      */
-    public Float getRealPrice() {
-        return Math.max((getPrice() - getDiscntPrice()), 0F);
+    public Float getRealPriceByDiscntCondition() {
+        /*
+        基于是否为折扣价
+         */
+        return Boolean.TRUE.equals(getDiscntGoods()) ? getDiscntPrice() : getPrice();
     }
 
     /*

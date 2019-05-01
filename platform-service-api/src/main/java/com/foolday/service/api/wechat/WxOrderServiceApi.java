@@ -6,7 +6,7 @@ import com.foolday.serviceweb.dto.wechat.order.WxOrderVo;
 import java.util.List;
 
 public interface WxOrderServiceApi {
-    OrderEntity submitOrder(WxOrderVo orderVo);
+    OrderEntity submitOrder(WxOrderVo orderVo, String shopId);
 
     void toPay(String userId, String orderId);
 

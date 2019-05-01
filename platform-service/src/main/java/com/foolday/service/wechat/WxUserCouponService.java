@@ -25,13 +25,13 @@ public class WxUserCouponService implements WxUserCouponServiceApi {
     private UserCouponMapper userCouponMapper;
 
     @Override
-    public void updateUsedByUserIdAndCouponId(String userId, String couponId) {
+    public void updateUsedByUserIdAndCouponId(String userId, String couponId, boolean isUsed) {
         LambdaQueryWrapper<UserCouponEntity> eq = Wrappers.lambdaQuery(new UserCouponEntity()).eq(UserCouponEntity::getUserId, userId).eq(UserCouponEntity::getCouponId, couponId);
         UserCouponEntity userCoupon = userCouponMapper.selectOne(eq);
         PlatformAssert.isTrue(Objects.nonNull(userCoupon), "您没有当前优惠券，请刷新");
         PlatformAssert.isFalse(userCoupon.getUsed(), "您所选优惠券已使用");
         PlatformAssert.isTrue(CommonStatus.有效.equals(userCoupon.getStatus()), "用户所选优惠券已失效");
-        userCoupon.setUsed(Boolean.TRUE);
+        userCoupon.setUsed(isUsed);
         userCoupon.setUpdateTime(LocalDateTime.now());
         int updateById = userCouponMapper.updateById(userCoupon);
         log.info("更新用户{}的优惠券{}为已使用{}", userId, couponId, (updateById == 1));
