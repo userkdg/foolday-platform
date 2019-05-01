@@ -35,6 +35,21 @@ public final class BaseServiceUtils {
     }
 
     /**
+     * 通用判断所给的id是否存在对应实体
+     *
+     * @param modelBaseMapper
+     * @param id
+     * @param <Model>
+     * @return
+     */
+    public static <Model> Model checkOneById(BaseMapper<Model> modelBaseMapper, String id, String errorMsg) {
+        PlatformAssert.isTrue(StringUtils.isNotBlank(id), "传递的标识为空，无法获取处理对象");
+        Model entity = modelBaseMapper.selectById(id);
+        PlatformAssert.notNull(entity, StringUtils.isNotBlank(errorMsg) ? errorMsg : "无法获取处理对象,信息已被删除,请刷新页面");
+        return entity;
+    }
+
+    /**
      * 本方法为通过唯一标识判断数据库中是否存在，不存在着不在往下执行，（快速失败）fast fail
      *
      * @param modelBaseMapper

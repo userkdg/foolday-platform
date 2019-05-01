@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.enums.IEnum;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
-public interface BaseEnum extends IEnum {
+public interface BaseEnum extends IEnum, Serializable {
     /**
      * 根据enumClass & value 获取枚举值
      * <p>
