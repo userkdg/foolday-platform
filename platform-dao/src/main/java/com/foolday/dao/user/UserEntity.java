@@ -26,6 +26,16 @@ public class UserEntity extends BaseEntity<UserEntity> {
      */
     private String wxid;
 
+    /*
+    经度
+     */
+    private Float longitude;
+
+    /*
+    纬度
+     */
+    private Float latitude;
+
     /**
      * 微信用户的一个openId对应一个公众号
      */
