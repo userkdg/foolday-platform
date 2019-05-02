@@ -3,10 +3,12 @@ package com.foolday.serviceweb.dto.admin.comment;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.foolday.common.enums.CommentStatus;
 import com.foolday.common.enums.CommentType;
+import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 订单评论
@@ -23,7 +25,7 @@ public class CommentVo implements Serializable {
     /**
      * 图片array
      */
-    private String imgIds;
+    private List<String> imgIds = Lists.newArrayList();
     /*
     不用desc 其为sql 关键字
      */

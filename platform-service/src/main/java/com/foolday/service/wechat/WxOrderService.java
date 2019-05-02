@@ -1,17 +1,18 @@
 package com.foolday.service.wechat;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseServiceUtils;
 import com.foolday.common.base.RedisBeanNameApi;
-import com.foolday.common.enums.ChannelType;
-import com.foolday.common.enums.MessageAction;
-import com.foolday.common.enums.OrderStatus;
-import com.foolday.common.enums.OrderType;
+import com.foolday.common.enums.*;
 import com.foolday.common.exception.PlatformException;
 import com.foolday.common.util.KeyUtils;
 import com.foolday.common.util.PlatformAssert;
+import com.foolday.dao.comment.CommentEntity;
 import com.foolday.dao.coupon.CouponEntity;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
+import com.foolday.dao.order.OrderDetailEntity;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.dao.order.OrderMapper;
 import com.foolday.dao.shop.ShopMapper;
@@ -24,6 +25,8 @@ import com.foolday.service.api.wechat.WxUserCouponServiceApi;
 import com.foolday.service.api.wechat.WxUserServiceApi;
 import com.foolday.service.common.CommonMessageManager;
 import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
+import com.foolday.serviceweb.dto.admin.comment.CommentVo;
+import com.foolday.serviceweb.dto.wechat.order.EntInvoiceVo;
 import com.foolday.serviceweb.dto.wechat.order.OrderDetailVo;
 import com.foolday.serviceweb.dto.wechat.order.WxOrderVo;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +41,9 @@ import reactor.util.function.Tuples;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -210,18 +215,24 @@ public class WxOrderService implements WxOrderServiceApi {
 
     /**
      * 获取用户的订单记录
+     * OrderStatus == null 为获取用户所有订单信息
      *
      * @param userId
+     * @param orderStatus
      * @return
      */
     @Override
-    public List<OrderEntity> listByUserId(String userId) {
-        return null;
+    public List<OrderEntity> listByUserId(String userId, OrderStatus orderStatus) {
+        LambdaQueryWrapper<OrderEntity> queryWrapper = Wrappers.lambdaQuery(new OrderEntity()).eq(OrderEntity::getUserId, userId);
+        if (Objects.isNull(orderStatus)) {
+            return orderMapper.selectList(queryWrapper);
+        }
+        return orderMapper.selectList(queryWrapper.eq(OrderEntity::getStatus, orderStatus));
     }
 
     @Override
     public OrderEntity get(String orderId, String userId) {
-        return null;
+        return BaseServiceUtils.checkOneById(orderMapper, orderId, "订单信息不存在");
     }
 
     @Override
@@ -249,6 +260,76 @@ public class WxOrderService implements WxOrderServiceApi {
         order.setStatus(OrderStatus.申请退款);
         order.setUpdateTime(LocalDateTime.now());
         return order.updateById();
+    }
+
+    /**
+     * 更新订单状态
+     *
+     * @param orderId
+     * @param userId
+     * @param orderStatus
+     * @return
+     */
+    @Override
+    public boolean updateOrderStatusByIdAndUserId(String orderId, String userId, OrderStatus orderStatus) {
+        OrderEntity entity = BaseServiceUtils.checkOneById(orderMapper, orderId, "订单信息不存在");
+        entity.setUserId(userId);
+        entity.setStatus(orderStatus);
+        return entity.updateById();
+    }
+
+    /**
+     * 加餐
+     *
+     * @param orderDetailvo
+     * @param orderId
+     * @return
+     */
+    @Override
+    public boolean appendOrderDetail(OrderDetailVo orderDetailvo, String orderId) {
+        OrderEntity entity = BaseServiceUtils.checkOneById(orderMapper, orderId, "订单信息不存在");
+        PlatformAssert.isTrue(OrderStatus.canAppendGoodsStatus(entity.getStatus()), "订单状态异常，无法加餐");
+        orderDetailServiceApi.add(orderDetailvo, orderId);
+        return false;
+    }
+
+    @Override
+    public void newBill(String orderId, EntInvoiceVo invoiceVo) {
+        log.warn("需要处理发票");
+    }
+
+    /**
+     * 通过订单获取商品，对每个商品进行生成一条评论
+     *
+     * @param orderId
+     * @param commentVo
+     * @return
+     */
+    @Override
+    public void addComment(String orderId, CommentVo commentVo) {
+        BaseServiceUtils.checkOneById(orderMapper, orderId, "订单信息不存在");
+        String imgIdStr = null;
+        if (commentVo.getImgIds() != null && !commentVo.getImgIds().isEmpty()) {
+            imgIdStr = String.join(",", commentVo.getImgIds());
+        }
+        List<OrderDetailEntity> orderDetails = orderDetailServiceApi.findByOrderId(orderId);
+        final String finalImgIdStr = imgIdStr;
+        List<CommentEntity> commentEntities = orderDetails.stream().map(orderDetail -> {
+            CommentEntity commentEntity = new CommentEntity();
+            BeanUtils.copyProperties(commentVo, commentEntity);
+            commentEntity.setOrderId(orderId);
+            commentEntity.setUserId(LoginUserHolder.get().getUserId());
+            commentEntity.setCreateTime(LocalDateTime.now());
+            commentEntity.setGoodsId(orderDetail.getGoodsId());
+            commentEntity.setStatus(CommentStatus.有效);
+            commentEntity.setAdminId("");
+            commentEntity.setAdminName("");
+            commentEntity.setImgIds(finalImgIdStr);
+            commentEntity.setShopId(LoginUserHolder.get().getShopId());
+            commentEntity.insert();
+            return commentEntity;
+        }).collect(Collectors.toList());
+        log.info("生成了评论信息=>{}", commentEntities);
     }
 
 }

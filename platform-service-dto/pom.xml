@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.foolday.cloud</groupId>
-            <artifactId>platform-common</artifactId>
+            <artifactId>platform-dao</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

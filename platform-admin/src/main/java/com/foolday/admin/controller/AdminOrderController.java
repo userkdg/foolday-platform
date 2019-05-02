@@ -50,10 +50,24 @@ public class AdminOrderController {
         return FantResult.ok();
     }
 
-    @ApiOperation(value = "后台人员获取对单列表")
-    @GetMapping("/cancel/list")
-    public FantResult<List<OrderEntity>> cancelOrderList() {
-        List<OrderEntity> cancelOrders = adminOrderServiceApi.findCancelOrders();
+    @ApiOperation(value = "后台人员获取对已退单列表")
+    @GetMapping("/audit/cancelOrder/list")
+    public FantResult<List<OrderEntity>> auditCancelOrders() {
+        List<OrderEntity> cancelOrders = adminOrderServiceApi.findByOrderStatus(OrderStatus.申请退款);
+        return FantResult.ok(cancelOrders);
+    }
+
+    @ApiOperation(value = "后台人员获取对已退单列表")
+    @GetMapping("/agreeCancel/list")
+    public FantResult<List<OrderEntity>> agreeOrders() {
+        List<OrderEntity> cancelOrders = adminOrderServiceApi.findByOrderStatus(OrderStatus.同意退款);
+        return FantResult.ok(cancelOrders);
+    }
+
+    @ApiOperation(value = "后台人员获取对已退单列表")
+    @GetMapping("/disagressCancel/list")
+    public FantResult<List<OrderEntity>> disagressCancelOrders() {
+        List<OrderEntity> cancelOrders = adminOrderServiceApi.findByOrderStatus(OrderStatus.不同意退款);
         return FantResult.ok(cancelOrders);
     }
 

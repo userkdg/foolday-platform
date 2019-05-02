@@ -18,5 +18,7 @@ public interface OrderServiceApi {
 
     List<OrderEntity> findCancelOrders();
 
+    List<OrderEntity> findByOrderStatus(OrderStatus orderStatus);
+
     void auditOrder(String orderId, boolean success);
 }

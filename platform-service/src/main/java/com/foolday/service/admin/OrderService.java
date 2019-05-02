@@ -89,8 +89,19 @@ public class OrderService implements OrderServiceApi {
      */
     @Override
     public List<OrderEntity> findCancelOrders() {
+        return findByOrderStatus(OrderStatus.同意退款);
+    }
+
+    /**
+     * 根据订单状态分类
+     *
+     * @param orderStatus
+     * @return
+     */
+    @Override
+    public List<OrderEntity> findByOrderStatus(OrderStatus orderStatus) {
         OrderEntity orderEntity = new OrderEntity();
-        orderEntity.setStatus(OrderStatus.申请退款);
+        orderEntity.setStatus(orderStatus);
         orderEntity.setShopId(LoginUserHolder.get().getShopId());
         return orderMapper.selectList(Wrappers.lambdaQuery(orderEntity))
                 .stream()
@@ -99,9 +110,15 @@ public class OrderService implements OrderServiceApi {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 后台管理员审核订单
+     *
+     * @param orderId
+     * @param success
+     */
     @Override
     public void auditOrder(String orderId, boolean success) {
-        OrderEntity orderEntity = BaseServiceUtils.checkOneById(orderMapper, orderId);
+        OrderEntity orderEntity = BaseServiceUtils.checkOneById(orderMapper, orderId, "订单信息无效");
         orderEntity.setStatus(success ? OrderStatus.同意退款 : OrderStatus.不同意退款);
         orderEntity.setUpdateTime(LocalDateTime.now());
         orderMapper.updateById(orderEntity);

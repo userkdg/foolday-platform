@@ -82,7 +82,8 @@ platform:
         loginUser:
           # isValid来控制当前配置是否有效，无效则取前端提供的base64
           valid: true
-          userId: testUserId
+          userId: testUserId # 系统内部id
+          openId: openId # 针对存储微信信息
           userName: testUserName
           shopId: testShopId
           browser: testBrowser

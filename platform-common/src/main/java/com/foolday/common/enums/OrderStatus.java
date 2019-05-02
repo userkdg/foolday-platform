@@ -13,8 +13,28 @@ public enum OrderStatus implements BaseEnum {
      */
     待付款(0), 待确认(1), 待评价(2), 已完成(3),
     申请退款(4), 同意退款(5), 不同意退款(6), 已付款(7),
+    取消订单(8),
     删除(-1),
     拼团中(10), 拼团成功(11), 拼团失败(12);
+
+    /**
+     * 定义是否为可加餐状态
+     *
+     * @param orderStatus
+     * @return
+     */
+    public static boolean canAppendGoodsStatus(OrderStatus orderStatus) {
+        if (orderStatus == null) return false;
+        switch (orderStatus) {
+            case 待付款:
+            case 已付款:
+            case 待确认:
+            case 拼团成功:
+                return true;
+            default:
+                return false;
+        }
+    }
 
     private int value;
 

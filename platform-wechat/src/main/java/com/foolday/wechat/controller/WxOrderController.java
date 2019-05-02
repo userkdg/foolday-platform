@@ -1,13 +1,13 @@
 package com.foolday.wechat.controller;
 
 import com.foolday.common.dto.FantResult;
+import com.foolday.common.enums.OrderStatus;
 import com.foolday.dao.order.OrderDetailEntity;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.service.api.admin.OrderDetailServiceApi;
 import com.foolday.service.api.wechat.WxOrderServiceApi;
-import com.foolday.serviceweb.dto.wechat.order.OrderDetailViewVo;
-import com.foolday.serviceweb.dto.wechat.order.WxOrderViewVo;
-import com.foolday.serviceweb.dto.wechat.order.WxOrderVo;
+import com.foolday.serviceweb.dto.admin.comment.CommentVo;
+import com.foolday.serviceweb.dto.wechat.order.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -35,16 +35,48 @@ public class WxOrderController {
     public FantResult<String> add(@ApiParam(value = "订单对象", required = true)
                                   @RequestBody WxOrderVo orderVo,
                                   @ApiParam(name = "shopId", value = "用户在哪家店下单", required = true)
-                                  @RequestParam(value = "shopId") String shopId){
-        wxOrderServiceApi.submitOrder(orderVo,shopId);
+                                  @RequestParam(value = "shopId") String shopId) {
+        wxOrderServiceApi.submitOrder(orderVo, shopId);
         return FantResult.ok();
-}
+    }
 
-    @ApiOperation(value = "订单列表")
+    @ApiOperation(value = "全部订单列表")
     @GetMapping(value = "/list")
-    public FantResult<List<OrderEntity>> list(@ApiParam(name = "userId", value = "用户id", required = true)
+    public FantResult<List<OrderEntity>> list(@ApiParam(name = "openId", value = "用户id", required = true)
+                                              @RequestParam(value = "openId") String openId) {
+        List<OrderEntity> orders = wxOrderServiceApi.listByUserId(openId, null);
+        return FantResult.ok(orders);
+    }
+
+    @ApiOperation(value = "待付款订单列表")
+    @GetMapping(value = "/waitPay/list")
+    public FantResult<List<OrderEntity>> waitPaylist(@ApiParam(name = "userId", value = "用户id", required = true)
+                                                     @RequestParam(value = "userId") String userId) {
+        List<OrderEntity> orders = wxOrderServiceApi.listByUserId(userId, OrderStatus.待付款);
+        return FantResult.ok(orders);
+    }
+
+    @ApiOperation(value = "待确认订单列表")
+    @GetMapping(value = "/waitConfirm/list")
+    public FantResult<List<OrderEntity>> waitConfirm(@ApiParam(name = "userId", value = "用户id", required = true)
+                                                     @RequestParam(value = "userId") String userId) {
+        List<OrderEntity> orders = wxOrderServiceApi.listByUserId(userId, OrderStatus.待确认);
+        return FantResult.ok(orders);
+    }
+
+    @ApiOperation(value = "待评价订单列表")
+    @GetMapping(value = "/waitComment/list")
+    public FantResult<List<OrderEntity>> waitComment(@ApiParam(name = "userId", value = "用户id", required = true)
+                                                     @RequestParam(value = "userId") String userId) {
+        List<OrderEntity> orders = wxOrderServiceApi.listByUserId(userId, OrderStatus.待评价);
+        return FantResult.ok(orders);
+    }
+
+    @ApiOperation(value = "已完成列表")
+    @GetMapping(value = "/done/list")
+    public FantResult<List<OrderEntity>> done(@ApiParam(name = "userId", value = "用户id", required = true)
                                               @RequestParam(value = "userId") String userId) {
-        List<OrderEntity> orders = wxOrderServiceApi.listByUserId(userId);
+        List<OrderEntity> orders = wxOrderServiceApi.listByUserId(userId, OrderStatus.已完成);
         return FantResult.ok(orders);
     }
 
@@ -76,7 +108,7 @@ public class WxOrderController {
                                      @ApiParam(name = "userId", value = "用户id", required = true)
                                      @RequestParam(value = "userId") String userId) {
         // 修改状态
-        boolean cancel = wxOrderServiceApi.cancelOrder(orderId, userId);
+        boolean cancel = wxOrderServiceApi.updateOrderStatusByIdAndUserId(orderId, userId, OrderStatus.取消订单);
         return FantResult.checkAs(cancel);
     }
 
@@ -107,8 +139,8 @@ public class WxOrderController {
     public FantResult<String> addGood(@ApiParam(name = "orderId", value = "订单id", required = true)
                                       @RequestParam(value = "orderId") String orderId,
                                       @ApiParam(value = "商品列表", required = true)
-                                      @RequestBody OrderDetailViewVo orderDetailvo) {
-        //
+                                      @RequestBody OrderDetailVo orderDetailvo) {
+        wxOrderServiceApi.appendOrderDetail(orderDetailvo, orderId);
         return FantResult.ok();
     }
 
@@ -116,8 +148,10 @@ public class WxOrderController {
     @ApiOperation(value = "订单申请开发票")
     @PostMapping(value = "/newBill")
     public FantResult<String> newBill(@ApiParam(name = "orderId", value = "订单id", required = true)
-                                      @RequestParam(value = "orderId") String orderId) {
-        //
+                                      @RequestParam(value = "orderId") String orderId,
+                                      @ApiParam(name = "invoice", value = "企业发票信息", required = true)
+                                      @RequestBody EntInvoiceVo invoiceVo) {
+        wxOrderServiceApi.newBill(orderId, invoiceVo);
         return FantResult.ok();
     }
 
@@ -125,8 +159,11 @@ public class WxOrderController {
     @ApiOperation(value = "订单发起评论")
     @PostMapping(value = "/comment")
     public FantResult<String> comment(@ApiParam(name = "orderId", value = "订单id", required = true)
-                                      @RequestParam(value = "orderId") String orderId) {
+                                      @RequestParam(value = "orderId") String orderId,
+                                      @ApiParam(name = "commentVo", value = "评论内容", required = true)
+                                      @RequestBody CommentVo commentVo) {
         // 评论管理
+        wxOrderServiceApi.addComment(orderId, commentVo);
         return FantResult.ok();
     }
 
