@@ -4,9 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseServiceUtils;
 import com.foolday.common.enums.CommonStatus;
+import com.foolday.common.enums.ShopStatus;
 import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.coupon.CouponEntity;
 import com.foolday.dao.coupon.CouponMapper;
+import com.foolday.dao.couponUser.UserCouponEntity;
+import com.foolday.dao.couponUser.UserCouponMapper;
+import com.foolday.dao.shop.ShopEntity;
 import com.foolday.service.api.admin.CouponServiceApi;
 import com.foolday.serviceweb.dto.coupon.CouponVo;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +26,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
+
 @Slf4j
 @Service
 @Transactional
 public class CouponService implements CouponServiceApi {
     @Resource
     private CouponMapper couponMapper;
+
+    @Resource
+    private UserCouponMapper userCouponMapper;
 
     /**
      * 获取列表
@@ -113,6 +122,73 @@ public class CouponService implements CouponServiceApi {
         BeanUtils.copyProperties(couponVo, couponEntity);
         couponEntity.setUpdateTime(LocalDateTime.now());
         couponMapper.updateById(couponEntity);
+    }
+
+    /**
+     * 根据店铺id获取相应的优惠券
+     *
+     * @param shopId
+     * @return
+     */
+    @Override
+    public List<CouponEntity> findValidByShopId(String shopId) {
+        ShopEntity shop = new ShopEntity().selectById(shopId);
+        PlatformAssert.isTrue(shop != null && ShopStatus.生效.equals(shop.getStatus()),
+                "店铺=>" + (shop == null ? shopId : shop.getName()) + "信息无效");
+        LambdaQueryWrapper<CouponEntity> wrapper = Wrappers.lambdaQuery(new CouponEntity())
+                .eq(CouponEntity::getShopId, shopId);
+        return couponMapper.selectList(appendValidCouponLambdaWrapper(wrapper)).stream()
+                .filter(CouponService::filterValidCoupon).collect(toList());
+    }
+
+
+    /**
+     * 基于LambdaQueryWrapper的有效优惠券条件
+     *
+     * @param wrapper
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static LambdaQueryWrapper<CouponEntity> appendValidCouponLambdaWrapper(LambdaQueryWrapper<CouponEntity> wrapper) {
+        return wrapper.eq(CouponEntity::getStatus, CommonStatus.有效)
+                .le(CouponEntity::getStartTime, LocalDateTime.now())
+                .ge(CouponEntity::getEndTime, LocalDateTime.now())
+                .orderByDesc(CouponEntity::getCreateTime, CouponEntity::getUpdateTime);
+
+    }
+
+    /**
+     * 根据用户id获取有效的优惠券
+     * t_user_coupon inner join t_coupon
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<CouponEntity> findValidByUserId(String userId) {
+        UserCouponEntity userCoupon = new UserCouponEntity();
+        userCoupon.setUserId(userId);
+        return userCouponMapper.selectList(Wrappers.lambdaQuery(userCoupon))
+                .stream()
+                .filter(uc -> CommonStatus.有效.equals(uc.getStatus()))
+                .map(UserCouponEntity::getCouponId)
+                .map(couponId -> couponMapper.selectById(couponId))
+                .filter(CouponService::filterValidCoupon)
+                .collect(toList());
+    }
+
+    /**
+     * 基于java stream 的提取有效的优惠券
+     *
+     * @param couponEntity
+     * @return
+     */
+    public static boolean filterValidCoupon(CouponEntity couponEntity) {
+        LocalDateTime now = LocalDateTime.now();
+        return Objects.nonNull(couponEntity) &&
+                CommonStatus.有效.equals(couponEntity.getStatus()) &&
+                couponEntity.getStartTime().isBefore(now) &&
+                couponEntity.getEndTime().isAfter(now);
     }
 
 }

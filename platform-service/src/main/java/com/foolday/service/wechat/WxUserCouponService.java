@@ -61,4 +61,25 @@ public class WxUserCouponService implements WxUserCouponServiceApi {
         return (userCouponMapper.updateById(userCoupon) == 1);
     }
 
+    /**
+     * 领券
+     *
+     * @param userId
+     * @param couponId
+     * @return
+     */
+    @Override
+    public UserCouponEntity newUserCoupon(String userId, String couponId) {
+        UserCouponEntity userCouponEntity = new UserCouponEntity();
+        userCouponEntity.setUserId(userId);
+        userCouponEntity.setCouponId(couponId);
+        userCouponEntity.setStatus(CommonStatus.有效);
+        Integer count = userCouponMapper.selectCount(Wrappers.lambdaQuery(userCouponEntity));
+        PlatformAssert.isTrue(count.equals(0), "您已领取过本优惠券");
+        userCouponEntity.setCreateTime(LocalDateTime.now());
+        boolean insert = userCouponEntity.insert();
+        log.info("用户{}领取了{}优惠券,情况{}", userId, couponId, insert);
+        return userCouponEntity;
+    }
+
 }

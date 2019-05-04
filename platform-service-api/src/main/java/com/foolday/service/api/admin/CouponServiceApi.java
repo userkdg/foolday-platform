@@ -32,4 +32,9 @@ public interface CouponServiceApi {
     void updateStatus(String couponId, CommonStatus status);
 
     void edit(String couponId, CouponVo couponVo);
+
+
+    List<CouponEntity> findValidByShopId(String shopId);
+
+    List<CouponEntity> findValidByUserId(String userId);
 }
