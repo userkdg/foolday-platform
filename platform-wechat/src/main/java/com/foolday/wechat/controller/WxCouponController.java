@@ -42,7 +42,7 @@ public class WxCouponController {
 
 
     @ApiOperation(value = "客户已有的优惠券列表")
-    @GetMapping(value = "/list")
+    @GetMapping(value = "/user/list")
     public FantResult<List<CouponEntity>> list(@ApiParam(name = "userId", value = "用户id", required = true)
                                                @RequestParam(value = "userId") String userId) {
         List<CouponEntity> coupons = couponServiceApi.findValidByUserId(userId);
