@@ -250,9 +250,9 @@ public class WxOrderService implements WxOrderServiceApi {
      */
     @Override
     public boolean refund(String orderId, String openId) {
+        UserEntity user = userServiceApi.findByOpenId(openId).orElseThrow(() -> new PlatformException("非法用户信息"));
         OrderEntity order = BaseServiceUtils.checkOneById(orderMapper, orderId);
         PlatformAssert.isTrue(StringUtils.equals(orderId, order.getUserId()), "非本人订单,结束退款操作");
-        UserEntity user = userServiceApi.findByOpenId(openId);
         // 通知后台人员 处理退款单子,确认退款后进行退费
         CommonMessageManager.OrderMsgHandler.notifyShopMsgFormUser(openId, order.getShopId(), orderId,
                 "用户【" + user.getName() + "】发起退款", "发起退款申请,请审批是否通过", MessageAction.申请退款, ChannelType.订单类);
