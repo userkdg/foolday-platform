@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 import static java.util.stream.Collectors.toList;
@@ -70,9 +68,34 @@ public class Image2diskService implements Image2DiskServiceApi {
     }
 
 
+    /**
+     * 通过配置+图片id+问图片名称获取文件磁盘路径
+     *
+     * @param imageId
+     * @param name
+     * @return
+     */
     public Path filePathByImageIdAndName(String imageId, String name) {
         Path path = Paths.get(imageConfigProperty.getStorePath(), (imageId + name));
         PlatformAssert.isTrue(Files.exists(path), "获取文件{}失败!文件已不存在");
+        return path;
+    }
+
+
+    /**
+     * 通过配置+图片id+问图片名称获取文件磁盘路径
+     *
+     * @param storePath SpringContextUtils.getBean(ImageConfigProperty.class).getStorePath();
+     * @param imageId
+     * @param name
+     * @return
+     */
+    @Override
+    public Path filePathByImageIdAndName(@Nullable String storePath, String imageId, String name) {
+        if (StringUtils.isBlank(storePath))
+            storePath = SpringContextUtils.getBean(ImageConfigProperty.class).getStorePath();
+        Path path = Paths.get(storePath, (imageId + name));
+        PlatformAssert.isTrue(Files.exists(path), "获取文件" + path + "失败!文件已不存在");
         return path;
     }
 
@@ -140,6 +163,46 @@ public class Image2diskService implements Image2DiskServiceApi {
         return Collections.emptyList();
     }
 
+    /**
+     * 批量删除
+     *
+     * @param fileIdArr
+     */
+    @Override
+    public void deleteAll(String... fileIdArr) {
+        Arrays.stream(fileIdArr).forEach(this::deleteOne);
+    }
+
+    /**
+     * 删除数据库的图片信息和磁盘信息
+     *
+     * @param fileId
+     */
+    @Override
+    public void deleteOne(String fileId) {
+        ImageEntity image = imageMapper.selectById(fileId);
+        Path diskPath = filePathByImageIdAndName(imageConfigProperty.getStorePath(), image.getId(), image.getName());
+        if (Files.exists(diskPath)) {
+            boolean delete = false;
+            try {
+                Files.delete(diskPath);
+                delete = true;
+            } catch (IOException e) {
+                log.error("删除文件{}失败", diskPath);
+            }
+            if (delete) imageMapper.deleteById(fileId);
+        } else {
+            log.warn("文件不存在或已删除");
+        }
+    }
+
+    /**
+     * fileDto 2 imageEntity 返回表id
+     *
+     * @param fileDto MulitpartFile
+     * @return
+     */
+    @Override
     public String image2DbByFileDto(FileDto fileDto) {
         // ru db
         ImageEntity imageEntity = new ImageEntity();
@@ -160,6 +223,13 @@ public class Image2diskService implements Image2DiskServiceApi {
         return fileDto.getImageId();
     }
 
+    /**
+     * 文件上传到磁盘中
+     *
+     * @param fileDto
+     * @return
+     */
+    @Override
     public FileDto uploadFileByFileDto(FileDto fileDto) {
         String imageId = UuidUtils.uuid32();
         try (InputStream inputStream = fileDto.getInputStream()) {
@@ -170,7 +240,6 @@ public class Image2diskService implements Image2DiskServiceApi {
             Files.copy(inputStream, path);
             fileDto.setFile(path.toFile());
         } catch (IOException e) {
-//                          e.printStackTrace();
             log.error("文件上传失败，e=>{}", e);
             imageId = null;
         }
