@@ -4,23 +4,19 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import com.foolday.common.util.JsonUtils;
+import com.foolday.common.dto.FantResult;
 import com.foolday.dao.user.UserEntity;
 import com.foolday.service.api.wechat.WxUserServiceApi;
 import com.foolday.service.config.WxMaConfiguration;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Optional;
 
 /**
  * 微信小程序用户接口
@@ -34,7 +30,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/wx/user/{appid}")
 public class WxMaUserController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private WxUserServiceApi wxUserServiceApi;
 
@@ -44,35 +39,17 @@ public class WxMaUserController {
      */
     @ApiOperation(value = "登陆接口", notes = "用户登录后必须获取用户信息，否则后台无法分析用户身份")
     @GetMapping("/login")
-    public String login(@ApiParam(value = "用户appid", required = true, name = "appid")
-                        @PathVariable(value = "appid") String appid,
-                        @ApiParam(value = "用户code", required = true, name = "code")
-                        @RequestParam(value = "code") String code) {
+    public FantResult<WxMaJscode2SessionResult> login(@ApiParam(value = "用户appid", required = true, name = "appid")
+                                                      @PathVariable(value = "appid") String appid,
+                                                      @ApiParam(value = "用户code", required = true, name = "code")
+                                                      @RequestParam(value = "code") String code) throws WxErrorException {
         if (StringUtils.isBlank(code)) {
-            return "empty jscode";
+            return FantResult.fail("empty jscode");
         }
-
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
-
-        try {
-            WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
-            this.logger.info(session.getSessionKey());
-            this.logger.info(session.getOpenid());// 前端开发微信公众号时怎么获取code，然后将code发给后端来换取用户的openid
-            //TODO 可以增加自己的逻辑，关联业务相关数据
-            /*
-            针对微信授权通过登录后，对用户信息进行保存和写入LoginUserHolder本地化内存中，管理用户信息以便业务使用
-             */
-            Optional<UserEntity> userEntity = wxUserServiceApi.findByOpenId(session.getOpenid());
-            if (userEntity.isPresent()) {
-                logger.info("登入成功，后台写入用户信息{}", session);
-            } else {
-                logger.info("有新用户session=>{}登录系统", session);
-            }
-            return JsonUtils.toJson(session);
-        } catch (WxErrorException e) {
-            this.logger.error(e.getMessage(), e);
-            return e.toString();
-        }
+        WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
+        //TODO 可以增加自己的逻辑，关联业务相关数据
+        return FantResult.ok(session);
     }
 
     /**
@@ -82,23 +59,23 @@ public class WxMaUserController {
      */
     @ApiOperation(value = "获取用户信息接口", notes = "用户登录后必须获取用户信息，否则后台无法分析用户身份")
     @GetMapping("/info")
-    public String info(@ApiParam(value = "用户appid", required = true)
-                       @PathVariable String appid,
-                       @ApiParam(value = "用户登录后的会话key", required = true)
-                       @RequestParam String sessionKey,
-                       @ApiParam(value = "用户签字类型", required = true)
-                       @RequestParam String signature,
-                       @ApiParam(value = "用户内容", required = true)
-                       @RequestParam String rawData,
-                       @ApiParam(value = "消息密文", required = true)
-                       @RequestParam String encryptedData,
-                       @ApiParam(value = "iv字符串", required = true)
-                       @RequestParam String iv) {
+    public FantResult<Object> info(@ApiParam(value = "用户appid", required = true)
+                                   @PathVariable String appid,
+                                   @ApiParam(value = "用户登录后的会话key", required = true)
+                                   @RequestParam String sessionKey,
+                                   @ApiParam(value = "用户签字类型", required = true)
+                                   @RequestParam String signature,
+                                   @ApiParam(value = "用户内容", required = true)
+                                   @RequestParam String rawData,
+                                   @ApiParam(value = "消息密文", required = true)
+                                   @RequestParam String encryptedData,
+                                   @ApiParam(value = "iv字符串", required = true)
+                                   @RequestParam String iv) {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
         // 用户信息校验
         if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            return "user check failed";
+            return FantResult.fail("user check failed");
         }
 
         // 解密用户信息
@@ -109,14 +86,7 @@ public class WxMaUserController {
         UserEntity userPoByOpenIdAndUnionId = wxUserServiceApi.findByOpenIdAndUnionId(userInfo.getOpenId(), userInfo.getUnionId())
                 .orElseGet(() -> wxUserServiceApi.addByWeixinInfo(userInfo, phoneNoInfo));
         LoginUser loginUser = LoginUser.valueOf(userPoByOpenIdAndUnionId, LoginUser.LoginUserType.微信用户);
-        LoginUser user = LoginUserHolder.get();
-        // 以最新一次获取用户信息为准
-        if (user != null) {
-            LoginUserHolder.clear();
-        }
-        LoginUserHolder.set(loginUser);
-        logger.info("获取用户信息{}，并写入本地化内存中维护", loginUser);
-        return JsonUtils.toJson(userInfo);
+        return FantResult.ok(loginUser);
     }
 
     /**
@@ -125,19 +95,18 @@ public class WxMaUserController {
      * </pre>
      */
     @GetMapping("/phone")
-    public String phone(@PathVariable(value = "appid") String appid, String sessionKey, String signature,
-                        String rawData, String encryptedData, String iv) {
+    public FantResult<WxMaPhoneNumberInfo> phone(@PathVariable(value = "appid") String appid, String sessionKey, String signature,
+                                                 String rawData, String encryptedData, String iv) {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
         // 用户信息校验
         if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            return "user check failed";
+            return FantResult.fail("user check failed");
         }
-
         // 解密
         WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
 
-        return JsonUtils.toJson(phoneNoInfo);
+        return FantResult.ok(phoneNoInfo);
     }
 
 }
