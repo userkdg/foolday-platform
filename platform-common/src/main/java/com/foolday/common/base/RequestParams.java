@@ -6,9 +6,21 @@ import java.io.FileNotFoundException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RequestParams {
-    public ConcurrentHashMap<String, String> urlParams = new ConcurrentHashMap<>();
-    public ConcurrentHashMap<String, Object> fileParams = new ConcurrentHashMap<>();
-    public Object jsonParam = null;
+    private ConcurrentHashMap<String, String> urlParams = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Object> fileParams = new ConcurrentHashMap<>();
+    private Object jsonParam = null;
+
+    public ConcurrentHashMap<String, Object> getFileParams() {
+        return fileParams;
+    }
+
+    public ConcurrentHashMap<String, String> getUrlParams() {
+        return urlParams;
+    }
+
+    public final Object getJsonParam() {
+        return jsonParam;
+    }
 
     /**
      * Adds key/value string pair to the request.

@@ -39,7 +39,7 @@ public class HttpUtils {
     /**
      * 初始化：为OkHttpClient配置参数
      */
-    public void initConfig() {
+    private void initConfig() {
         /****** 配置基本参数 ******/
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
         //设置连接超时时间
@@ -60,11 +60,11 @@ public class HttpUtils {
     }
 
     public Request createPostRequest(String url, RequestParams params) {
-        Request request = null;
+        Request request;
         if (params != null) {
             if (params.isJsonParam()) {
-                if (params.jsonParam instanceof JSONObject) {
-                    JSONObject jsonObject = (JSONObject) params.jsonParam;
+                if (params.getJsonParam() instanceof JSONObject) {
+                    JSONObject jsonObject = (JSONObject) params.getJsonParam();
                     RequestBody body = RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), jsonObject.toString());
                     request = new Request.Builder().url(url).post(body).build();
                 } else {
@@ -72,7 +72,7 @@ public class HttpUtils {
                 }
             } else {
                 FormBody.Builder bodyBuilder = new FormBody.Builder();
-                for (Map.Entry<String, String> entry : params.urlParams.entrySet()) {
+                for (Map.Entry<String, String> entry : params.getUrlParams().entrySet()) {
                     //将请求参数添加到请求体中
                     bodyBuilder.add(entry.getKey(), entry.getValue());
                 }
@@ -135,7 +135,7 @@ public class HttpUtils {
     public Request createGetRequest(String url, RequestParams params) {
         StringBuilder urlBuilder = new StringBuilder(url).append("?");
         if (params != null) {
-            for (Map.Entry<String, String> entry : params.urlParams.entrySet()) {
+            for (Map.Entry<String, String> entry : params.getUrlParams().entrySet()) {
                 //将请求参数添加到请求体中
                 urlBuilder.append(entry.getKey())
                         .append("=")
