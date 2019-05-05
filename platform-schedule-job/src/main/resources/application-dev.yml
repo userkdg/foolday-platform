@@ -135,3 +135,4 @@ wx:
       secret: a43e295acc1cbe68a48e8de50c430967 #（公众号的appsecret）
       token: my2019token #（接口配置里的Token值）
       aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #（接口配置里的EncodingAESKey值）
+      contactPhone: 1881312121 # 开发票中需要联系电话号码

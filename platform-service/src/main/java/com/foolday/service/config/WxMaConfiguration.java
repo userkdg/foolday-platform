@@ -8,6 +8,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaTemplateMessage;
 import cn.binarywang.wx.miniapp.config.WxMaInMemoryConfig;
 import cn.binarywang.wx.miniapp.message.WxMaMessageHandler;
 import cn.binarywang.wx.miniapp.message.WxMaMessageRouter;
+import com.foolday.common.exception.PlatformException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
@@ -30,24 +31,40 @@ import java.util.stream.Collectors;
 public class WxMaConfiguration {
     private WxMaProperties properties;
 
+    private volatile static WxMaProperties.Config defaultConfig = null;
+
     private static Map<String, WxMaMessageRouter> routers = Maps.newHashMap();
     private static Map<String, WxMaService> maServices = Maps.newHashMap();
 
     @Autowired
     public WxMaConfiguration(WxMaProperties properties) {
         this.properties = properties;
+        if (!properties.getConfigs().isEmpty()) {
+            defaultConfig = properties.getConfigs().get(0);
+        }
     }
 
     public static Map<String, WxMaMessageRouter> getRouters() {
         return routers;
     }
 
+    /**
+     * 单个公众号情况
+     *
+     * @return wx
+     */
+    public static WxMaService getDefaultMaService() {
+        if (defaultConfig == null) {
+            throw new PlatformException("获取默认appid等的配置失败！");
+        }
+        return getMaService(defaultConfig.getAppid());
+    }
+
     public static WxMaService getMaService(String appid) {
         WxMaService wxService = maServices.get(appid);
         if (wxService == null) {
-            throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
+            throw new PlatformException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
-
         return wxService;
     }
 
