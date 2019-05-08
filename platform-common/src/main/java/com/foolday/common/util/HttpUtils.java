@@ -69,9 +69,25 @@ public class HttpUtils {
         Request request;
         if (params != null) {
             if (params.isJsonParam()) {
+                StringBuilder urlBuilder = new StringBuilder(url);
+                /**
+                 * 允许在post json 对象时 在url中传参
+                 * eg:https://api.weixin.qq.com/card/invoice/makeoutinvoice?access_token={access_token}
+                 */
+                if (!params.getUrlParams().isEmpty()) {
+                    urlBuilder.append("?");
+                    for (Map.Entry<String, String> entry : params.getUrlParams().entrySet()) {
+                        //将请求参数添加到请求体中
+                        urlBuilder.append(entry.getKey())
+                                .append("=")
+                                .append(entry.getValue())
+                                .append("&");
+                    }
+                    urlBuilder.substring(0, urlBuilder.length() - 2);
+                }
                 JSONObject jsonObject = params.getJsonObject();
                 RequestBody body = RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), jsonObject.toString());
-                request = new Request.Builder().url(url).post(body).build();
+                request = new Request.Builder().url(urlBuilder.toString()).post(body).build();
             } else {
                 FormBody.Builder bodyBuilder = new FormBody.Builder();
                 for (Map.Entry<String, String> entry : params.getUrlParams().entrySet()) {
@@ -183,7 +199,7 @@ public class HttpUtils {
             }
         }
         return new Request.Builder()
-                .url(urlBuilder.substring(0, urlBuilder.length() - 1))
+                .url(urlBuilder.substring(0, urlBuilder.length() - 2))
                 .get()
                 .build();
     }

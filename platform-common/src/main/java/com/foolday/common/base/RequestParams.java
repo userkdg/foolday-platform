@@ -12,11 +12,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * multipart-form/data -> fileParams
  */
 public class RequestParams {
-    private ConcurrentHashMap<String, String> urlParams = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, Object> fileParams = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, String> urlParams;
+    private ConcurrentHashMap<String, Object> fileParams;
     private JSONObject jsonObject = new JSONObject();
 
     private RequestParams() {
+        urlParams = new ConcurrentHashMap<>();
+        fileParams = new ConcurrentHashMap<>();
     }
 
     enum RequestParamType {
@@ -25,12 +27,13 @@ public class RequestParams {
         URL
     }
 
-    private static class Holder {
-        private static RequestParams instance = new RequestParams();
-    }
-
+    /**
+     * 原有的singleton 单列存在数据共享问题，调整为独立的实例对象 （工厂模式）
+     *
+     * @return
+     */
     public static RequestParams getInstance() {
-        return Holder.instance;
+        return new RequestParams();
     }
 
     public RequestParams putJsonObject(JSONObject jsonObject) {

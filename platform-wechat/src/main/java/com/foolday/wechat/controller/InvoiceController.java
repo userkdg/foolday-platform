@@ -145,9 +145,10 @@ public class InvoiceController {
             put("time_out", 10000);
             put("phone", wxMpProperties.getDefaultConfig().getContactPhone());
         }});
-        RequestParams requestParams = RequestParams.getInstance().putJsonObjectMap(contactMap);
-        String okUrl = setbizattr_URL.concat("?action=set_contact&access_token=").concat(wxMpService.getAccessToken(false));
-        return HttpUtils.getInstance().executePostResultCls(okUrl, requestParams, WxRequestBaseResult.class);
+        RequestParams requestParams = RequestParams.getInstance().putJsonObjectMap(contactMap)
+                .putUrlKV("action","set_contact").putUrlKV("access_token", wxMpService.getAccessToken(false));
+//        String okUrl = setbizattr_URL.concat("?action=set_contact&access_token=").concat(wxMpService.getAccessToken(false));
+        return HttpUtils.getInstance().executePostResultCls(setbizattr_URL, requestParams, WxRequestBaseResult.class);
     }
 
     /**
