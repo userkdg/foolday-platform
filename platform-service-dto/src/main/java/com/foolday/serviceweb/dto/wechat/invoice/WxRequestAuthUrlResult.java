@@ -1,4 +1,4 @@
-package com.foolday.serviceweb.dto.wechat;
+package com.foolday.serviceweb.dto.wechat.invoice;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.foolday.serviceweb.dto.base.WxRequestBaseResult;

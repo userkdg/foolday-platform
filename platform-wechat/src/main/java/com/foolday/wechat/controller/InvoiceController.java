@@ -4,11 +4,15 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.alibaba.fastjson.JSONObject;
 import com.foolday.common.base.RequestParams;
 import com.foolday.common.dto.FantResult;
+import com.foolday.common.util.GsonUtils;
 import com.foolday.common.util.HttpUtils;
 import com.foolday.service.config.WxMaConfiguration;
 import com.foolday.service.config.WxMpProperties;
 import com.foolday.serviceweb.dto.base.WxRequestBaseResult;
-import com.foolday.serviceweb.dto.wechat.WxRequestAuthUrlResult;
+import com.foolday.serviceweb.dto.wechat.invoice.WxRequestAuthUrlResult;
+import com.foolday.serviceweb.dto.wechat.invoice.WxRequestInvoice;
+import com.foolday.serviceweb.dto.wechat.invoice.WxRequestInvoiceDetail;
+import com.foolday.serviceweb.dto.wechat.invoice.WxResponseInvoiceEnum;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +20,13 @@ import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.enums.TicketType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,10 +45,12 @@ public class InvoiceController {
 
 
     /**
+     * 请求可以，但是商家的信息未有效，无法开发票
+     *
      * @return
      * @throws WxErrorException
      */
-    @GetMapping("/invoice")
+    @PostMapping("/make")
     public FantResult<String> invoice() throws WxErrorException {
         final WxMaService wxService = WxMaConfiguration.getDefaultMaService();
         // 0
@@ -53,11 +60,59 @@ public class InvoiceController {
         // 2
         String ticket = wxMpService.getTicket(TicketType.WX_CARD, true);
 
-        String s_pappid = "";// 开票平台提供固定！
-        WxRequestAuthUrlResult wxRequestAuthUrlResult = getAuthUrl();
+        WxRequestAuthUrlResult wxRequestAuthUrlResult = getAuthUrl(ticket);
 
-        //TODO 可以增加自己的逻辑，关联业务相关数据
+        boolean makeOutInvoice = makeOutInvoice();
+
         return FantResult.ok(accessToken);
+    }
+
+    /**
+     * 统一开票接口-开具蓝票
+     * 接口说明
+     * https://api.weixin.qq.com/card/invoice/makeoutinvoice?access_token={access_token}
+     * 对于使用微信电子发票开票接入能力的商户，在公众号后台选择任何一家开票平台的套餐，都可以使用本接口实现电子发票的开具。
+     */
+    private static final String card_invoice_makeoutinvoice = "https://api.weixin.qq.com/card/invoice/makeoutinvoice";
+
+
+    /**
+     *
+     */
+    private boolean makeOutInvoice() throws WxErrorException {
+        WxRequestInvoice wxRequestInvoice = WxRequestInvoice.builder()
+                .bz("bz")
+                .ddh("ddh")
+                .fhr("fhr")
+                .fpqqlsh("fpqqls")
+                .ghfbank("bank")
+                .ghfbankid("bankId")
+                .ghfdh("ghfh")
+                .ghfmc("ghfmc")
+                .invoicedetail_list(Collections.singletonList(WxRequestInvoiceDetail.builder()
+                        .dw("dw")
+                        .fphxz("fphxz")
+                        .spbm("spbm")
+                        .xmdj("xmdj")
+                        .build()))
+                .build();
+        String jsonStr = GsonUtils.create().toJson(wxRequestInvoice);
+        // todo check
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("invoiceinfo", jsonStr);
+        RequestParams requestParams = RequestParams.getInstance().putJsonObject(jsonObject);
+        /*
+        返回
+            {
+              "errcode": 0,
+              "errmsg": "sucesss"
+            }
+         */
+        String okUrl = card_invoice_makeoutinvoice.concat("?access_token=").concat(wxMpService.getAccessToken());
+        WxRequestBaseResult wxRequestBaseResult = HttpUtils.getInstance().executePostResultCls(okUrl, requestParams, WxRequestBaseResult.class);
+        String errdesc = WxResponseInvoiceEnum.errdescOfErrcode(wxRequestBaseResult.getErrcode());
+        log.info("开发票情况=>{}", errdesc);
+        return wxRequestBaseResult.isSuccess();
     }
 
     /**
@@ -86,14 +141,13 @@ public class InvoiceController {
 
     public WxRequestBaseResult shopContact() throws WxErrorException {
         Map<String, Object> contactMap = Maps.newHashMap();
-        contactMap.put("action", "set_contact");
         contactMap.put("contact", new HashMap<String, Object>() {{
             put("time_out", 10000);
             put("phone", wxMpProperties.getDefaultConfig().getContactPhone());
-        }});// todo 是否有效
-        contactMap.put("access_token", wxMpService.getAccessToken(false));
+        }});
         RequestParams requestParams = RequestParams.getInstance().putJsonObjectMap(contactMap);
-        return HttpUtils.getInstance().executePostResultCls(setbizattr_URL, requestParams, WxRequestBaseResult.class);
+        String okUrl = setbizattr_URL.concat("?action=set_contact&access_token=").concat(wxMpService.getAccessToken(false));
+        return HttpUtils.getInstance().executePostResultCls(okUrl, requestParams, WxRequestBaseResult.class);
     }
 
     /**
@@ -149,17 +203,21 @@ public class InvoiceController {
      * "auth_url": "auth_url"
      * "appid": "appid"
      * }
+     *
+     * @param ticket
      */
-    public WxRequestAuthUrlResult getAuthUrl() {
+    public WxRequestAuthUrlResult getAuthUrl(String ticket) throws WxErrorException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("s_pappid", "");
+        jsonObject.put("s_pappid", wxMpProperties.getDefaultConfig().getAppId());
         jsonObject.put("order_id", "order_id");
         jsonObject.put("money", 10);
         jsonObject.put("timestamp", LocalDateTime.now().getSecond());
+        jsonObject.put("redirect_url", "https://mp.weixin.qq.com");
         jsonObject.put("source", "wxa");
-        jsonObject.put("ticket", "xxx");
+        jsonObject.put("ticket", ticket);
         jsonObject.put("type", "1");
         RequestParams requestParams = RequestParams.getInstance().putJsonObject(jsonObject);
-        return HttpUtils.getInstance().executePostResultCls(getauthurl, requestParams, WxRequestAuthUrlResult.class);
+        String okUrl = getauthurl.concat("?access_token=").concat(wxMpService.getAccessToken());
+        return HttpUtils.getInstance().executePostResultCls(okUrl, requestParams, WxRequestAuthUrlResult.class);
     }
 }

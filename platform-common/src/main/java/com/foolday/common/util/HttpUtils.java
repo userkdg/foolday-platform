@@ -110,7 +110,8 @@ public class HttpUtils {
      * @return
      */
     public <T> T executePostResultCls(String url, RequestParams params, Class<T> cls) {
-        return GsonUtils.fromJson(executePostRequestResult(url, params), cls);
+        String result = executePostRequestResult(url, params);
+        return GsonUtils.fromJson(result, cls);
     }
 
     /**
@@ -123,7 +124,8 @@ public class HttpUtils {
      * @return
      */
     public <T> T executeGetResultCls(String url, RequestParams params, Class<T> cls) {
-        return GsonUtils.fromJson(executeGetRequestResult(url, params), cls);
+        String result = executeGetRequestResult(url, params);
+        return GsonUtils.fromJson(result, cls);
     }
 
     public String executePostRequestResult(String url, RequestParams params) {
