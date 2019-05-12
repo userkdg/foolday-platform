@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 public class WXConstant {
     // 所选店铺编号
-    public static String shopId;
+    private String shopId;
 
 }

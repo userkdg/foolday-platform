@@ -2,6 +2,7 @@ package com.foolday.common.base;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * post -> jsonObject
  * multipart-form/data -> fileParams
  */
-public class RequestParams {
+public class RequestParams implements Serializable {
     private ConcurrentHashMap<String, String> urlParams;
     private ConcurrentHashMap<String, Object> fileParams;
     private JSONObject jsonObject = new JSONObject();

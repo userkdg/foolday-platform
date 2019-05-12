@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 基于okhttp3的简单封装
+ * 基于okhttp3的简单封装 单列模式 类数据为共享的需要确保，避免多次请求不会出现相互使用共享数据的情况
  */
 @Slf4j
 public class HttpUtils {
@@ -32,6 +32,11 @@ public class HttpUtils {
         initConfig();
     }
 
+    /**
+     * 对外提供自己的http风格
+     *
+     * @return
+     */
     @Synchronized
     public OkHttpClient getOkHttpClient() {
         if (okHttpClient == null)
