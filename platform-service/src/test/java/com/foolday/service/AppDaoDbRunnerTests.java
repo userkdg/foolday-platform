@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.common.base.RedisBeanNameApi;
+import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.enums.GoodsStatus;
 import com.foolday.common.enums.TagType;
 import com.foolday.common.util.KeyUtils;
+import com.foolday.dao.article.ArticleEntity;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.dao.tags.TagsEntity;
@@ -14,6 +16,7 @@ import com.foolday.dao.tags.TagsMapper;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
 import com.foolday.service.api.TestServiceApi;
+import com.foolday.service.api.wechat.WxArticleServiceApi;
 import com.foolday.serviceweb.dto.TestServiceWebDto;
 import org.apache.commons.dbutils.AsyncQueryRunner;
 import org.apache.commons.dbutils.QueryRunner;
@@ -45,6 +48,27 @@ import static com.foolday.service.common.SpringContextUtils.getBean;
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = {"application.yml"}, classes = PlatformServiceApplication.class)
 public class AppDaoDbRunnerTests {
+
+    @Resource
+    private WxArticleServiceApi wxArticleServiceApi;
+
+    @Test
+    public void article(){
+        ArticleEntity articleEntity = new ArticleEntity();
+        articleEntity.setContent("文章内容2");
+        articleEntity.setShopId("shopId");
+        articleEntity.setTitle("文章标题2");
+        articleEntity.setThumailId("imageId2");
+        articleEntity.setStatus(CommonStatus.有效);
+        articleEntity.setType("xxx2");
+        wxArticleServiceApi.insert(articleEntity);
+        System.out.println(articleEntity);
+        ArticleEntity clone = wxArticleServiceApi.clone(articleEntity);
+        System.out.println(clone);
+        clone.setType("2222");
+        wxArticleServiceApi.insertOrUpdate(clone);
+        System.out.println(clone);
+    }
 
     @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
     RedisTemplate redisTemplate;
