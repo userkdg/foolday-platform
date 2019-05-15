@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * service工具，基于entity的实现的封装
+ * 集成本类的好处时针对实现类中需要注入其他实体类的mapper+service的情况进行了优化，后续只要注入其他实体对应的serviceApi（实现了本类）即可，
+ * 无需在注入Mapper
  *
  * @param <Entity> 基于mybatis-plus的实现的实体类进行crud
  */
@@ -115,7 +117,6 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
 
     default Entity selectById(Serializable id) {
         Entity entity = getEntityBean();
-        assertEntityPKey(entity, "select entity by id but id is null");
         return model2Entity(entity.selectById(id));
     }
 
