@@ -20,7 +20,7 @@ public class ArticleController {
     @Resource
     private WxArticleServiceApi wxArticleServiceApi;
 
-    @ApiOperation("反馈意见,返回id")
+    @ApiOperation("新增文章,返回id")
     @PostMapping("/add")
     public FantResult<String> add(@ApiParam("文章标题") @RequestParam("title") String title,
                                   @ApiParam("内容") @RequestParam("content") String content,
@@ -38,6 +38,25 @@ public class ArticleController {
         return FantResult.ok(add.getId());
     }
 
+
+    @ApiOperation("文章")
+    @PostMapping("/edit")
+    public FantResult<String> edit(@ApiParam("文章标题") @RequestParam("title") String title,
+                                   @ApiParam("内容") @RequestParam("content") String content,
+                                   @ApiParam("文章的类别 eg:餐饮行业等") @RequestParam("type") String type,
+                                   @ApiParam("文章id") @RequestParam("articleId") String articleId,
+                                   @ApiParam("文章列表的缩略图id") @RequestParam("imageId") String imageId) {
+        ArticleEntity article = new ArticleEntity();
+        article.setType(type);
+        article.setThumailId(imageId);
+        article.setTitle(title);
+        article.setId(articleId);
+        article.setContent(content);
+        ArticleEntity add = wxArticleServiceApi.insertOrUpdate(article);
+        return FantResult.ok(add.getId());
+    }
+
+
     @ApiOperation("根据分类获取店铺的文章列表")
     @GetMapping("/list")
     public FantResult<Map> list(@ApiParam("店铺id") @RequestParam("shopId") String shopId) {
@@ -52,12 +71,30 @@ public class ArticleController {
         return FantResult.ok(articleEntity);
     }
 
-
     @ApiOperation("删")
     @PostMapping("/delete")
     public FantResult<String> delete(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
         wxArticleServiceApi.deleteById(ArticleEntity.class, articleId);
         return FantResult.ok();
     }
+
+    @ApiOperation("下架文章")
+    @PostMapping("/down")
+    public FantResult<String> down(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
+        ArticleEntity articleEntity = wxArticleServiceApi.selectById(ArticleEntity.class, articleId);
+        articleEntity.setStatus(CommonStatus.无效);
+        articleEntity.updateById();
+        return FantResult.ok();
+    }
+
+    @ApiOperation("上架文章")
+    @PostMapping("/down")
+    public FantResult<String> up(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
+        ArticleEntity articleEntity = wxArticleServiceApi.selectById(ArticleEntity.class, articleId);
+        articleEntity.setStatus(CommonStatus.有效);
+        articleEntity.updateById();
+        return FantResult.ok();
+    }
+
 
 }
