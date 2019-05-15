@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * service工具，基于entity的实现的封装
@@ -115,9 +116,9 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
         return model2Entity(model);
     }
 
-    default Entity selectById(Serializable id) {
+    default Optional<Entity> selectById(Serializable id) {
         Entity entity = getEntityBean();
-        return model2Entity(entity.selectById(id));
+        return Optional.ofNullable(model2Entity(entity.selectById(id)));
     }
 
     /**
@@ -127,10 +128,10 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
      * @return
      */
     @Deprecated
-    default Entity selectById(Entity entity) {
+    default Optional<Entity> selectById(Entity entity) {
         Model model = entity.selectById();
         assertEntityPKey(entity, "select entity by id but id is null");
-        return model2Entity(model);
+        return Optional.ofNullable(model2Entity(model));
     }
 
     // =======================================bean utils ============================================//

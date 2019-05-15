@@ -2,6 +2,7 @@ package com.foolday.wechat.controller;
 
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.CommonStatus;
+import com.foolday.common.exception.PlatformException;
 import com.foolday.dao.article.ArticleEntity;
 import com.foolday.service.api.wechat.WxArticleServiceApi;
 import io.swagger.annotations.Api;
@@ -67,7 +68,7 @@ public class ArticleController {
     @ApiOperation("获取")
     @GetMapping("/get")
     public FantResult<ArticleEntity> get(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
-        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId);
+        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId).orElse(null);
         return FantResult.ok(articleEntity);
     }
 
@@ -81,7 +82,7 @@ public class ArticleController {
     @ApiOperation("下架文章")
     @PostMapping("/down")
     public FantResult<String> down(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
-        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId);
+        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId).orElseThrow(()->new PlatformException("获取文章数据失败"));
         articleEntity.setStatus(CommonStatus.无效);
         articleEntity.updateById();
         return FantResult.ok();
@@ -90,7 +91,7 @@ public class ArticleController {
     @ApiOperation("上架文章")
     @PostMapping("/down")
     public FantResult<String> up(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
-        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId);
+        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId).orElseThrow(()->new PlatformException("获取文章数据失败"));
         articleEntity.setStatus(CommonStatus.有效);
         articleEntity.updateById();
         return FantResult.ok();

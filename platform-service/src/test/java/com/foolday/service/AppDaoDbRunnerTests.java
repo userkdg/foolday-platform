@@ -56,14 +56,14 @@ public class AppDaoDbRunnerTests {
     public void article() {
         ArticleEntity entity = new ArticleEntity();
         entity.setId("8b2981ec72589eacc206179add5a598a");
-        ArticleEntity a = wxArticleServiceApi.selectById(entity);
+        ArticleEntity a = wxArticleServiceApi.selectById(entity).orElse(null);
 
-        ArticleEntity articleEntity2 = wxArticleServiceApi.selectById("8b2981ec72589eacc206179add5a598a");
+        ArticleEntity articleEntity2 = wxArticleServiceApi.selectById("8b2981ec72589eacc206179add5a598a").orElse(null);
         boolean id = wxArticleServiceApi.deleteById("8b2981ec72589eacc206179add5a598a");
 
 
         System.out.println(a);
-        ArticleEntity articleEntity1 = wxArticleServiceApi.selectById(Wrappers.lambdaQuery(entity));
+        ArticleEntity articleEntity1 = wxArticleServiceApi.selectById("1").orElse(null);
         System.out.println(articleEntity1);
 
         ArticleEntity articleEntity = new ArticleEntity();
