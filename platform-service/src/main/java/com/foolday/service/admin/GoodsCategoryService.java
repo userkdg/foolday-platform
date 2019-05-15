@@ -3,7 +3,6 @@ package com.foolday.service.admin;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseServiceUtils;
-import com.foolday.common.base.BeanFactory;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.enums.TopDownStatus;
 import com.foolday.common.util.PlatformAssert;
@@ -36,9 +35,6 @@ public class GoodsCategoryService implements GoodsCategoryServiceApi {
 
     @Resource
     private GoodsServiceApi goodsServiceApi;
-
-
-    private static final BeanFactory<GoodsCategoryEntity> queryBeanFactory = GoodsCategoryEntity::new;
 
     /**
      * 新增
@@ -127,7 +123,7 @@ public class GoodsCategoryService implements GoodsCategoryServiceApi {
     @Override
     @SuppressWarnings("unchecked")
     public List<GoodsCategoryEntity> findByShopId(String shopId) {
-        LambdaQueryWrapper<GoodsCategoryEntity> queryWrapper = Wrappers.lambdaQuery(queryBeanFactory.newInstance())
+        LambdaQueryWrapper<GoodsCategoryEntity> queryWrapper = Wrappers.lambdaQuery(beanFactory().newInstance())
                 .eq(GoodsCategoryEntity::getShopId, shopId)
                 .eq(GoodsCategoryEntity::getStatus, CommonStatus.有效)
                 .orderByDesc(GoodsCategoryEntity::getTopDownStatus, GoodsCategoryEntity::getUpdateTime);

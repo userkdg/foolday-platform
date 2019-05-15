@@ -1,6 +1,7 @@
 package com.foolday.service.api.admin;
 
 import com.foolday.common.base.BaseServiceApi;
+import com.foolday.common.base.BeanFactory;
 import com.foolday.dao.shop.ShopEntity;
 import com.foolday.serviceweb.dto.admin.shop.ShopVo;
 
@@ -18,4 +19,15 @@ public interface ShopServiceApi extends BaseServiceApi<ShopEntity> {
     boolean delete(String... ids);
 
     boolean freeze(String ids);
+
+    /**
+     * 实例化实体类的工厂
+     *
+     * @return
+     */
+    @Override
+    default BeanFactory<ShopEntity> beanFactory() {
+        return ShopEntity::new;
+    }
+
 }

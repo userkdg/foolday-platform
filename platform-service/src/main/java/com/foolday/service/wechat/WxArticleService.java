@@ -22,7 +22,7 @@ public class WxArticleService implements WxArticleServiceApi {
      */
     @Override
     public Map<String, List<ArticleEntity>> listByShopIdGroupByType(String shopId) {
-        return selectList(lqWrapper(new ArticleEntity()).eq(ArticleEntity::getShopId, shopId))
+        return selectList(lqWrapper().eq(ArticleEntity::getShopId, shopId))
                 .stream()
                 .sorted(Comparator.comparing(ArticleEntity::getUpdateTime).reversed()
                         .thenComparing(ArticleEntity::getCreateTime).reversed())

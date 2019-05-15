@@ -67,21 +67,21 @@ public class ArticleController {
     @ApiOperation("获取")
     @GetMapping("/get")
     public FantResult<ArticleEntity> get(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
-        ArticleEntity articleEntity = wxArticleServiceApi.selectById(ArticleEntity.class, articleId);
+        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId);
         return FantResult.ok(articleEntity);
     }
 
     @ApiOperation("删")
     @PostMapping("/delete")
     public FantResult<String> delete(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
-        wxArticleServiceApi.deleteById(ArticleEntity.class, articleId);
+        wxArticleServiceApi.deleteById(articleId);
         return FantResult.ok();
     }
 
     @ApiOperation("下架文章")
     @PostMapping("/down")
     public FantResult<String> down(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
-        ArticleEntity articleEntity = wxArticleServiceApi.selectById(ArticleEntity.class, articleId);
+        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId);
         articleEntity.setStatus(CommonStatus.无效);
         articleEntity.updateById();
         return FantResult.ok();
@@ -90,7 +90,7 @@ public class ArticleController {
     @ApiOperation("上架文章")
     @PostMapping("/down")
     public FantResult<String> up(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
-        ArticleEntity articleEntity = wxArticleServiceApi.selectById(ArticleEntity.class, articleId);
+        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId);
         articleEntity.setStatus(CommonStatus.有效);
         articleEntity.updateById();
         return FantResult.ok();

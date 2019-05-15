@@ -25,7 +25,7 @@ public class WxUserService implements WxUserServiceApi {
 
     @Override
     public UserEntity add(WxUserVo userVo) {
-
+        UserEntity userEntity = beanFactory().newInstance();
         return null;
     }
 

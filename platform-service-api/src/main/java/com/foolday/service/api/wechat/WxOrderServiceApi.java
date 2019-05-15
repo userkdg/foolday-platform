@@ -1,6 +1,7 @@
 package com.foolday.service.api.wechat;
 
 import com.foolday.common.base.BaseServiceApi;
+import com.foolday.common.base.BeanFactory;
 import com.foolday.common.enums.OrderStatus;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.serviceweb.dto.admin.comment.CommentVo;
@@ -10,7 +11,17 @@ import com.foolday.serviceweb.dto.wechat.order.WxOrderVo;
 
 import java.util.List;
 
-public interface WxOrderServiceApi  extends BaseServiceApi<OrderEntity> {
+public interface WxOrderServiceApi extends BaseServiceApi<OrderEntity> {
+    /**
+     * 实例化实体类的工厂
+     *
+     * @return
+     */
+    @Override
+    default BeanFactory<OrderEntity> beanFactory() {
+        return OrderEntity::new;
+    }
+
     OrderEntity submitOrder(WxOrderVo orderVo, String shopId);
 
     void toPay(String userId, String orderId);

@@ -58,8 +58,8 @@ public class AppDaoDbRunnerTests {
         entity.setId("8b2981ec72589eacc206179add5a598a");
         ArticleEntity a = wxArticleServiceApi.selectById(entity);
 
-        ArticleEntity articleEntity2 = wxArticleServiceApi.selectById(ArticleEntity.class, "id");
-        boolean id = wxArticleServiceApi.deleteById(ArticleEntity.class, "id");
+        ArticleEntity articleEntity2 = wxArticleServiceApi.selectById("id");
+        boolean id = wxArticleServiceApi.deleteById("id");
 
 
         System.out.println(a);

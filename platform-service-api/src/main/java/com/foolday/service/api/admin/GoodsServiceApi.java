@@ -1,6 +1,7 @@
 package com.foolday.service.api.admin;
 
 import com.foolday.common.base.BaseServiceApi;
+import com.foolday.common.base.BeanFactory;
 import com.foolday.common.enums.GoodsStatus;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.serviceweb.dto.admin.goods.GoodsVo;
@@ -19,4 +20,14 @@ public interface GoodsServiceApi extends BaseServiceApi<GoodsEntity> {
     boolean updateStatus(GoodsStatus goodsStatus, String goodsId);
 
     List<GoodsEntity> findByGoodsCategoryId(String goodsCategoryId, String shopId);
+
+    /**
+     * 实例化实体类的工厂
+     *
+     * @return
+     */
+    @Override
+    default BeanFactory<GoodsEntity> beanFactory() {
+        return GoodsEntity::new;
+    }
 }

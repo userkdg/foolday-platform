@@ -84,7 +84,7 @@ public class WxOrderService implements WxOrderServiceApi {
     @Override
     public OrderEntity submitOrder(WxOrderVo orderVo, String shopId) {
         // 检查店铺信息有效性
-        BaseServiceUtils.checkOneById(shopMapper, shopId, "店铺信息无效,无法下单");
+        checkOneById(OrderEntity.class, shopId, "店铺信息无效,无法下单");
         OrderEntity orderEntity = new OrderEntity();
         BeanUtils.copyProperties(orderVo, orderEntity);
         orderEntity.setCreateTime(LocalDateTime.now());

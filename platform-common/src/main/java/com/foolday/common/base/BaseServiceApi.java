@@ -10,6 +10,7 @@ import com.foolday.common.exception.PlatformException;
 import com.foolday.common.util.PlatformAssert;
 import io.netty.util.internal.UnstableApi;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,31 +19,52 @@ import java.util.List;
  * service工具，基于entity的实现的封装
  *
  * @param <Entity> 基于mybatis-plus的实现的实体类进行crud
- * @see com.foolday.service.api.wechat.WxArticleServiceApi 的用法
  */
 public interface BaseServiceApi<Entity extends BaseEntity> {
-    default LambdaQueryWrapper<Entity> lqWrapper(Entity entity) {
-        return Wrappers.lambdaQuery(entity);
+    default LambdaQueryWrapper<Entity> lqWrapper() {
+        return Wrappers.lambdaQuery(getEntityBean());
     }
 
-    default Wrapper<Entity> qWrapper(Entity entity) {
-        return Wrappers.query(entity);
+    /**
+     * 统一通过工厂生成实体类对象用于Wrapper工具使用
+     *
+     * @return
+     */
+    default Wrapper<Entity> qWrapper() {
+        return Wrappers.query(getEntityBean());
     }
 
-    default LambdaUpdateWrapper<Entity> luWrapper(Entity entity) {
-        return Wrappers.lambdaUpdate(entity);
+    default LambdaUpdateWrapper<Entity> luWrapper() {
+        return Wrappers.lambdaUpdate(getEntityBean());
     }
 
-    default Wrapper<Entity> uWrapper(Entity entity) {
-        return Wrappers.update(entity);
+    default Wrapper<Entity> uWrapper() {
+        return Wrappers.update(getEntityBean());
     }
 
-    default QueryWrapper<Entity> eqWrapper() {
+    default QueryWrapper<Entity> emWrapper() {
         return Wrappers.emptyWrapper();
     }
 
+
+    // =======================================insert or update ============================================//
+
     default Entity insert(Entity entity) {
         entity.insert();
+        return entity;
+    }
+
+    /**
+     * default Entity upsert(Entity entity) {
+     * entity.insertOrUpdate();
+     * return entity;
+     * }
+     *
+     * @param entity
+     * @return
+     */
+    default Entity upsert(Entity entity) {
+        entity.insertOrUpdate();
         return entity;
     }
 
@@ -51,24 +73,11 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
         return entity;
     }
 
-    default boolean deleteById(Entity entity) {
-        assertEntityPKey(entity, "delete entity by id but id is null");
-        return entity.deleteById();
-    }
-
-    @Deprecated
-    default boolean deleteById(Entity entity, Serializable id) {
-        return entity.deleteById(id);
-    }
-
-    @SuppressWarnings("unchecked")
-    default boolean delete(Wrapper<Entity> wrappers) {
-        return wrappers.getEntity().delete(wrappers);
-    }
+    // =======================================update ============================================//
 
     @SuppressWarnings("unchecked")
     default boolean update(Wrapper<Entity> wrapper) {
-        return wrapper.getEntity().update(wrapper);
+        return getEntityBean().update(wrapper);
     }
 
     default boolean updateById(Entity entity) {
@@ -76,44 +85,54 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
         return entity.updateById();
     }
 
+    // =======================================delete ============================================//
 
-    default boolean updateById(Wrapper<Entity> wrapper) {
-        Entity entity = wrapper.getEntity();
-        assertEntityPKey(entity, "update entity by id but id is null");
-        return entity.updateById();
+    default boolean deleteById(Serializable id) {
+        return getEntityBean().deleteById(id);
     }
 
     @SuppressWarnings("unchecked")
-    default List<Entity> selectAll(Entity entity) {
-        return entity.selectAll();
+    default boolean delete(Wrapper<Entity> wrappers) {
+        return getEntityBean().delete(wrappers);
     }
 
+    // =======================================select ============================================//
+
     @SuppressWarnings("unchecked")
-    default List<Entity> selectAll(Class<Entity> entityCls) {
-        return newInstance(entityCls).selectAll();
+    default List<Entity> selectAll() {
+        return getEntityBean().selectAll();
     }
 
     @SuppressWarnings("unchecked")
     default List<Entity> selectList(Wrapper<Entity> wrapper) {
-        return wrapper.getEntity().selectList(wrapper);
+        return getEntityBean().selectList(wrapper);
     }
 
     default Entity selectOne(Wrapper<Entity> wrapper) {
-        @SuppressWarnings("unchecked") Model model = wrapper.getEntity().selectOne(wrapper);
+        @SuppressWarnings("unchecked") Model model = getEntityBean().selectOne(wrapper);
         return model2Entity(model);
     }
 
-    default Entity selectById(Class<Entity> entityCls, Serializable id) {
-        Entity entity = newInstance(entityCls);
+    default Entity selectById(Serializable id) {
+        Entity entity = getEntityBean();
         assertEntityPKey(entity, "select entity by id but id is null");
         return model2Entity(entity.selectById(id));
     }
 
+    /**
+     * pass 请使用selectById(Serializable id)
+     *
+     * @param entity
+     * @return
+     */
+    @Deprecated
     default Entity selectById(Entity entity) {
         Model model = entity.selectById();
         assertEntityPKey(entity, "select entity by id but id is null");
         return model2Entity(model);
     }
+
+    // =======================================bean utils ============================================//
 
     @SuppressWarnings("unchecked")
     default Entity model2Entity(Model<?> model) {
@@ -123,26 +142,6 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
             e.printStackTrace();
             throw new PlatformException("查询的实体类无法强转Model to BaseEntity");
         }
-    }
-
-    default Entity selectById(Wrapper<Entity> wrapper) {
-        Entity entity = wrapper.getEntity();
-        assertEntityPKey(entity, "select entity by id but id is null");
-        Model model = entity.selectById();
-        return model2Entity(model);
-    }
-
-
-    default boolean deleteById(Class<Entity> entityCls, Serializable id) {
-        Entity entity = newInstance(entityCls);
-        assertEntityPKey(entity, "delete entity by id but id is null");
-        return entity.deleteById(id);
-    }
-
-    default boolean deleteById(Wrapper<Entity> wrapper) {
-        Entity entity = wrapper.getEntity();
-        assertEntityPKey(entity, "delete entity by id but id is null");
-        return entity.deleteById();
     }
 
     /**
@@ -177,6 +176,8 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
         }
     }
 
+//    ======================= clone 一个原有的实体类=====================================
+
     /**
      * 克隆一个对象 用于Vo -> Entity中工具类
      * <p>
@@ -191,6 +192,59 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
         return newEntity;
     }
 
+    //    ======================= VO（必须实现Serializable由于vo进行前后端交互需要网络传输) 转 实体类=====================================
+
+    /**
+     * 用于vo 转entiy
+     *
+     * @param vo
+     * @param <Vo>
+     * @return
+     */
+    default <Vo extends Serializable> Entity of(Vo vo) {
+        return vo2entity(vo);
+    }
+
+
+    /**
+     * 用于vo 转entiy
+     *
+     * @param vo
+     * @param <Vo>
+     * @return
+     */
+    default <Vo extends Serializable> Entity entityForm(Vo vo) {
+        return vo2entity(vo);
+    }
+
+
+    /**
+     * 用于vo 转entiy
+     *
+     * @param vo
+     * @param <Vo>
+     * @return
+     */
+    default <Vo extends Serializable> Entity vo2entity(Vo vo) {
+        Entity entity = getEntityBean();
+        BeanUtils.copyProperties(vo, entity);
+        return entity;
+    }
+
+    //    ============================== 实例化对象或构建工厂========================
+
+    /**
+     * 实例化
+     *
+     * @return
+     */
+    default Entity getEntityBean() {
+        return beanFactory().newInstance();
+    }
+
+    BeanFactory<Entity> beanFactory();
+
+//    =================================校验数据有效性========================================
 
     /**
      * byId 的实体dao操作进行控制id不为空
@@ -202,5 +256,21 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
         PlatformAssert.notNull(entity, "entity must not null");
         String id = entity.getId();
         PlatformAssert.notNull(id, errmsg);
+    }
+
+    /**
+     * 判断id是否已存在数据，并返回实体数据，否则报错反馈前端
+     *
+     * @param entityClass
+     * @param id
+     * @param errmsg
+     * @return
+     * @see BaseServiceUtils 类似，区别时一个基于mapper 一个基于entiy
+     */
+    default Entity checkOneById(Class<Entity> entityClass, Serializable id, String errmsg) {
+        Model model = newInstance(entityClass).selectById(id);
+        Entity entity = model2Entity(model);
+        PlatformAssert.isTrue(entity != null, StringUtils.isEmpty(errmsg) ? "获取相应数据失败" : errmsg);
+        return entity;
     }
 }

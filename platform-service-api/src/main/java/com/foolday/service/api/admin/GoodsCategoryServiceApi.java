@@ -1,6 +1,7 @@
 package com.foolday.service.api.admin;
 
 import com.foolday.common.base.BaseServiceApi;
+import com.foolday.common.base.BeanFactory;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.enums.TopDownStatus;
 import com.foolday.dao.category.GoodsCategoryEntity;
@@ -23,4 +24,15 @@ public interface GoodsCategoryServiceApi extends BaseServiceApi<GoodsCategoryEnt
     List<GoodsCategoryEntity> findByShopId(String shopId);
 
     boolean delete(String id, String shopId);
+
+    /**
+     * 实例化实体类的工厂
+     *
+     * @return
+     */
+    @Override
+    default BeanFactory<GoodsCategoryEntity> beanFactory() {
+        return GoodsCategoryEntity::new;
+    }
+
 }

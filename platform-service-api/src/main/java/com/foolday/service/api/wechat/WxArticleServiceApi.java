@@ -1,6 +1,7 @@
 package com.foolday.service.api.wechat;
 
 import com.foolday.common.base.BaseServiceApi;
+import com.foolday.common.base.BeanFactory;
 import com.foolday.dao.article.ArticleEntity;
 
 import java.util.List;
@@ -12,4 +13,14 @@ import java.util.Map;
 public interface WxArticleServiceApi extends BaseServiceApi<ArticleEntity> {
 
     Map<String, List<ArticleEntity>> listByShopIdGroupByType(String shopId);
+
+    /**
+     * 实例化实体类的工厂
+     *
+     * @return
+     */
+    @Override
+    default BeanFactory<ArticleEntity> beanFactory() {
+        return ArticleEntity::new;
+    }
 }

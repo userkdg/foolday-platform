@@ -1,6 +1,7 @@
 package com.foolday.service.api.admin;
 
 import com.foolday.common.base.BaseServiceApi;
+import com.foolday.common.base.BeanFactory;
 import com.foolday.common.dto.FantPage;
 import com.foolday.common.enums.OrderStatus;
 import com.foolday.dao.order.OrderEntity;
@@ -22,4 +23,14 @@ public interface OrderServiceApi extends BaseServiceApi<OrderEntity> {
     List<OrderEntity> findByOrderStatus(OrderStatus orderStatus);
 
     void auditOrder(String orderId, boolean success);
+
+    /**
+     * 实例化实体类的工厂
+     *
+     * @return
+     */
+    @Override
+    default BeanFactory<OrderEntity> beanFactory() {
+        return OrderEntity::new;
+    }
 }

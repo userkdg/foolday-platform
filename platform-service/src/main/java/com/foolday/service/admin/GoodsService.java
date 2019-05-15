@@ -3,7 +3,6 @@ package com.foolday.service.admin;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.AdminBaseDataUtils;
 import com.foolday.common.base.BaseServiceUtils;
-import com.foolday.common.base.BeanFactory;
 import com.foolday.common.enums.GoodsStatus;
 import com.foolday.common.exception.PlatformException;
 import com.foolday.dao.category.GoodsCategoryMapper;
@@ -115,8 +114,6 @@ public class GoodsService implements GoodsServiceApi {
         return update == 1;
     }
 
-    private static final BeanFactory<GoodsEntity> beanFactory = GoodsEntity::new;
-
     /**
      * 根据分类获取对应的商品列表
      *
@@ -127,7 +124,7 @@ public class GoodsService implements GoodsServiceApi {
     @SuppressWarnings("unchecked")
     @Override
     public List<GoodsEntity> findByGoodsCategoryId(String goodsCategoryId, String shopId) {
-        GoodsEntity goodsEntity = beanFactory.newInstance();
+        GoodsEntity goodsEntity = beanFactory().newInstance();
         goodsEntity.setShopId(shopId);
         goodsEntity.setCategoryId(goodsCategoryId);
         goodsEntity.setStatus(GoodsStatus.上架);

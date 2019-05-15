@@ -1,6 +1,7 @@
 package com.foolday.service.api.admin;
 
 import com.foolday.common.base.BaseServiceApi;
+import com.foolday.common.base.BeanFactory;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.dao.coupon.CouponEntity;
 import com.foolday.serviceweb.dto.coupon.CouponVo;
@@ -38,4 +39,14 @@ public interface CouponServiceApi extends BaseServiceApi<CouponEntity> {
     List<CouponEntity> findValidByShopId(String shopId);
 
     List<CouponEntity> findValidByUserId(String userId);
+
+    /**
+     * 实例化实体类的工厂
+     *
+     * @return
+     */
+    @Override
+    default BeanFactory<CouponEntity> beanFactory() {
+        return CouponEntity::new;
+    }
 }
