@@ -2,12 +2,13 @@ package com.foolday.service.api.wechat;
 
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.foolday.common.base.BaseServiceApi;
 import com.foolday.dao.user.UserEntity;
 import com.foolday.serviceweb.dto.wechat.user.WxUserVo;
 
 import java.util.Optional;
 
-public interface WxUserServiceApi {
+public interface WxUserServiceApi extends BaseServiceApi<UserEntity> {
     UserEntity add(WxUserVo userVo);
 
 

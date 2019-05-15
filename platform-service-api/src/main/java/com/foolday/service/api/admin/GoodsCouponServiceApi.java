@@ -1,9 +1,10 @@
 package com.foolday.service.api.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.foolday.common.base.BaseServiceApi;
 import com.foolday.dao.couponGoods.GoodsCouponEntity;
 
-public interface GoodsCouponServiceApi {
+public interface GoodsCouponServiceApi  extends BaseServiceApi<GoodsCouponEntity> {
     void relateGoodsCoupons(String goodsId, String... couponIds);
 
     void relateGoodsesCoupons(String couponId, String[] goodsIds);

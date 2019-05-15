@@ -1,5 +1,6 @@
 package com.foolday.service.api.admin;
 
+import com.foolday.common.base.BaseServiceApi;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.enums.TopDownStatus;
 import com.foolday.dao.category.GoodsCategoryEntity;
@@ -7,7 +8,7 @@ import com.foolday.serviceweb.dto.admin.category.GoodsCategoryVo;
 
 import java.util.List;
 
-public interface GoodsCategoryServiceApi {
+public interface GoodsCategoryServiceApi extends BaseServiceApi<GoodsCategoryEntity> {
 
     GoodsCategoryEntity newGoodsCategory(GoodsCategoryVo categoryEntityVo);
 

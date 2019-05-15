@@ -1,5 +1,6 @@
 package com.foolday.service.api.admin;
 
+import com.foolday.common.base.BaseServiceApi;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.dao.coupon.CouponEntity;
 import com.foolday.serviceweb.dto.coupon.CouponVo;
@@ -7,7 +8,7 @@ import com.foolday.serviceweb.dto.coupon.CouponVo;
 import java.util.List;
 import java.util.Optional;
 
-public interface CouponServiceApi {
+public interface CouponServiceApi extends BaseServiceApi<CouponEntity> {
 
     List<CouponEntity> list();
 

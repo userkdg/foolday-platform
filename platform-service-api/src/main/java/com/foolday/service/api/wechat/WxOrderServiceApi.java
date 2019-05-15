@@ -1,5 +1,6 @@
 package com.foolday.service.api.wechat;
 
+import com.foolday.common.base.BaseServiceApi;
 import com.foolday.common.enums.OrderStatus;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.serviceweb.dto.admin.comment.CommentVo;
@@ -9,7 +10,7 @@ import com.foolday.serviceweb.dto.wechat.order.WxOrderVo;
 
 import java.util.List;
 
-public interface WxOrderServiceApi {
+public interface WxOrderServiceApi  extends BaseServiceApi<OrderEntity> {
     OrderEntity submitOrder(WxOrderVo orderVo, String shopId);
 
     void toPay(String userId, String orderId);

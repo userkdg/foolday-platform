@@ -1,9 +1,10 @@
 package com.foolday.service.api.wechat;
 
+import com.foolday.common.base.BaseServiceApi;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.dao.couponUser.UserCouponEntity;
 
-public interface WxUserCouponServiceApi {
+public interface WxUserCouponServiceApi  extends BaseServiceApi<UserCouponEntity> {
 
     void updateUsedByUserIdAndCouponId(String userId, String couponId, boolean isUsed);
 

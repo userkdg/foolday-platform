@@ -1,4 +1,4 @@
-package com.foolday.service.api.common;
+package com.foolday.common.base;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.foolday.common.base.BaseEntity;
 import com.foolday.common.exception.PlatformException;
 import com.foolday.common.util.PlatformAssert;
 import io.netty.util.internal.UnstableApi;

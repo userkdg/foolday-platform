@@ -1,7 +1,7 @@
 package com.foolday.service.api.wechat;
 
+import com.foolday.common.base.BaseServiceApi;
 import com.foolday.dao.article.ArticleEntity;
-import com.foolday.service.api.common.BaseServiceApi;
 
 import java.util.List;
 import java.util.Map;
