@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  */
 @Setter
 @Getter
-public abstract class BaseEntity<T extends Model<T>> extends Model<T> {
+public abstract class BaseEntity<T extends BaseEntity> extends Model<T> {
     @TableId(type = IdType.UUID)
     private String id;
 

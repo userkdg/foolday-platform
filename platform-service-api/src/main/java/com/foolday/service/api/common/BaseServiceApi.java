@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.foolday.common.base.BaseEntity;
 import com.foolday.common.exception.PlatformException;
+import com.foolday.common.util.PlatformAssert;
 import io.netty.util.internal.UnstableApi;
 import org.springframework.beans.BeanUtils;
 
@@ -36,7 +38,7 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
         return Wrappers.update(entity);
     }
 
-    default QueryWrapper<Entity> lqWrapper() {
+    default QueryWrapper<Entity> eqWrapper() {
         return Wrappers.emptyWrapper();
     }
 
@@ -51,9 +53,11 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
     }
 
     default boolean deleteById(Entity entity) {
+        assertEntityPKey(entity, "delete entity by id but id is null");
         return entity.deleteById();
     }
 
+    @Deprecated
     default boolean deleteById(Entity entity, Serializable id) {
         return entity.deleteById(id);
     }
@@ -63,12 +67,21 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
         return wrappers.getEntity().delete(wrappers);
     }
 
+    @SuppressWarnings("unchecked")
+    default boolean update(Wrapper<Entity> wrapper) {
+        return wrapper.getEntity().update(wrapper);
+    }
+
     default boolean updateById(Entity entity) {
+        assertEntityPKey(entity, "update entity by id but id is null");
         return entity.updateById();
     }
 
+
     default boolean updateById(Wrapper<Entity> wrapper) {
-        return wrapper.getEntity().updateById();
+        Entity entity = wrapper.getEntity();
+        assertEntityPKey(entity, "update entity by id but id is null");
+        return entity.updateById();
     }
 
     @SuppressWarnings("unchecked")
@@ -77,19 +90,61 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
     }
 
     @SuppressWarnings("unchecked")
+    default List<Entity> selectAll(Class<Entity> entityCls) {
+        return newInstance(entityCls).selectAll();
+    }
+
+    @SuppressWarnings("unchecked")
     default List<Entity> selectList(Wrapper<Entity> wrapper) {
         return wrapper.getEntity().selectList(wrapper);
     }
 
-    default boolean deleteById(Wrapper<Entity> wrapper) {
-        return wrapper.getEntity().deleteById();
+    default Entity selectOne(Wrapper<Entity> wrapper) {
+        @SuppressWarnings("unchecked") Model model = wrapper.getEntity().selectOne(wrapper);
+        return model2Entity(model);
+    }
+
+    default Entity selectById(Class<Entity> entityCls, Serializable id) {
+        Entity entity = newInstance(entityCls);
+        assertEntityPKey(entity, "select entity by id but id is null");
+        return model2Entity(entity.selectById(id));
+    }
+
+    default Entity selectById(Entity entity) {
+        Model model = entity.selectById();
+        assertEntityPKey(entity, "select entity by id but id is null");
+        return model2Entity(model);
     }
 
     @SuppressWarnings("unchecked")
-    default boolean update(Wrapper<Entity> wrapper) {
-        return wrapper.getEntity().update(wrapper);
+    default Entity model2Entity(Model<?> model) {
+        try {
+            return (Entity) model;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PlatformException("查询的实体类无法强转Model to BaseEntity");
+        }
     }
 
+    default Entity selectById(Wrapper<Entity> wrapper) {
+        Entity entity = wrapper.getEntity();
+        assertEntityPKey(entity, "select entity by id but id is null");
+        Model model = entity.selectById();
+        return model2Entity(model);
+    }
+
+
+    default boolean deleteById(Class<Entity> entityCls, Serializable id) {
+        Entity entity = newInstance(entityCls);
+        assertEntityPKey(entity, "delete entity by id but id is null");
+        return entity.deleteById(id);
+    }
+
+    default boolean deleteById(Wrapper<Entity> wrapper) {
+        Entity entity = wrapper.getEntity();
+        assertEntityPKey(entity, "delete entity by id but id is null");
+        return entity.deleteById();
+    }
 
     /**
      * 稳定的实例化对象
@@ -137,4 +192,16 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
         return newEntity;
     }
 
+
+    /**
+     * byId 的实体dao操作进行控制id不为空
+     *
+     * @param entity
+     * @param errmsg
+     */
+    default void assertEntityPKey(Entity entity, String errmsg) {
+        PlatformAssert.notNull(entity, "entity must not null");
+        String id = entity.getId();
+        PlatformAssert.notNull(id, errmsg);
+    }
 }
