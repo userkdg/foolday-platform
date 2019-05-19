@@ -1,310 +1,402 @@
-/*
-Navicat MySQL Data Transfer
+create schema if not exists foolday_platform collate utf8_general_ci;
 
-Source Server         : localhost
-Source Server Version : 50725
-Source Host           : localhost:3306
-Source Database       : foolday_platform
+create table if not exists t_admin
+(
+	id varchar(36) not null
+		primary key,
+	account varchar(100) not null comment '账号目前约定为手机号码',
+	password varchar(100) not null comment '密码 md5加密和加盐',
+	status tinyint default 1 not null comment '1为有效,2为无效，3为禁用，4为拉黑，-1为删除',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	telphone varchar(20) default '' null comment '手机号码',
+	nickname varchar(100) default '' null comment '名称'
+)
+comment '账号表' collate=utf8mb4_unicode_ci;
 
-Target Server Type    : MYSQL
-Target Server Version : 50725
-File Encoding         : 65001
+create index account_password_status_index
+	on t_admin (account, password, status);
 
-Date: 2019-04-22 23:04:00
-*/
+create table if not exists t_article
+(
+	id varchar(36) not null
+		primary key,
+	create_time datetime default CURRENT_TIMESTAMP null,
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	title varchar(100) not null comment '标题',
+	content mediumtext not null comment '文件内容,包含图片等二进制信息, <= 16Mb的内容',
+	thumail_id varchar(36) not null comment '缩略图id,列表显示',
+	status tinyint(2) default 1 null comment '状态 有效 1 无效0 删除-1',
+	type varchar(100) not null comment '文章类型, 餐饮资讯 饮食知识 行业动态',
+	shop_id varchar(36) null comment '店铺id'
+)
+comment '文章表';
 
-SET FOREIGN_KEY_CHECKS=0;
+create table if not exists t_banner
+(
+	id varchar(36) not null
+		primary key,
+	order_no int(5) not null comment '排序',
+	status tinyint default 1 not null comment '1为有效,2为无效，3为禁用，4为拉黑，-1为删除',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '更新时间',
+	goods_id varchar(36) null comment '商品id',
+	description varchar(36) null comment '描述',
+	image_id varchar(36) null comment '图id',
+	price float(10,2) null comment '价格',
+	shop_id varchar(36) null comment '店铺id'
+)
+comment 'banner管理' collate=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Table structure for t_admin
--- ----------------------------
-DROP TABLE IF EXISTS `t_admin`;
-CREATE TABLE `t_admin` (
-  `id` int(11) NOT NULL,
-  `account` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '账号目前约定为手机号码',
-  `password` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码 md5加密和加盐',
-  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1为有效,2为无效，3为禁用，4为拉黑，-1为删除',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `telphone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '手机号码',
-  `nickname` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '名称',
-  PRIMARY KEY (`id`),
-  KEY `account_password_status_index` (`account`,`password`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='账号表';
+create index banner_index
+	on t_banner (shop_id, goods_id, status);
 
--- ----------------------------
--- Records of t_admin
--- ----------------------------
-INSERT INTO `t_admin` VALUES ('1', '18813975053', 'PASSWORD_HEX_e10adc3949ba59abbe56e057f20f883e', '1', '2019-04-07 19:03:19', null, null, '');
+create index banner_index_order
+	on t_banner (order_no, update_time, status);
 
--- ----------------------------
--- Table structure for t_comment
--- ----------------------------
-DROP TABLE IF EXISTS `t_comment`;
-CREATE TABLE `t_comment` (
-  `id` int(11) NOT NULL,
-  `shop_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '店铺id',
-  `img_ids` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片ids 多个用 英文逗号隔开,最多在3-5张5*36=180',
-  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '有效(1),无效(2),删除(3)',
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '评论内容 目前约定最多200字',
-  `order_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '订单id',
-  `goods_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品id',
-  `user_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户id',
-  `user_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名称，前端需要限制不显示全名',
-  `comment_type` tinyint(2) DEFAULT '1' COMMENT '客户(1),店长(2),超级管理员(3)',
-  `admin_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '若店内人员回复则记录回复人id',
-  `admin_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '若店内人员回复则记录回复人名称',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  KEY `shopId` (`shop_id`),
-  KEY `userId_status_orderId_goodsId` (`user_id`,`status`,`order_id`,`goods_id`),
-  KEY `commentType` (`comment_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='评论表';
+create table if not exists t_carouse
+(
+	id varchar(36) not null
+		primary key,
+	order_no int(5) not null comment '排序',
+	status tinyint default 1 not null comment '1为有效,2为无效，3为禁用，4为拉黑，-1为删除',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '更新时间',
+	image_id varchar(36) null comment '图id',
+	shop_id varchar(36) null comment '店铺id'
+)
+comment 't_carouse管理' collate=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Records of t_comment
--- ----------------------------
+create index t_carouse_index
+	on t_carouse (shop_id, image_id, status);
 
--- ----------------------------
--- Table structure for t_coupon
--- ----------------------------
-DROP TABLE IF EXISTS `t_coupon`;
-CREATE TABLE `t_coupon` (
-  `id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `create_time` datetime NOT NULL,
-  `update_tme` datetime DEFAULT NULL,
-  `common_used` tinyint(1) DEFAULT '0' COMMENT '1可共用 0不可公用_默认',
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '使用说明',
-  `type` tinyint(2) DEFAULT '1' COMMENT '折扣券1,满减券2,其他优惠券0',
-  `status` tinyint(2) DEFAULT '1' COMMENT '有效1, 无效0, 删除-1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='优惠券明确商品可以使用那些券';
+create index t_carouse_index_order
+	on t_carouse (order_no, update_time, status);
 
--- ----------------------------
--- Records of t_coupon
--- ----------------------------
+create table if not exists t_comment
+(
+	id int not null
+		primary key,
+	shop_id varchar(36) not null comment '店铺id',
+	img_ids varchar(255) not null comment '图片ids 多个用 英文逗号隔开,最多在3-5张5*36=180',
+	status tinyint default 1 not null comment '有效(1),无效(2),删除(3)',
+	description varchar(255) default '' null comment '评论内容 目前约定最多200字',
+	order_id varchar(36) not null comment '订单id',
+	goods_id varchar(36) not null comment '商品id',
+	user_id varchar(36) not null comment '用户id',
+	user_name varchar(100) not null comment '用户名称，前端需要限制不显示全名',
+	comment_type tinyint(2) default 1 null comment '客户(1),店长(2),超级管理员(3)',
+	admin_id varchar(36) default '' null comment '若店内人员回复则记录回复人id',
+	admin_name varchar(100) default '' null comment '若店内人员回复则记录回复人名称',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间'
+)
+comment '评论表' collate=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Table structure for t_goods
--- ----------------------------
-DROP TABLE IF EXISTS `t_goods`;
-CREATE TABLE `t_goods` (
-  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `shop_id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '店铺id',
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品名称',
-  `price` float NOT NULL COMMENT '商品价格',
-  `discnt_price` float NOT NULL COMMENT '折扣价格',
-  `img_id` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '图片id',
-  `kccnt` int(11) DEFAULT '0' COMMENT '库存',
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '描述内容',
-  `status` int(2) DEFAULT '1' COMMENT '1上架 0下架 -1删除',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `category_id` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '分类id，目前一对一关系',
-  `unit` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '商品单位 0份 1杯 2包 3件 4打 5半打 6瓶',
-  PRIMARY KEY (`id`),
-  KEY `t_tagId_imagId_shopId` (`shop_id`,`img_id`,`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商品表';
+create index commentType
+	on t_comment (comment_type);
 
--- ----------------------------
--- Records of t_goods
--- ----------------------------
-INSERT INTO `t_goods` VALUES ('3acb51698cc1fbf5534f4e723bc2f6b2', '48fea0a0d879490cbd1d39e337e7d004', '雪碧', '5', '4', 'f6a6f0edb9ed432c82c853653d805d3b', '100', '雪的口感', '0', '2019-04-21 12:56:36', null, null, null);
-INSERT INTO `t_goods` VALUES ('3e99f859d26825f02c701b0ecc3c3071', 'b656bd087029467f8648f1b5d58f9e36', '雪碧', '5', '4', '4a537397fac64e349fe9b19105b8f01e', '100', '雪的口感', '1', '2019-04-20 23:47:49', null, null, null);
-INSERT INTO `t_goods` VALUES ('5430171824d9004228da377ef94c631d', '8aa19be83c354ace8857c577cf21c1c6', '雪碧', '5', '4', '82dda451d65241a698f8bdbc5d1be34a', '100', '雪的口感', '1', '2019-04-20 23:33:35', null, null, null);
-INSERT INTO `t_goods` VALUES ('5606398a34787e00f157647e2612b2e1', 'd359fcdd6e4348aba7ebb7ea8de068d6', '雪碧', '5', '4', 'da713ed2b5fc4718944aa54077bdce24', '100', '雪的口感', '0', '2019-04-21 13:12:53', null, null, null);
-INSERT INTO `t_goods` VALUES ('70b1d215e122ab0182b62eb98a525057', '53bcdf2893264db6afda26696a500e41', '雪碧', '5', '4', '21f855db321b49fc97d8a10838b62d63', '100', '雪的口感', '1', '2019-04-08 23:54:52', null, '5273afad6930f06cb63a4e13113520fd', '6');
-INSERT INTO `t_goods` VALUES ('8812fcf45485526cedd28b9766c67c56', '0e8224a69ab54c67b45248bcf52da1bd', '雪碧', '5', '4', 'b902f7d74c26428cbd8ca9c997b7bd15', '100', '雪的口感', '1', '2019-04-21 11:31:52', null, null, null);
-INSERT INTO `t_goods` VALUES ('8cb35e32d351469b3333963f73086ebe', '341601248820411588ec65605d70cd65', '雪碧', '5', '4', '070346ca5a7748b8b2a9b5803845a999', '100', '雪的口感', '0', '2019-04-21 11:33:24', null, null, null);
-INSERT INTO `t_goods` VALUES ('a1ac4181fa6e3e319ac8af0aee4ec8cb', '22ea0531f5aa4d49b6b7238e9e22957c', '大雪碧', '10', '8', '35978f754af2453e837a8509b7c73099', '100', '大雪的口感', '1', '2019-04-09 00:09:16', null, '5273afad6930f06cb63a4e13113520fe', '6');
-INSERT INTO `t_goods` VALUES ('a702b6d2e0951ed8893832df3ebb81fe', 'a7a30102ce454a85b949f8008d6f63e0', '可乐', '5', '4.5', '44f395e6cef444d58656de99c3ef9619', '100', '可口可乐的口感', '1', '2019-04-08 23:13:04', null, '5273afad6930f06cb63a4e13113520fd', '6');
-INSERT INTO `t_goods` VALUES ('b12b4867b38ddfbf3fce925ac49e98e8', 'testShopId', '雪碧', '12', '10', '1cd5e00450924ed49e545f830935f118', '100', 'string', '1', '2019-04-16 01:21:20', null, 'd7bf960e8951ff618c157ecbea5ad3bd', '0');
-INSERT INTO `t_goods` VALUES ('cf1d5849ada54b277c63c674f42e6bde', '975a8cb7f18b408a9b9401a9ee00f8d3', '雪碧', '5', '4', 'dcd90d157d9e4ba9a9dd51130b30894a', '100', '雪的口感', '0', '2019-04-21 10:54:37', null, null, null);
-INSERT INTO `t_goods` VALUES ('eb99ccced3ee04f287730228a8d0e49d', 'ce915b9df2884e73b5cccc54866c52aa', '雪碧', '5', '4', 'dbe00413c4474dcabf224c7d2ab1e336', '100', '雪的口感', '0', '2019-04-21 12:55:19', null, null, null);
+create index shopId
+	on t_comment (shop_id);
 
--- ----------------------------
--- Table structure for t_goods_category
--- ----------------------------
-DROP TABLE IF EXISTS `t_goods_category`;
-CREATE TABLE `t_goods_category` (
-  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '分类名称',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `status` tinyint(4) DEFAULT '1' COMMENT '状态有效(1),无效(0),删除(-1)',
-  `top_down_status` tinyint(4) DEFAULT '5' COMMENT '优先排序 9 置顶 5默认按最新来排 0 置底 可以+更新时间进行排序控制',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='分类表，目前主要针对商品分类';
+create index userId_status_orderId_goodsId
+	on t_comment (user_id, status, order_id, goods_id);
 
--- ----------------------------
--- Records of t_goods_category
--- ----------------------------
-INSERT INTO `t_goods_category` VALUES ('d7bf960e8951ff618c157ecbea5ad3bd', '热门推荐', '2019-04-12 23:50:56', '2019-04-12 23:50:57', '1', '5');
-INSERT INTO `t_goods_category` VALUES ('e97c76cd1a816e4b1a56192734ff3ef7', '热门推荐', '2019-04-21 11:05:27', '2019-04-21 11:05:34', '0', '9');
-INSERT INTO `t_goods_category` VALUES ('ee57963c22ad23201e60720c4a58f04f', '今日热推', '2019-04-12 23:50:57', '2019-04-12 23:50:58', '1', '9');
-INSERT INTO `t_goods_category` VALUES ('f3e55e0d3cebdd66fa27fabfca38f908', '今日热推', '2019-04-21 11:05:31', '2019-04-21 11:05:34', '1', '9');
+create table if not exists t_coupon
+(
+	id varchar(36) not null
+		primary key,
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	common_used tinyint(1) default 0 null comment '1可共用 0不可公用_默认',
+	description varchar(255) default '' null comment '使用说明',
+	type tinyint(2) default 1 null comment '折扣券1,满减券2,其他优惠券0',
+	status tinyint(2) default 1 null comment '有效1, 无效0, 删除-1'
+)
+comment '优惠券明确商品可以使用那些券' collate=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Table structure for t_image
--- ----------------------------
-DROP TABLE IF EXISTS `t_image`;
-CREATE TABLE `t_image` (
-  `id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `origin` tinyint(4) DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `size` bigint(20) DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `width` int(11) DEFAULT NULL,
-  `height` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+create table if not exists t_goods
+(
+	id varchar(64) not null
+		primary key,
+	shop_id varchar(64) not null comment '店铺id',
+	name varchar(100) not null comment '商品名称',
+	price float not null comment '商品价格',
+	discnt_price float not null comment '折扣价格',
+	img_id varchar(64) default '' null comment '图片id',
+	kccnt int default 0 null comment '库存',
+	description varchar(255) default '' null comment '描述内容',
+	status int(2) default 1 null comment '1上架 0下架 -1删除',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	category_id varchar(64) null comment '分类id，目前一对一关系',
+	unit varchar(36) null comment '商品单位 0份 1杯 2包 3件 4打 5半打 6瓶',
+	discnt_goods tinyint(1) default 0 null comment '是否为折扣价 0否 1是 默认0'
+)
+comment '商品表' collate=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Records of t_image
--- ----------------------------
-INSERT INTO `t_image` VALUES ('1cd5e00450924ed49e545f830935f118', 'jpeg', null, null, null, '26558', '2019-04-14 21:41:35', null, 'login2.jpg', '400', '350');
-INSERT INTO `t_image` VALUES ('a3c7970fbf044b5ebff7674e5534318b', 'jpeg', null, null, null, '323682', '2019-04-16 00:08:44', null, 'DSC_5808.jpg', '1428', '2087');
-INSERT INTO `t_image` VALUES ('b3cd2daf689b4ab8954b13abb14853c9', 'jpeg', null, null, null, '24099', '2019-04-14 21:39:44', null, 'login2.jpg', '400', '300');
-INSERT INTO `t_image` VALUES ('e9c29317845243ed80b79a51acd8f216', 'jpeg', null, null, null, '168128', '2019-04-14 21:39:07', null, 'login2.jpg', '960', '600');
+create index t_tagId_imagId_shopId
+	on t_goods (shop_id, img_id, category_id);
 
--- ----------------------------
--- Table structure for t_order
--- ----------------------------
-DROP TABLE IF EXISTS `t_order`;
-CREATE TABLE `t_order` (
-  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `shop_id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '店铺id',
-  `shop_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '店铺名称，冗余字段，便于显示',
-  `shop_address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '店铺地址，冗余字段，便于显示',
-  `eat_type` tinyint(4) DEFAULT '1' COMMENT '1 堂吃 0外带',
-  `goods_num` tinyint(4) DEFAULT '0' COMMENT '订单商品数量',
-  `all_price` float DEFAULT '0' COMMENT '订单总价格',
-  `discnt_price` float DEFAULT '0' COMMENT '折扣价格 减多少或打几折后减多少',
-  `other_discnt_price` float DEFAULT '0' COMMENT '其他优惠价',
-  `real_pay_price` float DEFAULT '0' COMMENT '实付价格',
-  `remark` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '订单备注',
-  `people_cnt` tinyint(4) DEFAULT '1' COMMENT '默认为1人用餐',
-  `user_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '微信小程序用户系统id,非wxid',
-  `groupbuy_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '拼团id',
-  `coupon_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '使用优惠券的id,控制优惠券的状态',
-  `status` tinyint(2) DEFAULT '0' COMMENT '普通订单类型:0待付款,1待确认,2待评价,3已完成(已评价);通用:4退款,-1删除,拼团类型:10拼团中,11拼团成功,12拼团失败',
-  `order_no` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '订单编号',
-  `order_type` tinyint(2) DEFAULT '0' COMMENT '0点餐订单 1拼团订单',
-  `seat_no` int(10) DEFAULT '0' COMMENT '座位号，目前只录入数值 不计号,为了按数值排序',
-  `queue_no` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '排队号',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL COMMENT '状态更新时间',
-  `other_coupon_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '其他优惠价对应的优惠标识',
-  PRIMARY KEY (`id`),
-  KEY `shopId_userId_eatType_orderType` (`shop_id`,`user_id`,`eat_type`,`order_type`,`status`) USING BTREE,
-  KEY `groupbuy_id` (`groupbuy_id`),
-  KEY `couponId` (`coupon_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='订单表';
+create table if not exists t_goods_category
+(
+	id varchar(64) not null
+		primary key,
+	name varchar(100) not null comment '分类名称',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	status tinyint default 1 null comment '状态有效(1),无效(0),删除(-1)',
+	top_down_status tinyint default 5 null comment '优先排序 9 置顶 5默认按最新来排 0 置底 可以+更新时间进行排序控制',
+	shop_id varchar(36) not null comment '哪家商品分类'
+)
+comment '分类表，目前主要针对商品分类' collate=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Records of t_order
--- ----------------------------
+create table if not exists t_goods_spec
+(
+	id varchar(36) not null
+		primary key,
+	name varchar(100) default '' null comment '规格名称',
+	adjust_price tinyint(1) default 0 null comment '明确规格的选择是否调整源商品的价格',
+	goods_append_price float(9,2) default 0.00 null comment '若reset_goods_price=1,商品以商品加本值(可为正负0)为准,=0,则忽略',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	goods_id varchar(36) not null comment '商品id',
+	status tinyint(1) default 1 null comment '状态',
+	order_num int default 0 null comment '排序号',
+	type tinyint not null comment '规格大类目前以枚举类定义，后续确认规格需求在调整',
+	shop_id varchar(36) not null comment '店铺id'
+)
+comment '商品规格表';
 
--- ----------------------------
--- Table structure for t_order_detail
--- ----------------------------
-DROP TABLE IF EXISTS `t_order_detail`;
-CREATE TABLE `t_order_detail` (
-  `id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `order_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '订单id',
-  `goods_desc` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '商品描述',
-  `goods_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品名称',
-  `goods_img_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '商品图片id',
-  `goods_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品id',
-  `all_price` float DEFAULT '0' COMMENT '订单总价格',
-  `price` float DEFAULT '0' COMMENT '实际价格',
-  `cnt` tinyint(4) DEFAULT '0' COMMENT '数量',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL COMMENT '订单状态更新时间',
-  PRIMARY KEY (`id`),
-  KEY `orderId_goodsId` (`order_id`,`goods_id`) COMMENT '订单+商品id'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='订单商品列表';
+create index goods_id
+	on t_goods_spec (goods_id, create_time);
 
--- ----------------------------
--- Records of t_order_detail
--- ----------------------------
+create table if not exists t_groupbuy
+(
+	id varchar(32) not null
+		primary key,
+	name varchar(255) null,
+	shop_id varchar(32) null,
+	condition_num int null comment 'n人拼团',
+	ori_price float(10,2) null,
+	curr_price float(10,2) null,
+	status int null,
+	imgIds varchar(255) null,
+	group_buy_code varchar(255) null comment '团购券码',
+	hx_code varchar(255) null comment '核销码',
+	limit_time_second int null,
+	include_shop_ids varchar(255) null comment '包含店铺',
+	remark varchar(255) null comment '备注',
+	start_time datetime null comment '有效期，起始时间',
+	end_time datetime null comment '有效期，结束时间',
+	use_start_time datetime null comment '使用起始时间（1天）',
+	use_end_time datetime null comment '使用结束时间（1天）',
+	rule varchar(255) null,
+	kccnt int(255) null,
+	goods_detail text null,
+	repeat_times int null
+);
 
--- ----------------------------
--- Table structure for t_shop
--- ----------------------------
-DROP TABLE IF EXISTS `t_shop`;
-CREATE TABLE `t_shop` (
-  `id` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺名称',
-  `addr` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '地址',
-  `contact` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系方式',
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
-  `lnt` float DEFAULT NULL COMMENT '经度',
-  `lat` float DEFAULT NULL COMMENT '纬度',
-  `status` tinyint(2) DEFAULT '0' COMMENT '状态，0-正常，1-停用',
-  `createtime` datetime DEFAULT NULL,
-  `updatetime` datetime DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+create table if not exists t_image
+(
+	id varchar(36) not null
+		primary key,
+	type varchar(10) null,
+	origin tinyint null,
+	description varchar(255) null,
+	remark varchar(255) null,
+	size bigint null,
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP,
+	name varchar(255) null,
+	width int null,
+	height int null
+)
+collate=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Records of t_shop
--- ----------------------------
-INSERT INTO `t_shop` VALUES ('0a77dbc729ad2b72ae9714b290e5fcb5', 'string', 'string', 'string', 'string', '0', '0', '0', '2019-04-21 14:17:00', '2019-04-21 14:17:00', null, null);
-INSERT INTO `t_shop` VALUES ('213de879c44b14c3d78d5accbe21ae2d', 'xxx', null, 'xxx', null, null, null, '0', '2019-04-21 00:00:57', null, null, null);
-INSERT INTO `t_shop` VALUES ('2195dc2348488b17fc4cefe8d7ee8e90', 'xxx', null, 'xxx', null, null, null, '0', '2019-04-21 10:36:08', null, null, null);
-INSERT INTO `t_shop` VALUES ('280763b0bc926997b5d0708a6d9db73b', 'xxx', null, 'xxx', null, null, null, '0', '2019-04-21 00:20:18', null, null, null);
-INSERT INTO `t_shop` VALUES ('640fcb878c4095a77778cc83c5933249', 'string', 'string', 'string', 'string', '0', '0', '0', '2019-04-21 14:14:26', '2019-04-21 14:14:26', null, null);
-INSERT INTO `t_shop` VALUES ('b32e145cac6c58ef33ac6171a0b3356f', 'string', 'string', 'string', 'string', '0', '0', '0', '2019-04-21 17:40:28', '2019-04-21 17:40:28', null, null);
-INSERT INTO `t_shop` VALUES ('dd2cdd5f8b396cd357388b7b320d449e', 'xxx', null, 'xxx', null, null, null, '0', '2019-04-21 02:55:02', null, null, null);
+create table if not exists t_message
+(
+	id varchar(36) not null
+		primary key,
+	sender varchar(100) default '' null comment '发给谁，一般是微信的wxid openid',
+	callbak_url varchar(500) default '' null comment '回掉链接',
+	remark varchar(100) default '' null comment '备注信息',
+	channel_type varchar(50) default '' not null comment '目前为字符串的枚举值',
+	title varchar(100) default '' not null comment '消息的标题信息',
+	content varchar(516) default '' not null comment '消息的主题内容',
+	business_id varchar(36) default '' not null comment '消息对应的业务主键id',
+	to_shop_id varchar(36) default '' null comment '商铺id',
+	action tinyint(5) default 1 null comment '业务消息类型 与字段 business_id有对应关系',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '更新时间'
+)
+comment '消息管理表';
 
--- ----------------------------
--- Table structure for t_tags
--- ----------------------------
-DROP TABLE IF EXISTS `t_tags`;
-CREATE TABLE `t_tags` (
-  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标签名称',
-  `type` int(2) NOT NULL DEFAULT '1' COMMENT '1为商品类型 0为订单类 -1为删除类',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `priority_level` int(5) DEFAULT '0' COMMENT '定义标签优先级',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='标签表，目前主要针对商品分类';
+create table if not exists t_order
+(
+	id varchar(64) not null
+		primary key,
+	shop_id varchar(64) not null comment '店铺id',
+	shop_name varchar(100) not null comment '店铺名称，冗余字段，便于显示',
+	shop_address varchar(255) not null comment '店铺地址，冗余字段，便于显示',
+	eat_type tinyint default 1 null comment '1 堂吃 0外带',
+	goods_num tinyint default 0 null comment '订单商品数量',
+	all_price float default 0 null comment '订单总价格',
+	remark varchar(100) default '' null comment '订单备注',
+	people_cnt tinyint default 1 null comment '默认为1人用餐',
+	user_id varchar(36) not null comment '微信小程序用户系统id,非wxid',
+	groupbuy_id varchar(36) default '' null comment '拼团id',
+	coupon_id varchar(36) default '' null comment '使用优惠券的id,控制优惠券的状态',
+	status tinyint(2) default 0 null comment '普通订单类型:0待付款,1待确认,2待评价,3已完成(已评价);通用:4退款,-1删除,拼团类型:10拼团中,11拼团成功,12拼团失败',
+	order_no varchar(50) default '' null comment '订单编号',
+	order_type tinyint(2) default 0 null comment '0点餐订单 1拼团订单',
+	seat_no int(10) default 0 null comment '座位号，目前只录入数值 不计号,为了按数值排序',
+	queue_no varchar(10) default '' null comment '排队号',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	other_coupon_id varchar(36) default '' null comment '其他优惠价对应的优惠标识',
+	user_name varchar(100) default '' null comment '用户名称，便于后台管理查询'
+)
+comment '订单表' collate=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Records of t_tags
--- ----------------------------
-INSERT INTO `t_tags` VALUES ('5273afad6930f06cb63a4e13113520fd', '热门推荐', '1', '2019-04-08 22:34:27', null, '2');
-INSERT INTO `t_tags` VALUES ('5273afad6930f06cb63a4e13113520fe', '今日优惠', '1', '2019-04-08 22:34:27', null, '1');
+create index couponId
+	on t_order (coupon_id);
 
--- ----------------------------
--- Table structure for t_user
--- ----------------------------
-DROP TABLE IF EXISTS `t_user`;
-CREATE TABLE `t_user` (
-  `id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名称',
-  `img_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户头像id，无默认取..需定义',
-  `wxid` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '微信id',
-  `longitude` float DEFAULT '0' COMMENT '经度',
-  `latitude` float DEFAULT '0' COMMENT '纬度',
-  `status` tinyint(2) DEFAULT '1' COMMENT ' 在线(0),有效(1),无效(2),禁用(3),拉黑(4)',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL COMMENT '状态更新时间',
-  PRIMARY KEY (`id`),
-  KEY `wxid` (`wxid`),
-  KEY `name_imgId_status` (`status`,`img_id`,`name`) USING BTREE,
-  KEY `long_lat` (`longitude`,`latitude`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='微信用户信息';
+create index groupbuy_id
+	on t_order (groupbuy_id);
 
--- ----------------------------
--- Records of t_user
--- ----------------------------
+create index shopId_userId_eatType_orderType
+	on t_order (shop_id, user_id, eat_type, order_type, status);
+
+create table if not exists t_order_detail
+(
+	id varchar(36) not null
+		primary key,
+	order_id varchar(36) not null comment '订单id',
+	goods_desc varchar(100) default '' null comment '商品描述',
+	goods_name varchar(50) not null comment '商品名称',
+	goods_img_id varchar(36) default '' null comment '商品图片id',
+	goods_id varchar(36) not null comment '商品id',
+	all_price float default 0 null comment '订单总价格',
+	price float default 0 null comment '实际价格',
+	cnt tinyint default 0 null comment '数量',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间'
+)
+comment '订单商品列表' collate=utf8mb4_unicode_ci;
+
+create index orderId_goodsId
+	on t_order_detail (order_id, goods_id)
+	comment '订单+商品id';
+
+create table if not exists t_qrcode
+(
+	id varchar(32) not null
+		primary key,
+	content text null comment '二维码内容',
+	path varchar(255) null comment '路径',
+	name varchar(255) null comment '下载二维码时图片命名（默认取桌位名）'
+);
+
+create table if not exists t_shop
+(
+	id varchar(32) not null
+		primary key,
+	name varchar(255) null comment '店铺名称',
+	addr varchar(255) null comment '地址',
+	contact varchar(255) null comment '联系方式',
+	description varchar(255) null comment '描述',
+	lnt float null comment '经度',
+	lat float null comment '纬度',
+	status tinyint(2) default 0 null comment '状态，0-正常，1-停用',
+	createtime datetime null,
+	updatetime datetime null,
+	create_time datetime null on update CURRENT_TIMESTAMP,
+	update_time datetime null on update CURRENT_TIMESTAMP
+)
+collate=utf8mb4_unicode_ci;
+
+create table if not exists t_table
+(
+	id varchar(32) not null
+		primary key,
+	shop_id varchar(32) null comment '店铺ID',
+	name varchar(255) null comment '名称',
+	status int null comment '状态',
+	qrcode_id varchar(32) null comment '二维码ID'
+)
+collate=utf8mb4_unicode_ci;
+
+create table if not exists t_tags
+(
+	id varchar(64) not null
+		primary key,
+	name varchar(100) not null comment '标签名称',
+	type int(2) default 1 not null comment '1为商品类型 0为订单类 -1为删除类',
+	create_time datetime not null,
+	update_time datetime null,
+	priority_level int(5) default 0 null comment '定义标签优先级'
+)
+comment '标签表，目前主要针对商品分类' collate=utf8mb4_unicode_ci;
+
+create table if not exists t_user
+(
+	id varchar(36) not null
+		primary key,
+	name varchar(100) not null comment '用户名称',
+	img_id varchar(36) not null comment '用户头像id，无默认取..需定义',
+	wxid varchar(100) not null comment '微信id',
+	longitude float default 0 null comment '经度',
+	latitude float default 0 null comment '纬度',
+	status tinyint(2) default 1 null comment ' 在线(0),有效(1),无效(2),禁用(3),拉黑(4)',
+	create_time datetime not null,
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	open_id varchar(100) default '' null comment '微信用户每个公众对应一个openid',
+	union_id varchar(100) default '' null comment '微信用户唯一id',
+	city varchar(100) null comment '所在城市',
+	province varchar(100) null comment '所在省',
+	country varchar(100) null comment '所在国家',
+	gender varchar(10) null,
+	tel varchar(100) null comment '手机号码',
+	shop_id varchar(36) null comment '店铺id'
+)
+comment '微信用户信息' collate=utf8mb4_unicode_ci;
+
+create index long_lat
+	on t_user (longitude, latitude);
+
+create index name_imgId_status
+	on t_user (status, img_id, name);
+
+create index wxid
+	on t_user (wxid);
+
+create table if not exists t_user_address_history
+(
+	id varchar(36) not null
+		primary key,
+	address varchar(500) not null comment '地址名称',
+	status tinyint default 1 not null comment '1为有效,2为无效，3为禁用，4为拉黑，-1为删除',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '更新时间',
+	user_id varchar(36) null comment '用户id',
+	shop_id varchar(36) null comment '店铺id'
+)
+comment 't_user_address_history用户地址使用过的记录管理' collate=utf8mb4_unicode_ci;
+
+create index t_user_address_history_index
+	on t_user_address_history (user_id, shop_id, status);
+
+create table if not exists t_user_advice
+(
+	id varchar(36) not null
+		primary key,
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	user_id varchar(255) not null comment '意见发起人id',
+	content varchar(255) not null comment '意见内容',
+	img_ids varchar(255) not null comment '反馈图片ids 用英文逗号隔开 区分多个图片',
+	shop_id varchar(36) not null comment '店铺id,针对哪家店反馈'
+)
+comment '客户意见反馈';
+
