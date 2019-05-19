@@ -111,9 +111,9 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
         return getEntityBean().selectList(wrapper);
     }
 
-    default Entity selectOne(Wrapper<Entity> wrapper) {
+    default Optional<Entity> selectOne(Wrapper<Entity> wrapper) {
         @SuppressWarnings("unchecked") Model model = getEntityBean().selectOne(wrapper);
-        return model2Entity(model);
+        return Optional.ofNullable(model2Entity(model));
     }
 
     default Optional<Entity> selectById(Serializable id) {

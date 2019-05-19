@@ -9,10 +9,9 @@ import com.foolday.dao.couponGoods.GoodsCouponEntity;
 import com.foolday.dao.couponGoods.GoodsCouponMapper;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.service.api.admin.GoodsCouponServiceApi;
+import com.foolday.service.common.PlatformService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -26,8 +25,7 @@ import java.util.stream.Stream;
  * 4.优惠券删除=》清除关联
  */
 @Slf4j
-@Service
-@Transactional
+@PlatformService
 public class GoodsCouponService implements GoodsCouponServiceApi {
     @Resource
     private GoodsCouponMapper couponGoodsMapper;
