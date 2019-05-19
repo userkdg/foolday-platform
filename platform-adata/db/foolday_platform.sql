@@ -219,7 +219,7 @@ create table if not exists t_message
 	id varchar(36) not null
 		primary key,
 	sender varchar(100) default '' null comment '发给谁，一般是微信的wxid openid',
-	callbak_url varchar(500) default '' null comment '回掉链接',
+	callback_url varchar(500) default '' null comment '回掉链接',
 	remark varchar(100) default '' null comment '备注信息',
 	channel_type varchar(50) default '' not null comment '目前为字符串的枚举值',
 	title varchar(100) default '' not null comment '消息的标题信息',
@@ -309,9 +309,7 @@ create table if not exists t_shop
 	lnt float null comment '经度',
 	lat float null comment '纬度',
 	status tinyint(2) default 0 null comment '状态，0-正常，1-停用',
-	createtime datetime null,
-	updatetime datetime null,
-	create_time datetime null on update CURRENT_TIMESTAMP,
+	create_time datetime DEFAULT CURRENT_TIMESTAMP,
 	update_time datetime null on update CURRENT_TIMESTAMP
 )
 collate=utf8mb4_unicode_ci;
