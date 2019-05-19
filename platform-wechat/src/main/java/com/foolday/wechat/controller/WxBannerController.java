@@ -3,6 +3,7 @@ package com.foolday.wechat.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.CommentStatus;
+import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.banner.BannerEntity;
 import com.foolday.service.api.banner.BannerServiceApi;
 import io.swagger.annotations.Api;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Banner管理
@@ -34,13 +36,21 @@ public class WxBannerController {
     @ApiOperation("获取banner数据 传递size来控制返回的条数,size=-1为获取所有")
     public FantResult<List<BannerEntity>> list(@RequestParam("shopId") String shopId,
                                                @ApiParam("数量") @RequestParam("size") Integer size) {
+        PlatformAssert.notNull(size, "获取banner的数量不为空");
         LambdaQueryWrapper<BannerEntity> queryWrapper = bannerServiceApi.lqWrapper()
                 .eq(BannerEntity::getShopId, shopId)
                 .eq(BannerEntity::getStatus, CommentStatus.有效)
                 .orderByAsc(BannerEntity::getOrderNo)
                 .orderByDesc(BannerEntity::getUpdateTime);
-        List<BannerEntity> bannerEntities = bannerServiceApi.selectList(queryWrapper).stream().limit(size).collect(Collectors.toList());
-        return FantResult.ok(bannerEntities);
+        try (Stream<BannerEntity> stream = bannerServiceApi.selectList(queryWrapper).stream()) {
+            List<BannerEntity> bannerEntities;
+            if (size == -1) {
+                bannerEntities = stream.collect(Collectors.toList());
+            } else {
+                bannerEntities = stream.limit(size).collect(Collectors.toList());
+            }
+            return FantResult.ok(bannerEntities);
+        }
     }
 
 }
