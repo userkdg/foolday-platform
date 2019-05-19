@@ -263,16 +263,16 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
     /**
      * 判断id是否已存在数据，并返回实体数据，否则报错反馈前端
      *
-     * @param entityClass
      * @param id
      * @param errmsg
      * @return
      * @see BaseServiceUtils 类似，区别时一个基于mapper 一个基于entiy
      */
-    default Entity checkOneById(Class<Entity> entityClass, Serializable id, String errmsg) {
-        Model model = newInstance(entityClass).selectById(id);
+    default Entity checkOneById(Serializable id, String errmsg) {
+        final String finalErrmsg = StringUtils.isEmpty(errmsg) ? "获取相应数据失败" : errmsg;
+        Entity model = selectById(id).orElseThrow(()->new PlatformException(finalErrmsg));
         Entity entity = model2Entity(model);
-        PlatformAssert.isTrue(entity != null, StringUtils.isEmpty(errmsg) ? "获取相应数据失败" : errmsg);
+        PlatformAssert.isTrue(entity != null,  errmsg);
         return entity;
     }
 }

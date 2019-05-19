@@ -84,7 +84,7 @@ public class WxOrderService implements WxOrderServiceApi {
     @Override
     public OrderEntity submitOrder(WxOrderVo orderVo, String shopId) {
         // 检查店铺信息有效性
-        checkOneById(OrderEntity.class, shopId, "店铺信息无效,无法下单");
+        checkOneById(shopId, "店铺信息无效,无法下单");
         OrderEntity orderEntity = new OrderEntity();
         BeanUtils.copyProperties(orderVo, orderEntity);
         orderEntity.setCreateTime(LocalDateTime.now());
@@ -109,10 +109,11 @@ public class WxOrderService implements WxOrderServiceApi {
         Float sumPrice = sumPriceAndExistDiscntGoods.getT1();
         AtomicBoolean existDiscntGoods = sumPriceAndExistDiscntGoods.getT2();
         float couponRealPrice;
-        if (existDiscntGoods.get())
+        if (existDiscntGoods.get()) {
             couponRealPrice = 0F;
-        else
+        } else {
             couponRealPrice = calcRealPriceByCouponAndUpdateCouponStatus(orderVo, userId, sumPrice, existDiscntGoods.get());
+        }
         orderEntity.setCouponId(orderVo.getCouponId());
         orderEntity.setOtherCouponId(orderVo.getOtherCouponId());
         orderEntity.setAllPrice(couponRealPrice);
