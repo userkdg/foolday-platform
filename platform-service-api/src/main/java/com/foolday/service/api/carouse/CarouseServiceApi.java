@@ -5,7 +5,7 @@ import com.foolday.dao.carouse.CarouseEntity;
 
 /**
  * 轮播口
- * @author Administrator
+ * @author userkdg
  */
 public interface CarouseServiceApi extends BaseServiceApi<CarouseEntity> {
 }

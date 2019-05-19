@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * 轮播管理
  *
- * @author Administrator
+ * @author userkdg
  */
 @Api("后台 轮播管理")
 @Controller

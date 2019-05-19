@@ -8,10 +8,10 @@ import com.foolday.service.api.banner.BannerServiceApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 /**
  * Banner管理
  *
- * @author Administrator
+ * @author userkdg
  */
 @Api("wxBanner管理管理")
-@Controller
+@RestController
 @RequestMapping("/banner")
 public class WxBannerController {
 

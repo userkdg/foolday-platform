@@ -7,10 +7,10 @@ import com.foolday.dao.carouse.CarouseEntity;
 import com.foolday.service.api.carouse.CarouseServiceApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -18,10 +18,10 @@ import java.util.List;
 /**
  * 轮播管理
  *
- * @author Administrator
+ * @author userkdg
  */
 @Api("wx轮播管理")
-@Controller
+@RestController
 @RequestMapping("/carousel")
 public class WxCarouselController {
 

@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 业务轮播
- * @author Administrator
+ * @author userkdg
  */
 @Slf4j
 @PlatformService

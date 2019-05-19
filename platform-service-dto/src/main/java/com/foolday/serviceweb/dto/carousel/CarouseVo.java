@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * 轮播交互
- * @author Administrator
+ * @author userkdg
  */
 @ApiModel("轮播实体")
 @Data

@@ -20,7 +20,7 @@ import lombok.ToString;
  * )
  *     comment 't_user_address_history用户地址使用过的记录管理' collate=utf8mb4_unicode_ci;
  *
- * @author Administrator
+ * @author userkdg
  */
 @Data
 @ToString(callSuper = true)

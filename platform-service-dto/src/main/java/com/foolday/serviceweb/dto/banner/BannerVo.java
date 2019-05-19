@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * @author Administrator
+ * @author userkdg
  */
 @ApiModel("banner 交互")
 @Data

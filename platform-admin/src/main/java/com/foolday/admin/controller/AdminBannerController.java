@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 /**
  * Banner管理
  *
- * @author Administrator
+ * @author userkdg
  */
 @Api("Banner管理")
 @Controller

@@ -4,7 +4,7 @@ import com.foolday.common.base.BaseServiceApi;
 import com.foolday.dao.useraddr.UserAddressEntity;
 
 /**
- * @author Administrator
+ * @author userkdg
  */
 public interface UserAddressServiceApi extends BaseServiceApi<UserAddressEntity> {
 }

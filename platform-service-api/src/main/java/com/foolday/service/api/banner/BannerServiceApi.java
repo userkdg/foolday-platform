@@ -5,7 +5,7 @@ import com.foolday.dao.banner.BannerEntity;
 
 
 /**
- * @author Administrator
+ * @author userkdg
  */
 public interface BannerServiceApi extends BaseServiceApi<BannerEntity> {
 }

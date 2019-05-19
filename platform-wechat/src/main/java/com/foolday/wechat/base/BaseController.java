@@ -6,7 +6,7 @@ import com.foolday.common.base.BaseServiceApi;
 /**
  * 基础增删改查
  *
- * @author Administrator
+ * @author userkdg
  */
 public interface BaseController<Entity extends BaseEntity> {
     /**

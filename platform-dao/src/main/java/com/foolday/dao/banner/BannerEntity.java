@@ -10,7 +10,7 @@ import lombok.ToString;
 
 /**
  * banner entity
- * @author Administrator
+ * @author userkdg
  */
 @TableName("t_banner")
 @Data

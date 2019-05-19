@@ -12,7 +12,7 @@ import lombok.ToString;
  * 存储轮播的图片和店铺
  * 一店铺对多张图片
  *
- * @author Administrator
+ * @author userkdg
  */
 @TableName("t_carouse")
 @Data

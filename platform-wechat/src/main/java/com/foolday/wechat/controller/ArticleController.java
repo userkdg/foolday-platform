@@ -89,7 +89,7 @@ public class ArticleController {
     }
 
     @ApiOperation("上架文章")
-    @PostMapping("/down")
+    @PostMapping("/up")
     public FantResult<String> up(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
         ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId).orElseThrow(()->new PlatformException("获取文章数据失败"));
         articleEntity.setStatus(CommonStatus.有效);
