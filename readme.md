@@ -69,3 +69,11 @@
 ### swagger2 访问 
  1. admin-web : http://localhost/system/swagger-ui.html
  2. wechat-web : http://localhost:8080/wehat/swagger-ui.html
+ 
+### 权限管理
+1. 用户选择角色
+2. 角色对应权限
+3. 权限的控制通过方法级别的url+http method
+ * 通过Spring AOP + 注解创建对应的模块的url信息-初始化已有的url信息
+ * 启动系统初始化url信息和用户对应的角色和url权限信息
+ * 针对已有的权限信息，在用户发起请求的时候进行用户校验和权限验证，拦截器请求，成功则继续，失败则跳到403权限失败

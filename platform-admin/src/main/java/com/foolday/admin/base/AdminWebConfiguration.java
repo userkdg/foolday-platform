@@ -1,7 +1,9 @@
 package com.foolday.admin.base;
 
 import com.foolday.admin.base.intercepter.PlatformAuthTokenInterceptor;
+import com.foolday.admin.base.intercepter.PlatformUrlAuthInterceptor;
 import com.foolday.admin.base.property.WebInterceptorPatternProperties;
+import com.foolday.admin.base.property.WebInterceptorStaticUrlProperties;
 import com.foolday.admin.base.property.WebLoginUserMvcProperties;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.exception.PlatformException;
@@ -38,9 +40,15 @@ import java.util.stream.Collectors;
  * 用来管理admin web异常的相应给前端的全局异常处理配置
  * 可后续增加其他类型的异常类处理
  * 2019年4月7日 16点06分：增加拦截授权
+ *
+ * @author userkdg
  */
 @Configuration
-@EnableConfigurationProperties(value = {WebLoginUserMvcProperties.class, WebInterceptorPatternProperties.class})
+@EnableConfigurationProperties(value = {
+        WebLoginUserMvcProperties.class,
+        WebInterceptorPatternProperties.class,
+        WebInterceptorStaticUrlProperties.class
+})
 public class AdminWebConfiguration implements WebMvcConfigurer {
     private static final Logger logger = LoggerFactory.getLogger(AdminWebConfiguration.class);
 
@@ -49,6 +57,9 @@ public class AdminWebConfiguration implements WebMvcConfigurer {
 
     @Autowired
     private WebInterceptorPatternProperties webInterceptorPatternProperties;
+
+    @Autowired
+    private WebInterceptorStaticUrlProperties webInterceptorStaticUrlProperties;
 
     /**
      * 注入拦截
@@ -61,7 +72,12 @@ public class AdminWebConfiguration implements WebMvcConfigurer {
                 this.webLoginUserMvcProperties.getLoginUser().isValid()) {
             logger.debug("启用登录测试用户：{}", this.webLoginUserMvcProperties.getLoginUser());
             registry.addInterceptor(new PlatformAuthTokenInterceptor(this.webLoginUserMvcProperties.getLoginUser()))
-                    .excludePathPatterns(webInterceptorPatternProperties.getExcludePathPatternsList());
+                    .excludePathPatterns(webInterceptorPatternProperties.getExcludePathPatternsList())
+                    .order(-100);
+            registry.addInterceptor(new PlatformUrlAuthInterceptor(this.webLoginUserMvcProperties.getLoginUser(),
+                    webInterceptorStaticUrlProperties.getErrorUrl()))
+                    .excludePathPatterns(webInterceptorPatternProperties.getExcludePathPatternsList())
+                    .addPathPatterns("/**").order(-99);
         }
     }
 

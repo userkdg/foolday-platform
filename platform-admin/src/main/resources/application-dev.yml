@@ -7,6 +7,7 @@ spring:
   application:
     name: platform-admin
 
+
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://47.92.64.11:3306/foolday_platform?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
@@ -79,6 +80,12 @@ platform:
   spring:
     web:
       mvc:
+        url:
+          error-url:
+            # 错误的静态页面配置 对应resources/static/** spring mvc 默认去static下得静态资源
+            error404: /error/404.html
+            error403: /error/403.html
+            error500: /error/500.html
         loginUser:
           # isValid来控制当前配置是否有效，无效则取前端提供的base64
           valid: true
@@ -95,6 +102,11 @@ platform:
           excludePathPatterns:
           - /api/**
           - /v2/api-docs
+          - /common/error/**
+          - /swagger-ui.html
+          - /webjars/**
+          - /swagger-resources/**
+          - /error/**
   #          includePathPatterns:
   #            -
   # 图片定制

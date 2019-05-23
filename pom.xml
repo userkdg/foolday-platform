@@ -56,7 +56,7 @@
         <guava-jre.version>25.0-jre</guava-jre.version>
         <freemarker.version>2.3.28</freemarker.version>
         <swagger2.version>2.8.0</swagger2.version>
-        <aspectj.version>1.8.10</aspectj.version>
+        <aspectj.version>1.9.4</aspectj.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
         <jsp-api.version>2.2</jsp-api.version>
         <jstl.version>1.2</jstl.version>
@@ -323,6 +323,18 @@
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>weixin-java-mp</artifactId>
                 <version>${weixin-java-miniapp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
             </dependency>
 
         </dependencies>

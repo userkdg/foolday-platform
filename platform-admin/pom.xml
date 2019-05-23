@@ -52,8 +52,6 @@
             <artifactId>core</artifactId>
         </dependency>
 
-
-
     </dependencies>
 
     <build>
