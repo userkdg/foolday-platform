@@ -169,7 +169,7 @@ public class SystemLog2Db {
                 systemLog.insert();
             } catch (Exception e) {
 //                e.printStackTrace();
-                log.error("日志写入失败{}", e);
+                log.error("日志写入失败{}", e.toString());
             } finally {
                 // 清楚本地化内存
                 systemLogThreadLocal.remove();
