@@ -44,34 +44,52 @@ public class SystemLog2Db {
      * 判断请求方式
      *
      * @param method
+     *
      * @return
      */
     private static Tuple3<HttpMethod, String, String> of(Method method) {
+        Class<?> declaringClass = method.getDeclaringClass();
+        RequestMapping classRequestMapping = declaringClass.getAnnotation(RequestMapping.class);
+        final String uriOfClass = buidlerUri(classRequestMapping.value());
         GetMapping getMapping = method.getAnnotation(GetMapping.class);
         if (getMapping != null) {
-            return Tuples.of(HttpMethod.GET, array2string(getMapping.value()), array2string(getMapping.produces()));
+            return Tuples.of(HttpMethod.GET, builderUrl(uriOfClass, getMapping.value()), buidlerUri(getMapping.produces()));
         }
         PostMapping postMapping = method.getAnnotation(PostMapping.class);
         if (postMapping != null) {
-            return Tuples.of(HttpMethod.POST, array2string(postMapping.value()), array2string(postMapping.produces()));
+            return Tuples.of(HttpMethod.POST, builderUrl(uriOfClass, postMapping.value()), buidlerUri(postMapping.produces()));
         }
         DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
         if (deleteMapping != null) {
-            return Tuples.of(HttpMethod.DELETE, array2string(deleteMapping.value()), array2string(deleteMapping.produces()));
+            return Tuples.of(HttpMethod.DELETE, builderUrl(uriOfClass, deleteMapping.value()), buidlerUri(deleteMapping.produces()));
         }
         PutMapping putMapping = method.getAnnotation(PutMapping.class);
         if (putMapping != null) {
-            return Tuples.of(HttpMethod.PUT, array2string(putMapping.value()), array2string(putMapping.produces()));
+            return Tuples.of(HttpMethod.PUT, builderUrl(uriOfClass, putMapping.value()), buidlerUri(putMapping.produces()));
         }
         PatchMapping patchMapping = method.getAnnotation(PatchMapping.class);
         if (patchMapping != null) {
-            return Tuples.of(HttpMethod.PATCH, array2string(patchMapping.value()), array2string(patchMapping.produces()));
+            return Tuples.of(HttpMethod.PATCH, builderUrl(uriOfClass, patchMapping.value()), buidlerUri(patchMapping.produces()));
         }
         return null;
     }
 
-    private static String array2string(Object[] value) {
-        return Arrays.asList(value).toString();
+    private static String builderUrl(String uriOfClass, String[] value) {
+        if (uriOfClass == null) {
+            uriOfClass = "";
+        }
+        if (uriOfClass.lastIndexOf("/") >= 1) {
+            uriOfClass = uriOfClass.substring(0, uriOfClass.length() - 1);
+        }
+        String suffixUri = buidlerUri(value);
+        if (suffixUri.length() >= 1 && !suffixUri.startsWith("/")) {
+            suffixUri = "/".concat(suffixUri);
+        }
+        return uriOfClass.concat(suffixUri);
+    }
+
+    private static String buidlerUri(String[] values) {
+        return String.join("|", values);
     }
 
     @Pointcut("@annotation(com.foolday.admin.base.aspectj.PlatformLog)")

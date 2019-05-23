@@ -8,6 +8,7 @@ import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.enums.GoodsStatus;
 import com.foolday.common.enums.TagType;
 import com.foolday.common.util.KeyUtils;
+import com.foolday.core.init.ContextLoader;
 import com.foolday.dao.article.ArticleEntity;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
@@ -15,6 +16,7 @@ import com.foolday.dao.tags.TagsEntity;
 import com.foolday.dao.tags.TagsMapper;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
+import com.foolday.dao.userAuth.UserAuthEntity;
 import com.foolday.service.api.TestServiceApi;
 import com.foolday.service.api.wechat.WxArticleServiceApi;
 import com.foolday.serviceweb.dto.TestServiceWebDto;
@@ -35,6 +37,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -54,6 +57,13 @@ public class AppDaoDbRunnerTests {
 
     @Test
     public void article() {
+        Set<UserAuthEntity> testUserId =
+                ContextLoader.getOrDefault("testUserId", null);
+        System.out.println(testUserId);
+
+        Set<UserAuthEntity> testUserId2 =
+                ContextLoader.getOrDefault("testUserId", null);
+
         ArticleEntity entity = new ArticleEntity();
         entity.setId("8b2981ec72589eacc206179add5a598a");
         ArticleEntity a = wxArticleServiceApi.selectById(entity).orElse(null);

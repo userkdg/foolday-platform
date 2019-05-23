@@ -6,6 +6,7 @@ package com.foolday.admin.base.intercepter;
  **/
 
 import com.foolday.admin.base.property.WebInterceptorStaticUrlProperties;
+import com.foolday.core.init.ContextLoader;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -48,8 +49,8 @@ public final class PlatformUrlAuthInterceptor implements HandlerInterceptor {
         String method = request.getMethod();
         String requestURI = request.getRequestURI();
         log.debug("用户{}发起请求{}的url为{}", loginUser.getUserId(), method, requestURI);
-        Set<String> userUrls = userUrlMap.get(loginUser.getUserId());
-        if (!userUrls.contains(requestURI)) {
+        Set<String> userAuthEntities = ContextLoader.getUrls(loginUser.getUserId(), true);
+        if (!userAuthEntities.contains(requestURI)) {
             //重定向到跳转到静态页面、没有经过spring mvc 视图处理
             response.sendRedirect(request.getContextPath() + errorUrl.getError403());
             log.error("用户无法访问该资源，跳到{}", errorUrl.getError403());
@@ -59,11 +60,11 @@ public final class PlatformUrlAuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
     }
 
