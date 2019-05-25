@@ -3,8 +3,8 @@ package com.foolday.core.init;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseEntity;
 import com.foolday.common.enums.UserStatus;
-import com.foolday.dao.systemUrl.SystemUrlEntity;
-import com.foolday.dao.systemUrl.SystemUserUrlEntity;
+import com.foolday.dao.system.auth.SysAdminAuthEntity;
+import com.foolday.dao.system.auth.SysAuthEntity;
 import com.foolday.dao.user.UserEntity;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -26,25 +26,25 @@ import java.util.stream.Collectors;
 @Component
 public final class ContextLoader {
 
-    private static final Cache<String, Set<SystemUrlEntity>> userAuthEntityLoadingCache = CacheBuilder.newBuilder()
+    private static final Cache<String, Set<SysAuthEntity>> userAuthEntityLoadingCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .refreshAfterWrite(10, TimeUnit.MINUTES)
-            .build(new CacheLoader<String, Set<SystemUrlEntity>>() {
+            .build(new CacheLoader<String, Set<SysAuthEntity>>() {
                 @Override
-                public Set<SystemUrlEntity> load(final String userId) throws Exception {
+                public Set<SysAuthEntity> load(final String userId) throws Exception {
                     userAuthEntityLoadingCache.putAll(loadUserAuth());
                     return userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
                 }
             });
 
     public static void main(String[] args) {
-        Set<SystemUrlEntity> testUserId = getOrDefault("testUserId", Collections.emptySet());
+        Set<SysAuthEntity> testUserId = getOrDefault("testUserId", Collections.emptySet());
         System.out.println(testUserId);
     }
 
     public static Set<String> getUrls(String userId, boolean requireBaseUrl) {
         try {
-            Set<SystemUrlEntity> userAuthEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
+            Set<SysAuthEntity> userAuthEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
             return userAuthEntities.stream().map(userAuthEntity -> {
                 if (requireBaseUrl) {
                     return userAuthEntity.getBaseUrl().concat(userAuthEntity.getUrl());
@@ -57,9 +57,9 @@ public final class ContextLoader {
         return Collections.emptySet();
     }
 
-    public static Set<SystemUrlEntity> get(String userId) {
+    public static Set<SysAuthEntity> get(String userId) {
         try {
-            Set<SystemUrlEntity> systemUrlEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
+            Set<SysAuthEntity> systemUrlEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
             return new HashSet<>(systemUrlEntities);
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -67,9 +67,9 @@ public final class ContextLoader {
         return Collections.emptySet();
     }
 
-    public static Set<SystemUrlEntity> getOrDefault(String userId, Set<SystemUrlEntity> defaultSet) {
+    public static Set<SysAuthEntity> getOrDefault(String userId, Set<SysAuthEntity> defaultSet) {
         try {
-            Set<SystemUrlEntity> systemUrlEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
+            Set<SysAuthEntity> systemUrlEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
             return new HashSet<>(systemUrlEntities);
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -77,25 +77,25 @@ public final class ContextLoader {
         return defaultSet;
     }
 
-    private static Map<String, Set<SystemUrlEntity>> loadUserAuth() {
+    private static Map<String, Set<SysAuthEntity>> loadUserAuth() {
         UserEntity userEntity = new UserEntity();
         userEntity.setStatus(UserStatus.有效);
         List<UserEntity> userEntities = userEntity.selectList(Wrappers.lambdaQuery(userEntity));
-        Map<String, Set<SystemUrlEntity>> returnMap = Maps.newHashMap();
+        Map<String, Set<SysAuthEntity>> returnMap = Maps.newHashMap();
         userEntities.stream().map(BaseEntity::getId)
                 .forEach(userId -> {
-                    Set<SystemUrlEntity> systemUrls = loadUserAuth(userId);
+                    Set<SysAuthEntity> systemUrls = loadUserAuth(userId);
                     returnMap.put(userId, systemUrls);
                 });
         return returnMap;
     }
 
-    private static Set<SystemUrlEntity> loadUserAuth(String userId) {
-        SystemUserUrlEntity systemUserUrlEntity = new SystemUserUrlEntity();
-        systemUserUrlEntity.setUserId(userId);
-        return systemUserUrlEntity.selectList(Wrappers.lambdaQuery(systemUserUrlEntity))
-                .stream().map(SystemUserUrlEntity::getUrlId)
-                .map(urlId -> new SystemUrlEntity().selectById(urlId))
+    private static Set<SysAuthEntity> loadUserAuth(String userId) {
+        SysAdminAuthEntity sysAdminAuthEntity = new SysAdminAuthEntity();
+        sysAdminAuthEntity.setUserId(userId);
+        return sysAdminAuthEntity.selectList(Wrappers.lambdaQuery(sysAdminAuthEntity))
+                .stream().map(SysAdminAuthEntity::getUrlId)
+                .map(urlId -> new SysAuthEntity().selectById(urlId))
                 .collect(Collectors.toSet());
     }
 }

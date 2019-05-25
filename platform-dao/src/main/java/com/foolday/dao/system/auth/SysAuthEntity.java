@@ -1,4 +1,4 @@
-package com.foolday.dao.systemUrl;
+package com.foolday.dao.system.auth;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.foolday.common.base.BaseEntity;
@@ -22,11 +22,11 @@ import java.util.Objects;
  * @author userkdg
  * @date 2019/5/25 12:10
  **/
-@TableName("t_system_url")
+@TableName("t_sys_auth")
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class SystemUrlEntity extends BaseEntity<SystemUrlEntity> {
+public class SysAuthEntity extends BaseEntity<SysAuthEntity> {
     private String url;
 
     private HttpMethodType authHttpMethod;
@@ -39,7 +39,7 @@ public class SystemUrlEntity extends BaseEntity<SystemUrlEntity> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SystemUrlEntity that = (SystemUrlEntity) o;
+        SysAuthEntity that = (SysAuthEntity) o;
         return Objects.equals(url, that.url) &&
                 authHttpMethod == that.authHttpMethod &&
                 status == that.status &&

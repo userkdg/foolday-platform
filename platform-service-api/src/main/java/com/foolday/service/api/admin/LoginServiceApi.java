@@ -1,7 +1,7 @@
 package com.foolday.service.api.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.foolday.dao.admin.AdminEntity;
+import com.foolday.dao.system.admin.AdminEntity;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import com.foolday.serviceweb.dto.admin.login.LoginVo;
 import org.springframework.util.DigestUtils;

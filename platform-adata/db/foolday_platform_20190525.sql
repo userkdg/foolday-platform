@@ -1,22 +1,5 @@
 create schema if not exists foolday_platform collate utf8_general_ci;
 
-create table if not exists t_admin
-(
-	id varchar(36) not null
-		primary key,
-	account varchar(100) not null comment '账号目前约定为手机号码',
-	password varchar(100) not null comment '密码 md5加密和加盐',
-	status tinyint default 1 not null comment '1为有效,2为无效，3为禁用，4为拉黑，-1为删除',
-	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
-	telphone varchar(20) default '' null comment '手机号码',
-	nickname varchar(100) default '' null comment '名称'
-)
-comment '账号表' collate=utf8mb4_unicode_ci;
-
-create index account_password_status_index
-	on t_sys_admin (account, password, status);
-
 create table if not exists t_article
 (
 	id varchar(36) not null
@@ -89,7 +72,9 @@ create table if not exists t_comment
 	admin_id varchar(36) default '' null comment '若店内人员回复则记录回复人id',
 	admin_name varchar(100) default '' null comment '若店内人员回复则记录回复人名称',
 	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间'
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	shop_name varchar(255) null,
+	star tinyint null comment '评星<=5'
 )
 comment '评论表' collate=utf8mb4_unicode_ci;
 
@@ -309,10 +294,71 @@ create table if not exists t_shop
 	lnt float null comment '经度',
 	lat float null comment '纬度',
 	status tinyint(2) default 0 null comment '状态，0-正常，1-停用',
-	create_time datetime DEFAULT CURRENT_TIMESTAMP,
+	create_time datetime default CURRENT_TIMESTAMP null,
 	update_time datetime null on update CURRENT_TIMESTAMP
 )
 collate=utf8mb4_unicode_ci;
+
+create table if not exists t_system_admin
+(
+	id varchar(36) not null
+		primary key,
+	account varchar(100) not null comment '账号目前约定为手机号码',
+	password varchar(100) not null comment '密码 md5加密和加盐',
+	status tinyint default 1 not null comment '1为有效,2为无效，3为禁用，4为拉黑，-1为删除',
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	telphone varchar(20) default '' null comment '手机号码',
+	nickname varchar(100) default '' null comment '名称'
+)
+comment '账号表' collate=utf8mb4_unicode_ci;
+
+create index account_password_status_index
+	on t_sys_admin (account, password, status);
+
+create table if not exists t_system_log
+(
+	id varchar(36) not null
+		primary key,
+	operator varchar(100) not null comment '操作人',
+	operator_id varchar(100) not null comment '操作人',
+	operate_status varchar(50) not null,
+	create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	result_msg varchar(1000) default '' null comment '请求情况信息',
+	resource_name varchar(100) default '' null comment '资源名称',
+	host varchar(50) default '' null,
+	cost varchar(20) default '' null comment '请求耗时',
+	action varchar(20) default '' null comment '动作，http method',
+	content_type varchar(500) default '' null,
+	request_body varchar(1000) default '' null,
+	response_body varchar(1000) default '' null,
+	request_url varchar(500) null
+)
+comment '操作日志记录' collate=utf8mb4_unicode_ci;
+
+create table if not exists t_system_url
+(
+	id varchar(36) not null,
+	url varchar(500) not null comment '控制器的url',
+	auth_http_method tinyint(2) null comment '请求方式 httpMethod',
+	create_time datetime default CURRENT_TIMESTAMP null,
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间',
+	status tinyint(2) null comment 'uri是否有效',
+	base_url varchar(100) null comment '基础uri eg：/system || /weChat if null get url else base_url+url'
+)
+comment '用户权限url';
+
+create table if not exists t_system_user_url
+(
+	id varchar(36) not null
+		primary key,
+	user_id varchar(36) not null comment '用户id',
+	url_id varchar(36) not null comment 'url id',
+	create_time datetime default CURRENT_TIMESTAMP null,
+	update_time datetime null on update CURRENT_TIMESTAMP comment '自动更新时间'
+)
+comment '用户url 中间表';
 
 create table if not exists t_table
 (
@@ -397,4 +443,18 @@ create table if not exists t_user_advice
 	shop_id varchar(36) not null comment '店铺id,针对哪家店反馈'
 )
 comment '客户意见反馈';
+
+create table if not exists t_user_auth
+(
+	id varchar(36) not null,
+	user_id varchar(36) not null comment '用户id',
+	auth_url varchar(500) not null,
+	auth_http_method tinyint(2) null comment '请求方式 httpMethod ',
+	create_time datetime default CURRENT_TIMESTAMP null,
+	update_time datetime null on update CURRENT_TIMESTAMP,
+	status tinyint(2) null comment 'uri是否有效',
+	base_url varchar(100) null comment '基础uri eg：/system || /wechat
+'
+)
+comment '用户权限url';
 

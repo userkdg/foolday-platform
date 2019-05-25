@@ -1,4 +1,4 @@
-package com.foolday.dao.admin;
+package com.foolday.dao.system.admin;
 
 
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -8,9 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-;
 
-@TableName("t_admin")
+@TableName("t_sys_admin")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

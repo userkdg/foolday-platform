@@ -3,14 +3,13 @@ package com.foolday.service.admin;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseServiceUtils;
-import com.foolday.common.base.BaseServiceUtils;
 import com.foolday.common.enums.ShopStatus;
 import com.foolday.common.enums.UserStatus;
 import com.foolday.common.util.PlatformAssert;
-import com.foolday.dao.admin.AdminEntity;
-import com.foolday.dao.admin.AdminMapper;
 import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.shop.ShopMapper;
+import com.foolday.dao.system.admin.AdminEntity;
+import com.foolday.dao.system.admin.AdminMapper;
 import com.foolday.service.api.admin.ShopServiceApi;
 import com.foolday.serviceweb.dto.admin.shop.ShopVo;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.Objects;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service

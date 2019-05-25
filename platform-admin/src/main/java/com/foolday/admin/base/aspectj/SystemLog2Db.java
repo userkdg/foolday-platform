@@ -1,7 +1,7 @@
 package com.foolday.admin.base.aspectj;
 
 import com.foolday.common.enums.ActionStatus;
-import com.foolday.dao.log.SystemLogEntity;
+import com.foolday.dao.system.log.SystemLogEntity;
 import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;

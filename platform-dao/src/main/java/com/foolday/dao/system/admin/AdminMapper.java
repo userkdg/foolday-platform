@@ -1,4 +1,4 @@
-package com.foolday.dao.admin;
+package com.foolday.dao.system.admin;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;

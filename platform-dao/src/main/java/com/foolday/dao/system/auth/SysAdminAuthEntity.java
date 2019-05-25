@@ -1,4 +1,4 @@
-package com.foolday.dao.systemUrl;
+package com.foolday.dao.system.auth;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.foolday.common.base.BaseEntity;
@@ -16,11 +16,11 @@ import lombok.ToString;
  * @author userkdg
  * @date 2019/5/25 12:10
  **/
-@TableName("t_system_user_url")
+@TableName("t_sys_admin_auth")
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class SystemUserUrlEntity extends BaseEntity<SystemUserUrlEntity> {
+public class SysAdminAuthEntity extends BaseEntity<SysAdminAuthEntity> {
     private String urlId;
 
     private String userId;

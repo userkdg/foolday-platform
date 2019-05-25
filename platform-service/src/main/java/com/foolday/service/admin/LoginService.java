@@ -2,9 +2,9 @@ package com.foolday.service.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.util.PlatformAssert;
-import com.foolday.dao.admin.AdminEntity;
-import com.foolday.dao.admin.AdminMapper;
 import com.foolday.dao.shop.ShopEntity;
+import com.foolday.dao.system.admin.AdminEntity;
+import com.foolday.dao.system.admin.AdminMapper;
 import com.foolday.service.api.admin.LoginServiceApi;
 import com.foolday.service.api.admin.ShopServiceApi;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;

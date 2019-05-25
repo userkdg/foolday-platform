@@ -1,7 +1,6 @@
 package com.foolday.admin.base.aspectj;
 
 import com.foolday.common.base.AuthUrlStatus;
-import com.foolday.common.base.CrossAuth;
 import com.foolday.common.enums.CommonStatus;
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpMethod;
@@ -27,15 +26,18 @@ public final class HttpUtils {
         Class<?> declaringClass = method.getDeclaringClass();
         RequestMapping classRequestMapping = declaringClass.getAnnotation(RequestMapping.class);
         String[] classRequestMapUrl = classRequestMapping == null ? new String[0] : classRequestMapping.value();
-        /*类中是否加入启动跳过权限的注解，则每个用户都有权限去访问，也就是默认分配给每个用户url*/
+        /*
+        类中是否加入启动跳过权限的注解，则每个用户都有权限去访问，也就是默认分配给每个用户url
         CrossAuth crossAuth = declaringClass.getAnnotation(CrossAuth.class);
         boolean urlCrossAuth = crossAuth == null || !crossAuth.valid();
+        */
+        boolean urlCrossAuth = true;
         /*权限url是否有效, 用在类或方法，若类和方法都有，则方法覆盖类*/
         AuthUrlStatus authUrlClassStatus = declaringClass.getAnnotation(AuthUrlStatus.class);
         CommonStatus classUrlStatus = authUrlClassStatus == null ? CommonStatus.有效 : authUrlClassStatus.valid();
         /*权限方法url*/
         AuthUrlStatus authUrlMethodStatus = method.getAnnotation(AuthUrlStatus.class);
-        CommonStatus urlStatus = authUrlClassStatus == null ? classUrlStatus : authUrlMethodStatus.valid();
+        CommonStatus urlStatus = authUrlMethodStatus == null ? classUrlStatus : authUrlMethodStatus.valid();
         GetMapping getMapping = method.getAnnotation(GetMapping.class);
 
         final String uriOfClass = builderUri(classRequestMapUrl);
@@ -60,7 +62,6 @@ public final class HttpUtils {
         }
         return null;
     }
-
 
     public static String builderUrl(String uriOfClass, String[] value) {
         if (uriOfClass == null) {

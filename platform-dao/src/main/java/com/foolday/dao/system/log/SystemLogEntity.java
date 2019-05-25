@@ -1,4 +1,4 @@
-package com.foolday.dao.log;
+package com.foolday.dao.system.log;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.foolday.common.base.BaseEntity;
@@ -69,5 +69,7 @@ public class SystemLogEntity extends BaseEntity<SystemLogEntity> {
      * 结果
      */
     private String responseBody;
+
+    private String shopId;
 
 }
