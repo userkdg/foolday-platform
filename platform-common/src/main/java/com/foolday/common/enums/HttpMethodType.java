@@ -24,6 +24,10 @@ public enum HttpMethodType implements BaseEnum {
         this.value = value;
     }
 
+    public HttpMethodType of(String name){
+        return valueOf(name);
+    }
+
     @Override
     public Integer getValue() {
         return this.value;

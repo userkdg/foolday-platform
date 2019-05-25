@@ -14,9 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,13 +25,9 @@ import java.util.Set;
 public final class PlatformUrlAuthInterceptor implements HandlerInterceptor {
 
     /**
-     * 加载用户的url权限 todo
+     * 加载用户的url权限
      */
-    private static Map<String, Set<String>> userUrlMap = new HashMap<String, Set<String>>() {{
-        Set<String> userSet = new HashSet<>();
-        userSet.add("/system/comment/list2");
-        put("testUserId", userSet);
-    }};
+
     private final LoginUser loginUser;
     private final WebInterceptorStaticUrlProperties.ErrorUrl errorUrl;
 

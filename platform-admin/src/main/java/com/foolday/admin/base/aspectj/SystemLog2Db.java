@@ -11,9 +11,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
 import reactor.util.function.Tuple3;
-import reactor.util.function.Tuples;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -39,58 +37,6 @@ public class SystemLog2Db {
      * 本地化方式中转系统日志
      */
     private static final ThreadLocal<SystemLogEntity> systemLogThreadLocal = new ThreadLocal<>();
-
-    /**
-     * 判断请求方式
-     *
-     * @param method
-     *
-     * @return
-     */
-    private static Tuple3<HttpMethod, String, String> of(Method method) {
-        Class<?> declaringClass = method.getDeclaringClass();
-        RequestMapping classRequestMapping = declaringClass.getAnnotation(RequestMapping.class);
-        final String uriOfClass = buidlerUri(classRequestMapping.value());
-        GetMapping getMapping = method.getAnnotation(GetMapping.class);
-        if (getMapping != null) {
-            return Tuples.of(HttpMethod.GET, builderUrl(uriOfClass, getMapping.value()), buidlerUri(getMapping.produces()));
-        }
-        PostMapping postMapping = method.getAnnotation(PostMapping.class);
-        if (postMapping != null) {
-            return Tuples.of(HttpMethod.POST, builderUrl(uriOfClass, postMapping.value()), buidlerUri(postMapping.produces()));
-        }
-        DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
-        if (deleteMapping != null) {
-            return Tuples.of(HttpMethod.DELETE, builderUrl(uriOfClass, deleteMapping.value()), buidlerUri(deleteMapping.produces()));
-        }
-        PutMapping putMapping = method.getAnnotation(PutMapping.class);
-        if (putMapping != null) {
-            return Tuples.of(HttpMethod.PUT, builderUrl(uriOfClass, putMapping.value()), buidlerUri(putMapping.produces()));
-        }
-        PatchMapping patchMapping = method.getAnnotation(PatchMapping.class);
-        if (patchMapping != null) {
-            return Tuples.of(HttpMethod.PATCH, builderUrl(uriOfClass, patchMapping.value()), buidlerUri(patchMapping.produces()));
-        }
-        return null;
-    }
-
-    private static String builderUrl(String uriOfClass, String[] value) {
-        if (uriOfClass == null) {
-            uriOfClass = "";
-        }
-        if (uriOfClass.lastIndexOf("/") >= 1) {
-            uriOfClass = uriOfClass.substring(0, uriOfClass.length() - 1);
-        }
-        String suffixUri = buidlerUri(value);
-        if (suffixUri.length() >= 1 && !suffixUri.startsWith("/")) {
-            suffixUri = "/".concat(suffixUri);
-        }
-        return uriOfClass.concat(suffixUri);
-    }
-
-    private static String buidlerUri(String[] values) {
-        return String.join("|", values);
-    }
 
     @Pointcut("@annotation(com.foolday.admin.base.aspectj.PlatformLog)")
     public void annotationPointCut() {
@@ -155,7 +101,7 @@ public class SystemLog2Db {
             PlatformLog action = method.getAnnotation(PlatformLog.class);
             log.debug("注解式拦截：" + action.name());
             systemLog.setResourceName(action.name());
-            Tuple3<HttpMethod, String, String> httpMethodAnnotation = of(method);
+            Tuple3<HttpMethod, String, String> httpMethodAnnotation = HttpUtils.methodOf(method);
             if (httpMethodAnnotation != null) {
                 HttpMethod httpMethod = httpMethodAnnotation.getT1();
                 systemLog.setAction(httpMethod.name());

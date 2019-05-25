@@ -12,5 +12,5 @@ public class PlatformWechatApplication {
     public static void main(String[] args) {
         SpringApplication.run(PlatformWechatApplication.class, args);
     }
-
+    
 }

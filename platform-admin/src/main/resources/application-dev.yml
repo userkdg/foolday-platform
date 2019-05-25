@@ -6,8 +6,6 @@ server:
 spring:
   application:
     name: platform-admin
-
-
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://47.92.64.11:3306/foolday_platform?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
@@ -42,7 +40,7 @@ mybatis-plus:
   # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
   mapper-locations: classpath:/com/foolday/dao/*/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔 com.yourpackage.*.entity
-  typeAliasesPackage: com.foolday.dao.* # todo
+  typeAliasesPackage: com.foolday.dao.*
   # 支持统配符 * 或者 :  分割
   typeEnumsPackage: com.foolday.common.enums
   global-config:
@@ -80,6 +78,10 @@ platform:
   spring:
     web:
       mvc:
+        init:
+          auth-url-data:
+            base-package: com.foolday.admin.controller
+            base-system-path: ${server.servlet.context-path}
         url:
           error-url:
             # 错误的静态页面配置 对应resources/static/** spring mvc 默认去static下得静态资源

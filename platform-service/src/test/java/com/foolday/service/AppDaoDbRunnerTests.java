@@ -12,11 +12,11 @@ import com.foolday.core.init.ContextLoader;
 import com.foolday.dao.article.ArticleEntity;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
+import com.foolday.dao.systemUrl.SystemUrlEntity;
 import com.foolday.dao.tags.TagsEntity;
 import com.foolday.dao.tags.TagsMapper;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
-import com.foolday.dao.userAuth.UserAuthEntity;
 import com.foolday.service.api.TestServiceApi;
 import com.foolday.service.api.wechat.WxArticleServiceApi;
 import com.foolday.serviceweb.dto.TestServiceWebDto;
@@ -57,11 +57,11 @@ public class AppDaoDbRunnerTests {
 
     @Test
     public void article() {
-        Set<UserAuthEntity> testUserId =
+        Set<SystemUrlEntity> testUserId =
                 ContextLoader.getOrDefault("testUserId", null);
         System.out.println(testUserId);
 
-        Set<UserAuthEntity> testUserId2 =
+        Set<SystemUrlEntity> testUserId2 =
                 ContextLoader.getOrDefault("testUserId", null);
 
         ArticleEntity entity = new ArticleEntity();

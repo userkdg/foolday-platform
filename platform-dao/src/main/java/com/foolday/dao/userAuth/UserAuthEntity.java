@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
+ * 用来管理每个
  * @author userkdg
  * @date 2019/5/23 23:24
  **/

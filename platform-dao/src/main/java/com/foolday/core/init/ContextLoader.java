@@ -1,13 +1,15 @@
 package com.foolday.core.init;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.foolday.common.enums.CommonStatus;
-import com.foolday.dao.userAuth.UserAuthEntity;
+import com.foolday.common.base.BaseEntity;
+import com.foolday.common.enums.UserStatus;
+import com.foolday.dao.systemUrl.SystemUrlEntity;
+import com.foolday.dao.systemUrl.SystemUserUrlEntity;
+import com.foolday.dao.user.UserEntity;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.collect.Maps;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -23,30 +25,31 @@ import java.util.stream.Collectors;
  **/
 @Component
 public final class ContextLoader {
-    private static final Cache<String, List<UserAuthEntity>> userAuthEntityLoadingCache = CacheBuilder.newBuilder()
+
+    private static final Cache<String, Set<SystemUrlEntity>> userAuthEntityLoadingCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .refreshAfterWrite(10, TimeUnit.MINUTES)
-            .build(new CacheLoader<String, List<UserAuthEntity>>() {
+            .build(new CacheLoader<String, Set<SystemUrlEntity>>() {
                 @Override
-                public List<UserAuthEntity> load(final String userId) throws Exception {
+                public Set<SystemUrlEntity> load(final String userId) throws Exception {
                     userAuthEntityLoadingCache.putAll(loadUserAuth());
                     return userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
                 }
             });
 
     public static void main(String[] args) {
-        Set<UserAuthEntity> testUserId = getOrDefault("testUserId", Collections.emptySet());
+        Set<SystemUrlEntity> testUserId = getOrDefault("testUserId", Collections.emptySet());
         System.out.println(testUserId);
     }
 
     public static Set<String> getUrls(String userId, boolean requireBaseUrl) {
         try {
-            List<UserAuthEntity> userAuthEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
+            Set<SystemUrlEntity> userAuthEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
             return userAuthEntities.stream().map(userAuthEntity -> {
                 if (requireBaseUrl) {
-                    return userAuthEntity.getBaseUrl().concat(userAuthEntity.getAuthUrl());
+                    return userAuthEntity.getBaseUrl().concat(userAuthEntity.getUrl());
                 }
-                return userAuthEntity.getAuthUrl();
+                return userAuthEntity.getUrl();
             }).collect(Collectors.toSet());
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -54,37 +57,45 @@ public final class ContextLoader {
         return Collections.emptySet();
     }
 
-    public static Set<UserAuthEntity> get(String userId) {
+    public static Set<SystemUrlEntity> get(String userId) {
         try {
-            List<UserAuthEntity> userAuthEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
-            return new HashSet<>(userAuthEntities);
+            Set<SystemUrlEntity> systemUrlEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
+            return new HashSet<>(systemUrlEntities);
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
         return Collections.emptySet();
     }
 
-    public static Set<UserAuthEntity> getOrDefault(String userId, Set<UserAuthEntity> defaultSet) {
+    public static Set<SystemUrlEntity> getOrDefault(String userId, Set<SystemUrlEntity> defaultSet) {
         try {
-            List<UserAuthEntity> userAuthEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
-            return new HashSet<>(userAuthEntities);
+            Set<SystemUrlEntity> systemUrlEntities = userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
+            return new HashSet<>(systemUrlEntities);
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
         return defaultSet;
     }
 
-    private static Map<String, List<UserAuthEntity>> loadUserAuth() {
-        List<UserAuthEntity> userAuthEntities = new UserAuthEntity().selectAll();
-        return userAuthEntities.stream()
-                .filter(u -> CommonStatus.有效.equals(u.getStatus()))
-                .filter(u -> StringUtils.isNotBlank(u.getUserId()))
-                .collect(Collectors.groupingBy(UserAuthEntity::getUserId));
+    private static Map<String, Set<SystemUrlEntity>> loadUserAuth() {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setStatus(UserStatus.有效);
+        List<UserEntity> userEntities = userEntity.selectList(Wrappers.lambdaQuery(userEntity));
+        Map<String, Set<SystemUrlEntity>> returnMap = Maps.newHashMap();
+        userEntities.stream().map(BaseEntity::getId)
+                .forEach(userId -> {
+                    Set<SystemUrlEntity> systemUrls = loadUserAuth(userId);
+                    returnMap.put(userId, systemUrls);
+                });
+        return returnMap;
     }
 
-    private static List<UserAuthEntity> loadUserAuth(String userId) {
-        LambdaQueryWrapper<UserAuthEntity> queryWrapper = Wrappers.lambdaQuery(new UserAuthEntity())
-                .eq(UserAuthEntity::getUserId, userId).eq(UserAuthEntity::getStatus, CommonStatus.有效);
-        return new UserAuthEntity().selectList(queryWrapper);
+    private static Set<SystemUrlEntity> loadUserAuth(String userId) {
+        SystemUserUrlEntity systemUserUrlEntity = new SystemUserUrlEntity();
+        systemUserUrlEntity.setUserId(userId);
+        return systemUserUrlEntity.selectList(Wrappers.lambdaQuery(systemUserUrlEntity))
+                .stream().map(SystemUserUrlEntity::getUrlId)
+                .map(urlId -> new SystemUrlEntity().selectById(urlId))
+                .collect(Collectors.toSet());
     }
 }
