@@ -1,4 +1,4 @@
-package com.foolday.admin.controller;
+package com.foolday.admin.controller.system;
 
 import com.foolday.common.base.AdminBaseDataUtils;
 import com.foolday.common.constant.WebConstant;

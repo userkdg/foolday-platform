@@ -2,6 +2,7 @@ package com.foolday.core.init;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseEntity;
+import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.enums.UserStatus;
 import com.foolday.dao.system.auth.SysAdminAuthEntity;
 import com.foolday.dao.system.auth.SysAuthEntity;
@@ -96,6 +97,8 @@ public final class ContextLoader {
         return sysAdminAuthEntity.selectList(Wrappers.lambdaQuery(sysAdminAuthEntity))
                 .stream().map(SysAdminAuthEntity::getUrlId)
                 .map(urlId -> new SysAuthEntity().selectById(urlId))
+                /*必须为有效，系统类会调整，如删除url 就需要启动时判断是否已被删除了，已被删除则为-1 status*/
+                .filter(sysAuthEntity -> CommonStatus.有效.equals(sysAuthEntity.getStatus()))
                 .collect(Collectors.toSet());
     }
 }

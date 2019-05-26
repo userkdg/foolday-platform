@@ -1,6 +1,6 @@
 package com.foolday.admin;
 
-import com.foolday.serviceweb.dto.init.InitAuthUrl2DbApi;
+import com.foolday.service.api.init.InitAuthUrl2DbApi;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

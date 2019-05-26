@@ -31,6 +31,9 @@ public class SysAuthEntity extends BaseEntity<SysAuthEntity> {
 
     private HttpMethodType authHttpMethod;
 
+    /**
+     * 请只取有效的urlId
+     */
     private CommonStatus status;
 
     private String baseUrl;

@@ -1,4 +1,4 @@
-package com.foolday.serviceweb.dto.init;
+package com.foolday.service.api.init;
 
 import java.io.IOException;
 

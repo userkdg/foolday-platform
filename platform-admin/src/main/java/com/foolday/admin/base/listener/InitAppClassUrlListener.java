@@ -1,7 +1,7 @@
 package com.foolday.admin.base.listener;
 
 import com.foolday.admin.base.property.WebAuthUrlDataProperties;
-import com.foolday.serviceweb.dto.init.InitAuthUrl2DbApi;
+import com.foolday.service.api.init.InitAuthUrl2DbApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

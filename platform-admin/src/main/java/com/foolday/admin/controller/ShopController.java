@@ -1,9 +1,7 @@
 package com.foolday.admin.controller;
 
-import com.foolday.common.dto.FantPage;
 import com.foolday.common.dto.FantResult;
 import com.foolday.dao.shop.ShopEntity;
-import com.foolday.service.api.TestServiceApi;
 import com.foolday.service.api.admin.ShopServiceApi;
 import com.foolday.serviceweb.dto.admin.shop.ShopVo;
 import io.swagger.annotations.*;
@@ -30,17 +28,6 @@ public class ShopController {
         FantResult<String> result = new FantResult<>();
         boolean flag = shopServiceApi.createShop(shopVo);
         return flag ? FantResult.ok() : FantResult.fail();
-    }
-
-    @Resource
-    private TestServiceApi testServiceApi;
-
-    @ApiOperation(value = "新增店铺", notes = "传入json格式")
-    @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
-    @PostMapping("/tesT")
-    public FantResult<String> test() {
-        testServiceApi.test();
-        return FantResult.ok();
     }
 
     @ApiOperation(value = "查看所有店铺")
