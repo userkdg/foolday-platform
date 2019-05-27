@@ -1,7 +1,7 @@
 package com.foolday.service.banner;
 
 import com.foolday.common.base.BeanFactory;
-import com.foolday.common.base.PlatformService;
+import com.foolday.common.base.annotation.PlatformService;
 import com.foolday.dao.banner.BannerEntity;
 import com.foolday.service.api.banner.BannerServiceApi;
 import lombok.extern.slf4j.Slf4j;

@@ -2,7 +2,7 @@ package com.foolday.service.roleAuth;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.foolday.common.base.BeanFactory;
-import com.foolday.common.base.PlatformService;
+import com.foolday.common.base.annotation.PlatformService;
 import com.foolday.dao.system.auth.SysAuthEntity;
 import com.foolday.dao.system.role.SysRoleAuthEntity;
 import com.foolday.dao.system.role.SysRoleAuthMapper;

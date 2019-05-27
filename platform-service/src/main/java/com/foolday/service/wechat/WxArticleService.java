@@ -1,6 +1,6 @@
 package com.foolday.service.wechat;
 
-import com.foolday.common.base.PlatformService;
+import com.foolday.common.base.annotation.PlatformService;
 import com.foolday.dao.article.ArticleEntity;
 import com.foolday.service.api.wechat.WxArticleServiceApi;
 import lombok.extern.slf4j.Slf4j;

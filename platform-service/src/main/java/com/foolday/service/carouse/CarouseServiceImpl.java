@@ -1,7 +1,7 @@
 package com.foolday.service.carouse;
 
 import com.foolday.common.base.BeanFactory;
-import com.foolday.common.base.PlatformService;
+import com.foolday.common.base.annotation.PlatformService;
 import com.foolday.dao.carouse.CarouseEntity;
 import com.foolday.service.api.carouse.CarouseServiceApi;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.foolday.service.auth;
 
 import com.foolday.common.base.BeanFactory;
-import com.foolday.common.base.PlatformService;
+import com.foolday.common.base.annotation.PlatformService;
 import com.foolday.dao.system.auth.SysAuthEntity;
 import com.foolday.dao.system.auth.SysAuthMapper;
 import com.foolday.service.api.auth.SysAuthServiceApi;

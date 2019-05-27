@@ -1,6 +1,6 @@
 package com.foolday.admin.base.aspectj;
 
-import com.foolday.common.base.AuthUrlStatus;
+import com.foolday.common.base.annotation.AuthUrlStatus;
 import com.foolday.common.enums.CommonStatus;
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpMethod;

@@ -2,7 +2,7 @@ package com.foolday.service.admin;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.foolday.common.base.BeanFactory;
-import com.foolday.common.base.PlatformService;
+import com.foolday.common.base.annotation.PlatformService;
 import com.foolday.dao.system.admin.AdminEntity;
 import com.foolday.dao.system.admin.AdminMapper;
 import com.foolday.service.api.admin.SysAdminServiceApi;

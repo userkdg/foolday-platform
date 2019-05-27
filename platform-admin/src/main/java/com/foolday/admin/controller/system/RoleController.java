@@ -3,7 +3,7 @@ package com.foolday.admin.controller.system;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.foolday.common.base.CrossAuth;
+import com.foolday.common.base.annotation.CrossAuth;
 import com.foolday.common.dto.FantPage;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.CommonStatus;

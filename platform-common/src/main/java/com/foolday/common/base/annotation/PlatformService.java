@@ -1,4 +1,4 @@
-package com.foolday.common.base;
+package com.foolday.common.base.annotation;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;

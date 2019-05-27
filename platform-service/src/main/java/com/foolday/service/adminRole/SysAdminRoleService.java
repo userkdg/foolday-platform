@@ -1,7 +1,7 @@
 package com.foolday.service.adminRole;
 
 import com.foolday.common.base.BeanFactory;
-import com.foolday.common.base.PlatformService;
+import com.foolday.common.base.annotation.PlatformService;
 import com.foolday.dao.system.adminRole.SysAdminRoleEntity;
 import com.foolday.dao.system.adminRole.SysAdminRoleMapper;
 import com.foolday.dao.system.role.SysRoleEntity;

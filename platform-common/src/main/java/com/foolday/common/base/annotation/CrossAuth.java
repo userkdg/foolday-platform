@@ -1,4 +1,4 @@
-package com.foolday.common.base;
+package com.foolday.common.base.annotation;
 
 import java.lang.annotation.*;
 

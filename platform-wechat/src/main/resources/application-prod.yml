@@ -40,7 +40,7 @@ mybatis-plus:
   # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
   mapper-locations: classpath:/com/foolday/dao/*/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔 com.yourpackage.*.entity
-  typeAliasesPackage: com.foolday.dao.* # todo
+  typeAliasesPackage: com.foolday.dao.*
   # 支持统配符 * 或者 ; 分割
   typeEnumsPackage: com.foolday.common.enums
   # 自动配置中已Map来存储
