@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Set;
 
 @Repository
+@Deprecated
 public interface SysAdminAuthMapper extends BaseMapper<SysAdminAuthEntity> {
     @Select("select url_id from t_sys_admin_auth where user_id = #{userId}")
     Set<String> findUrlIdByUserId(@Param("userId")String userId);
