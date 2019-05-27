@@ -144,7 +144,10 @@ public class AdminController {
                 .or()
                 .like(StringUtils.isNotEmpty(queryPageVo.getSearchKey()), AdminEntity::getTelphone, queryPageVo.getSearchKey());
         FantPage<AdminEntity> sysAdminRoleFantPage = sysAdminServiceApi.selectPage(page, queryWrapper);
-        return sysAdminRoleFantPage;
+        return sysAdminRoleFantPage.map(adminEntity -> {
+            adminEntity.setPassword(null);
+            return adminEntity;
+        });
     }
 
     private void updateStatus(String id, UserStatus status) {
