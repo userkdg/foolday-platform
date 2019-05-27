@@ -7,5 +7,5 @@ import com.foolday.dao.system.menu.SysMenuEntity;
  * @author userkdg
  * @date 2019/5/26 16:42
  **/
-public interface MenuServiceApi extends BaseServiceApi<SysMenuEntity> {
+public interface SysMenuServiceApi extends BaseServiceApi<SysMenuEntity> {
 }

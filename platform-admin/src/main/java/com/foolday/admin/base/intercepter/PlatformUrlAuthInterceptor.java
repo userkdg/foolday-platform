@@ -6,6 +6,7 @@ package com.foolday.admin.base.intercepter;
  **/
 
 import com.foolday.admin.base.property.WebInterceptorStaticUrlProperties;
+import com.foolday.common.constant.WebConstant;
 import com.foolday.core.init.ContextLoader;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,8 @@ public final class PlatformUrlAuthInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         log.debug("用户{}发起请求{}的url为{}", loginUser.getUserId(), method, requestURI);
         Set<String> userAuthEntities = ContextLoader.getUrls(loginUser.getUserId(), true);
-        if (!userAuthEntities.contains(requestURI)) {
+        if (!userAuthEntities.contains(requestURI) &&
+                !loginUser.getUserName().equalsIgnoreCase(WebConstant.SYSTEM_ADMIN_NAME)) {
             //重定向到跳转到静态页面、没有经过spring mvc 视图处理
             response.sendRedirect(request.getContextPath() + errorUrl.getError403());
             log.error("用户无法访问该资源，跳到{}", errorUrl.getError403());

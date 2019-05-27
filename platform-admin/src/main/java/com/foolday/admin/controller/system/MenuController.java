@@ -1,6 +1,6 @@
 package com.foolday.admin.controller.system;
 
-import com.foolday.service.api.menu.MenuServiceApi;
+import com.foolday.service.api.menu.SysMenuServiceApi;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +14,6 @@ import javax.annotation.Resource;
 @RestController
 public class MenuController {
     @Resource
-    private MenuServiceApi menuServiceApi;
+    private SysMenuServiceApi menuServiceApi;
 
 }

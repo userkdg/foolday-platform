@@ -26,7 +26,7 @@ import java.util.Objects;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class SysAuthEntity extends BaseEntity<SysAuthEntity> {
+public class SysAuthEntity extends BaseEntity<SysAuthEntity> implements Comparable<SysAuthEntity> {
     private String url;
 
     private HttpMethodType authHttpMethod;
@@ -52,5 +52,15 @@ public class SysAuthEntity extends BaseEntity<SysAuthEntity> {
     @Override
     public int hashCode() {
         return Objects.hash(url, authHttpMethod, status, baseUrl);
+    }
+
+    @Override
+    public int compareTo(SysAuthEntity o) {
+        if (o == null) return -1;
+        if (this.getCreateTime() != null && o.getCreateTime() != null)
+            return this.getCreateTime().compareTo(o.getCreateTime());
+        if (this.getUpdateTime() != null && o.getUpdateTime() != null)
+            return this.getUpdateTime().compareTo(o.getUpdateTime());
+        return 1;
     }
 }

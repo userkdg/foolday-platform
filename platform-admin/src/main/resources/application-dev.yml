@@ -93,7 +93,7 @@ platform:
           valid: true
           userId: testUserId # 系统内部id
           openId: openId # 针对存储微信信息
-          userName: testUserName
+          userName: admin
           shopId: testShopId
           browser: testBrowser
           app: testApp

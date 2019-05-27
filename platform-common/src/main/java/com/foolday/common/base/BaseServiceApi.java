@@ -270,9 +270,9 @@ public interface BaseServiceApi<Entity extends BaseEntity> {
      */
     default Entity checkOneById(Serializable id, String errmsg) {
         final String finalErrmsg = StringUtils.isEmpty(errmsg) ? "获取相应数据失败" : errmsg;
-        Entity model = selectById(id).orElseThrow(()->new PlatformException(finalErrmsg));
+        Entity model = selectById(id).orElseThrow(() -> new PlatformException(finalErrmsg));
         Entity entity = model2Entity(model);
-        PlatformAssert.isTrue(entity != null,  errmsg);
+        PlatformAssert.isTrue(entity != null, errmsg);
         return entity;
     }
 }

@@ -3,7 +3,7 @@ package com.foolday.service.menu;
 import com.foolday.common.base.BeanFactory;
 import com.foolday.common.base.PlatformService;
 import com.foolday.dao.system.menu.SysMenuEntity;
-import com.foolday.service.api.menu.MenuServiceApi;
+import com.foolday.service.api.menu.SysMenuServiceApi;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
  **/
 @Slf4j
 @PlatformService
-public class MenuServiceImpl implements MenuServiceApi {
+public class SysMenuService implements SysMenuServiceApi {
     @Override
     public BeanFactory<SysMenuEntity> beanFactory() {
         return SysMenuEntity::new;

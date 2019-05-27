@@ -17,7 +17,7 @@ import lombok.ToString;
  * @author userkdg
  * @date 2019/5/25 12:10
  **/
-@TableName("t_sys_admin_menu")
+@TableName("t_sys_role")
 @Setter
 @Getter
 @ToString(callSuper = true)
