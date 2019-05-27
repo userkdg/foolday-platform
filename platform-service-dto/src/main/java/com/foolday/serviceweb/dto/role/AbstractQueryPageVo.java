@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Setter
 @Getter
 @ToString
-public class RoleQueryPageVo extends PageVo implements Serializable {
+public class AbstractQueryPageVo extends PageVo implements Serializable {
     /**
      * 查询对象
      */

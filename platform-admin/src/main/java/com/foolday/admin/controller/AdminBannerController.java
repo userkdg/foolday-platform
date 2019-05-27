@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  *
  * @author userkdg
  */
-@Api("Banner管理")
+@Api(value = "Banner管理",tags = "Banner管理")
 @Controller
 @RequestMapping("/banner")
 public class AdminBannerController {

@@ -26,7 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-@Api("登陆控制器")
+@Api(value = "登陆控制器",tags = "登陆控制器")
 @RequestMapping("/admin")
 @RestController
 public class LoginController {

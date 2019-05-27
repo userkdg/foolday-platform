@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  *
  * @author userkdg
  */
-@Api("后台 轮播管理")
+@Api(value = "后台 轮播管理",tags = "后台 轮播管理")
 @Controller
 @RequestMapping("/carousel")
 public class AdminCarouselController {

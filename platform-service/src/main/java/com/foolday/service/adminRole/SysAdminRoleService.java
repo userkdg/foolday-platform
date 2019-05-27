@@ -29,7 +29,7 @@ public class SysAdminRoleService implements SysAdminRoleServiceApi {
     @Override
     public boolean deleteByUserId(String userId) {
         int deleteByUserId = sysAdminRoleMapper.deleteByUserId(userId);
-        return (deleteByUserId == 1);
+        return (deleteByUserId >= 1);
     }
 
     @Override

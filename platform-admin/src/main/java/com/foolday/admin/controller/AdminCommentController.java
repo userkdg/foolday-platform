@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author userkdg
  */
-@Api("后台人员评论管理")
+@Api(value = "后台人员评论管理",tags = "后台人员评论管理")
 @Slf4j
 @RequestMapping("/comment")
 @RestController

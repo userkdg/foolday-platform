@@ -14,7 +14,7 @@ import com.foolday.dao.system.role.SysRoleAuthEntity;
 import com.foolday.dao.system.role.SysRoleEntity;
 import com.foolday.service.api.role.SysRoleServiceApi;
 import com.foolday.service.api.roleAuth.SysRoleAuthServiceApi;
-import com.foolday.serviceweb.dto.role.RoleQueryPageVo;
+import com.foolday.serviceweb.dto.role.AbstractQueryPageVo;
 import com.foolday.serviceweb.dto.role.SysRoleAuthVo;
 import com.foolday.serviceweb.dto.role.SysRoleVo;
 import io.swagger.annotations.Api;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * @author userkdg
  */
 @Slf4j
-@Api("角色管理")
+@Api(value = "角色管理",tags = "角色管理")
 @RequestMapping("/role")
 @RestController
 @CrossAuth
@@ -135,7 +135,7 @@ public class RoleController {
 
     @ApiOperation("角色分页列表")
     @PostMapping("/page")
-    public FantPage<SysRoleEntity> page(@ApiParam("角色") @RequestBody RoleQueryPageVo queryPageVo) {
+    public FantPage<SysRoleEntity> page(@ApiParam("角色") @RequestBody AbstractQueryPageVo queryPageVo) {
         Page page = new Page(queryPageVo.getCurrentPage(), queryPageVo.getPageSize());
         LambdaQueryWrapper<SysRoleEntity> queryWrapper = roleServiceApi.lqWrapper().like(StringUtils.isNotEmpty(queryPageVo.getSearchKey()), SysRoleEntity::getName, queryPageVo.getSearchKey());
         FantPage<SysRoleEntity> sysRoleEntityFantPage = roleServiceApi.selectPage(page, queryWrapper);
