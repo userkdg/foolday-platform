@@ -24,7 +24,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class SysMenuEntity extends BaseEntity<SysMenuEntity> {
+public class SysMenuEntity extends BaseEntity<SysMenuEntity> implements Comparable<SysMenuEntity> {
     private String name;
 
     private String iconUrl;
@@ -37,4 +37,15 @@ public class SysMenuEntity extends BaseEntity<SysMenuEntity> {
     private String pid;
 
     private String shopId;
+
+    @Override
+    public int compareTo(SysMenuEntity o) {
+        if (o.getUpdateTime() != null && this.getUpdateTime() != null) {
+            return o.getUpdateTime().compareTo(this.getUpdateTime());
+        }
+        if (o.getCreateTime() != null && this.getCreateTime() != null) {
+            return o.getUpdateTime().compareTo(this.getUpdateTime());
+        }
+        return 1;
+    }
 }

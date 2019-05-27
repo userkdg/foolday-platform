@@ -21,10 +21,25 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class SysRoleEntity extends BaseEntity<SysRoleEntity> {
+public class SysRoleEntity extends BaseEntity<SysRoleEntity> implements Comparable<SysRoleEntity>{
     private String name;
 
     private CommonStatus status;
 
     private String shopId;
+
+
+    @Override
+    public int compareTo(SysRoleEntity o) {
+        if (o.getUpdateTime() != null && this.getUpdateTime() != null) {
+            return o.getUpdateTime().compareTo(this.getUpdateTime());
+        }
+        if (o.getCreateTime() != null && this.getCreateTime() != null) {
+            return o.getUpdateTime().compareTo(this.getUpdateTime());
+        }
+        if (o.getCreateTime() != null) {
+            return o.getCreateTime().compareTo(this.getCreateTime());
+        }
+        return 1;
+    }
 }
