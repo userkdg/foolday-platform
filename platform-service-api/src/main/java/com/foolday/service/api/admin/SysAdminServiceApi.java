@@ -3,6 +3,9 @@ package com.foolday.service.api.admin;
 import com.foolday.common.base.BaseMapperServiceApi;
 import com.foolday.common.base.BaseServiceApi;
 import com.foolday.dao.system.admin.AdminEntity;
+import com.foolday.serviceweb.dto.admin.SysAdminVo;
+
+import java.util.List;
 
 /**
  * @author userkdg
@@ -10,4 +13,7 @@ import com.foolday.dao.system.admin.AdminEntity;
  **/
 public interface SysAdminServiceApi extends BaseServiceApi<AdminEntity>, BaseMapperServiceApi<AdminEntity> {
 
+    void editAdminAndRoleAndMenu(SysAdminVo sysAdminVo, String adminId, List<String> roleIds, List<String> menuIds);
+
+    AdminEntity addAdminAndRoleAndMenu(SysAdminVo sysAdminVo, List<String> roleIds, List<String> menuIds);
 }

@@ -43,50 +43,27 @@ import java.util.stream.Collectors;
 public class AdminController {
     @Resource
     private SysAdminServiceApi sysAdminServiceApi;
-
     @Resource
     private SysAdminRoleServiceApi sysAdminRoleServiceApi;
-
-    @Resource
-    private SysMenuServiceApi sysMenuServiceApi;
-
     @Resource
     private SysAdminMenuServiceApi sysAdminMenuServiceApi;
 
-    @ApiOperation("用户新增+角色权限")
+    @ApiOperation("用户新增+角色+菜单")
     @PostMapping("/add")
     public FantResult<String> add(@ApiParam("用户") @RequestBody SysAdminVo sysAdminVo,
                                   @ApiParam("勾选的角色ids") @RequestParam(required = false) List<String> roleIds,
                                   @ApiParam("勾选的菜单ids") @RequestParam(required = false) List<String> menuIds) {
-        AdminEntity adminEntity = sysAdminServiceApi.of(sysAdminVo);
-        AdminEntity insert = sysAdminServiceApi.insert(adminEntity);
-        relateRoleOfUser(roleIds, insert.getId(), adminEntity.getShopId());
-        relateMenuOfUser(menuIds, insert.getId(), adminEntity.getShopId());
+        AdminEntity insert = sysAdminServiceApi.addAdminAndRoleAndMenu(sysAdminVo, roleIds, menuIds);
         return FantResult.ok(insert.getId());
     }
 
-    @ApiOperation("用户编辑")
+    @ApiOperation("用户编辑+角色+菜单")
     @PostMapping("/edit/{id}")
     public FantResult<String> edit(@ApiParam("用户") @RequestBody SysAdminVo sysAdminVo,
                                    @ApiParam("用户id") @PathVariable("id") String id,
                                    @ApiParam("勾选的权限ids") @RequestParam(required = false) List<String> roleIds,
                                    @ApiParam("勾选的菜单ids") @RequestParam(required = false) List<String> menuIds) {
-        AdminEntity adminEntity = sysAdminServiceApi.checkOneById(id, "编辑用户已删除，请刷新页面");
-        adminEntity.setStatus(sysAdminVo.getStatus());
-        adminEntity.setAccount(sysAdminVo.getAccount());
-        adminEntity.setShopId(sysAdminVo.getShopId());
-        adminEntity.setTelphone(sysAdminVo.getTelphone());
-        adminEntity.setNickname(sysAdminVo.getNickname());
-        adminEntity.setPassword(sysAdminVo.getPassword());
-        adminEntity.insertOrUpdate();
-        boolean delete = sysAdminRoleServiceApi.deleteByUserId(id);
-        log.info("清理old权限关联{}", delete);
-        delete = sysAdminMenuServiceApi.deleteByUserId(id);
-        log.info("清理old菜单关联{}", delete);
-        // 处理权限
-        relateRoleOfUser(roleIds, id, sysAdminVo.getShopId());
-        // 处理菜单
-        relateMenuOfUser(menuIds, id, adminEntity.getShopId());
+        sysAdminServiceApi.editAdminAndRoleAndMenu(sysAdminVo, id, roleIds, menuIds);
         return FantResult.ok();
     }
 
@@ -159,50 +136,5 @@ public class AdminController {
         sysAdminServiceApi.updateById(sysRoleEntity);
     }
 
-    /**
-     * 关联菜单
-     *
-     * @param menuIds
-     * @param userId
-     * @param shopId
-     */
-    private void relateMenuOfUser(List<String> menuIds, String userId, String shopId) {
-        if (menuIds != null && !menuIds.isEmpty()) {
-            menuIds.stream().filter(menuId -> {
-                Optional<SysMenuEntity> sysMenuEntity = sysMenuServiceApi.selectById(menuId);
-                return sysMenuEntity.isPresent() && sysMenuEntity.get().getShopId().equalsIgnoreCase(shopId);
-            }).map(s -> {
-                SysAdminMenuEntity sysAdminMenu = new SysAdminMenuEntity();
-                sysAdminMenu.setMenuId(s);
-                sysAdminMenu.setUserId(userId);
-                return sysAdminMenu;
-            }).forEach(s -> sysAdminMenuServiceApi.insert(s));
-        }
-    }
 
-    /**
-     * 建立用户与权限关联
-     *
-     * @param roleIds shopId
-     * @param userId  userId
-     */
-    private void relateRoleOfUser(List<String> roleIds, String userId, String shopId) {
-        if (roleIds != null && !roleIds.isEmpty()) {
-            // 建立用户与权限关系
-            Map<String, Map<String, List<SysRoleEntity>>> sysShopIdAndRoleAllMap = ContextLoader.getSysRoleAllMap();
-            Map<String, List<SysRoleEntity>> sysRoleAllMap = sysShopIdAndRoleAllMap.get(shopId);
-            roleIds.stream().peek(roleId -> {
-                if (!sysRoleAllMap.containsKey(roleId)) {
-                    log.warn("用户选择了非法角色信息roleId=>{},不建立用户与权限关系,跳过处理", roleId);
-                }
-            }).filter(sysRoleAllMap::containsKey).map(roleId -> {
-                SysAdminRoleEntity sysAdminRole = new SysAdminRoleEntity();
-                sysAdminRole.setUserId(userId);
-                sysAdminRole.setRoleId(roleId);
-                return sysAdminRole;
-            }).forEach(sysRoleAuthEntity -> sysAdminRoleServiceApi.insert(sysRoleAuthEntity));
-        } else {
-            log.warn("用户{}的角色为空", userId);
-        }
-    }
 }

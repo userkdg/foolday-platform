@@ -48,38 +48,8 @@ public class RoleController {
     @PostMapping("/add")
     public FantResult<String> add(@ApiParam("角色") @RequestBody SysRoleVo sysRole,
                                   @ApiParam("勾选的权限ids") @RequestParam(required = false) List<String> authIds) {
-
-        SysRoleEntity role = roleServiceApi.of(sysRole);
-        role.setStatus(CommonStatus.有效);
-        SysRoleEntity insert = roleServiceApi.insert(role);
-        String roleId = insert.getId();
-        relateAuthOfRole(authIds, roleId);
-        return FantResult.ok(roleId);
-    }
-
-    /**
-     * 建立角色与权限关联
-     *
-     * @param authIds
-     * @param roleId
-     */
-    private void relateAuthOfRole(List<String> authIds, String roleId) {
-        if (authIds != null && !authIds.isEmpty()) {
-            // 建立角色与权限关系
-            Map<String, SysAuthEntity> sysAuthAllMap = ContextLoader.getSysAuthAllMap();
-            authIds.stream().peek(authId -> {
-                if (!sysAuthAllMap.containsKey(authId)) {
-                    log.warn("用户选择了非法权限信息authId=>{},不建立角色与权限关系,跳过处理", authId);
-                }
-            }).filter(sysAuthAllMap::containsKey).map(authId -> {
-                SysRoleAuthEntity sysRoleAuth = new SysRoleAuthEntity();
-                sysRoleAuth.setAuthId(authId);
-                sysRoleAuth.setRoleId(roleId);
-                return sysRoleAuth;
-            }).forEach(sysRoleAuthEntity -> roleAuthServiceApi.insert(sysRoleAuthEntity));
-        } else {
-            log.warn("角色{}的权限为空", roleId);
-        }
+        SysRoleEntity roleEntity = roleServiceApi.addRoleAndAuth(sysRole, authIds);
+        return FantResult.ok(roleEntity.getId());
     }
 
     @ApiOperation("角色编辑")
@@ -87,15 +57,7 @@ public class RoleController {
     public FantResult<String> edit(@ApiParam("角色") @RequestBody SysRoleVo sysRoleVo,
                                    @ApiParam("角色id") @PathVariable("id") String id,
                                    @ApiParam("勾选的权限ids") @RequestParam(required = false) List<String> authIds) {
-        SysRoleEntity sysRoleEntity = roleServiceApi.checkOneById(id, "编辑角色已删除，请刷新页面");
-        sysRoleEntity.setStatus(sysRoleVo.getStatus());
-        sysRoleEntity.setName(sysRoleVo.getName());
-        sysRoleEntity.setShopId(sysRoleVo.getShopId());
-        roleServiceApi.insertOrUpdate(sysRoleEntity);
-        boolean delete = roleAuthServiceApi.deleteByRoleId(id);
-        log.info("清理old权限关联{}", delete);
-        // 处理权限
-        relateAuthOfRole(authIds, id);
+        roleServiceApi.editRoleAndAuth(sysRoleVo, id, authIds);
         return FantResult.ok();
     }
 
