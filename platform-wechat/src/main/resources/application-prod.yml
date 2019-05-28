@@ -19,7 +19,7 @@ spring:
         prepStmtCacheSize: 10
         prepStmtCacheSqlLimit: 16
         useServerPrepStmts: true
-        maximumPoolSize: 5
+        maximumPoolSize: 4
 
     tomcat:
       max-wait: 10000
