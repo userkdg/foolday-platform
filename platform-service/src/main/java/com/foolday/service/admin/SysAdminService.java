@@ -17,6 +17,7 @@ import com.foolday.service.api.adminMenu.SysAdminMenuServiceApi;
 import com.foolday.service.api.menu.SysMenuServiceApi;
 import com.foolday.serviceweb.dto.admin.SysAdminVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -33,8 +34,6 @@ import java.util.Optional;
 public class SysAdminService implements SysAdminServiceApi {
     @Resource
     private AdminMapper adminMapper;
-    @Resource
-    private SysAdminServiceApi sysAdminServiceApi;
     @Resource
     private SysMenuServiceApi sysMenuServiceApi;
     @Resource
@@ -81,15 +80,15 @@ public class SysAdminService implements SysAdminServiceApi {
     }
 
     private AdminEntity privateAddAdminAndRoleAndMenu(SysAdminVo sysAdminVo, List<String> roleIds, List<String> menuIds) {
-        AdminEntity adminEntity = sysAdminServiceApi.of(sysAdminVo);
-        AdminEntity insert = sysAdminServiceApi.insert(adminEntity);
+        AdminEntity adminEntity = of(sysAdminVo);
+        AdminEntity insert = insert(adminEntity);
         relateRoleOfUser(roleIds, insert.getId(), adminEntity.getShopId());
         relateMenuOfUser(menuIds, insert.getId(), adminEntity.getShopId());
         return insert;
     }
 
     private void privateEditAdminAndRoleAndMenu(SysAdminVo sysAdminVo, String id, List<String> roleIds, List<String> menuIds) {
-        AdminEntity adminEntity = sysAdminServiceApi.checkOneById(id, "编辑用户已删除，请刷新页面");
+        AdminEntity adminEntity = checkOneById(id, "编辑用户已删除，请刷新页面");
         adminEntity.setStatus(sysAdminVo.getStatus());
         adminEntity.setAccount(sysAdminVo.getAccount());
         adminEntity.setShopId(sysAdminVo.getShopId());
