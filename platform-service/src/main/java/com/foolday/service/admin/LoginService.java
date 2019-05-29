@@ -1,6 +1,7 @@
 package com.foolday.service.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.foolday.common.enums.UserStatus;
 import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.system.admin.AdminEntity;
@@ -68,7 +69,7 @@ public class LoginService implements LoginServiceApi {
         AdminEntity admin = adminMapper.selectOne(Wrappers.lambdaQuery(adminEntity));
         PlatformAssert.isFalse(Objects.isNull(admin), "账号信息不存在");
         ShopEntity shopEntity = shopServiceApi.findByAdminId(admin.getId());
-        LoginUser loginUser = new LoginUser(admin.getId(), admin.getAccount(), shopEntity.getId());
+        LoginUser loginUser = new LoginUser(admin.getId(), admin.getAccount(), shopEntity.getId(), UserStatus.有效.equals(admin.getStatus()));
         return loginUser;
     }
 

@@ -7,7 +7,7 @@ public final class WebConstant {
     /**
      * jwt的密钥
      */
-    public static final String Admin_JWT_SECERT = "this is a jwt secret";
+    public static final String Admin_JWT_SECERT = "thisIsAJwtSecret";
     /**
      * 超级管理员
      */

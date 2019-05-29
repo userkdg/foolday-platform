@@ -37,22 +37,25 @@ public class LoginUser implements Serializable {
     public LoginUser() {
     }
 
-    public LoginUser(String userId, String userName) {
+    public LoginUser(String userId, String userName, boolean valid) {
         this.userId = userId;
         this.userName = userName;
+        this.valid = valid;
     }
 
-    public LoginUser(String userId, String userName, String shopId) {
+    public LoginUser(String userId, String userName, String shopId, boolean valid) {
         this.userId = userId;
         this.userName = userName;
         this.shopId = shopId;
+        this.valid = valid;
     }
 
-    public LoginUser(String userId, String userName, String openId, String shopId) {
+    public LoginUser(String userId, String userName, String openId, String shopId, boolean valid) {
         this.userId = userId;
         this.userName = userName;
         this.openId = openId;
         this.shopId = shopId;
+        this.valid = valid;
     }
 
 

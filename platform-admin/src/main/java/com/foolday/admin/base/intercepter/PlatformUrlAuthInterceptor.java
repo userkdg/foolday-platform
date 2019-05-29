@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -23,6 +24,7 @@ import java.util.Set;
  * @author userkdg
  */
 @Slf4j
+@Deprecated
 public final class PlatformUrlAuthInterceptor implements HandlerInterceptor {
 
     /**
@@ -40,17 +42,23 @@ public final class PlatformUrlAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String method = request.getMethod();
+        return checkUserAuth(request, response, loginUser);
+    }
+
+    private boolean checkUserAuth(HttpServletRequest request, HttpServletResponse response, LoginUser loginUser) throws IOException {
+       /* String method = request.getMethod();
         String requestURI = request.getRequestURI();
         log.debug("用户{}发起请求{}的url为{}", loginUser.getUserId(), method, requestURI);
         Set<String> userAuthEntities = ContextLoader.getUrls(loginUser.getUserId(), true);
-        if (!userAuthEntities.contains(requestURI) &&
-                !loginUser.getUserName().equalsIgnoreCase(WebConstant.SYSTEM_ADMIN_NAME)) {
+        if (loginUser.getUserName().equalsIgnoreCase(WebConstant.SYSTEM_ADMIN_NAME)){
+            return true;
+        }
+        if (!userAuthEntities.contains(requestURI)) {
             //重定向到跳转到静态页面、没有经过spring mvc 视图处理
             response.sendRedirect(request.getContextPath() + errorUrl.getError403());
             log.error("用户无法访问该资源，跳到{}", errorUrl.getError403());
             return false;
-        }
+        }*/
         return true;
     }
 

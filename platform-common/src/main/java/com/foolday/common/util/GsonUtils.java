@@ -34,4 +34,19 @@ public class GsonUtils {
         return create().fromJson(jsonStr, cls);
     }
 
+    /**
+     * 1.把对象转为json string
+     * 2.json string 2 object
+     *
+     * @param obj eg: map
+     * @param clazz eg: loginUser {@link LoginUser}
+     * @param <T>
+     * @return
+     */
+    public static <T> T toJsonThenObject(Object obj, Class<T> clazz) {
+        String toJson = create().toJson(obj);
+        return create().fromJson(toJson, clazz);
+    }
+
+
 }

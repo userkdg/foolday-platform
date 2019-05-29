@@ -1,7 +1,6 @@
 package com.foolday.admin.base;
 
 import com.foolday.admin.base.intercepter.PlatformAuthTokenInterceptor;
-import com.foolday.admin.base.intercepter.PlatformUrlAuthInterceptor;
 import com.foolday.admin.base.property.WebInterceptorPatternProperties;
 import com.foolday.admin.base.property.WebInterceptorStaticUrlProperties;
 import com.foolday.admin.base.property.WebLoginUserMvcProperties;
@@ -71,13 +70,14 @@ public class AdminWebConfiguration implements WebMvcConfigurer {
         if (this.webLoginUserMvcProperties.getLoginUser() != null &&
                 this.webLoginUserMvcProperties.getLoginUser().isValid()) {
             logger.debug("启用登录测试用户：{}", this.webLoginUserMvcProperties.getLoginUser());
-            registry.addInterceptor(new PlatformAuthTokenInterceptor(this.webLoginUserMvcProperties.getLoginUser()))
-                    .excludePathPatterns(webInterceptorPatternProperties.getExcludePathPatternsList())
-                    .order(-100);
-            registry.addInterceptor(new PlatformUrlAuthInterceptor(this.webLoginUserMvcProperties.getLoginUser(),
+            registry.addInterceptor(new PlatformAuthTokenInterceptor(this.webLoginUserMvcProperties.getLoginUser(),
                     webInterceptorStaticUrlProperties.getErrorUrl()))
                     .excludePathPatterns(webInterceptorPatternProperties.getExcludePathPatternsList())
-                    .addPathPatterns("/**").order(-99);
+                    .order(-100);
+        /*  registry.addInterceptor(new PlatformUrlAuthInterceptor(LoginUserHolder.get(),
+                    webInterceptorStaticUrlProperties.getErrorUrl()))
+                    .excludePathPatterns(webInterceptorPatternProperties.getExcludePathPatternsList())
+                    .addPathPatterns("/**").order(-99);*/
         }
     }
 
