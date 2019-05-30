@@ -1,6 +1,7 @@
 package com.foolday.admin.controller.system;
 
 import com.foolday.common.base.AdminBaseDataUtils;
+import com.foolday.common.base.RedisBeanNameApi;
 import com.foolday.common.constant.WebConstant;
 import com.foolday.common.dto.FantResult;
 import com.foolday.service.api.admin.LoginServiceApi;
@@ -36,7 +37,7 @@ public class LoginController {
     @Resource
     private LoginServiceApi loginServiceApi;
 
-    @Resource
+    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
     private RedisTemplate<String, String> redisTemplate;
 
     /**

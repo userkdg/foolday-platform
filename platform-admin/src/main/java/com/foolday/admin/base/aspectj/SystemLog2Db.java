@@ -1,6 +1,7 @@
 package com.foolday.admin.base.aspectj;
 
 import com.foolday.common.enums.ActionStatus;
+import com.foolday.common.util.IpUtils;
 import com.foolday.dao.system.log.SystemLogEntity;
 import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +12,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import reactor.util.function.Tuple3;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
@@ -63,8 +67,8 @@ public class SystemLog2Db {
             systemLog.setOperator(LoginUserHolder.get().getUserName());
             systemLog.setOperateStatus(ActionStatus.SUCCESS);
             systemLog.setRequestBody(Arrays.asList(args).toString());
-            // todo
-            systemLog.setHost(null);
+            final String ipAddr = findIpAddressByRequest();
+            systemLog.setHost(ipAddr);
 
             StringBuilder sb = new StringBuilder().append("用户").append(userId)
                     .append("请求类").append(point.getSignature().getDeclaringTypeName())
@@ -90,6 +94,21 @@ public class SystemLog2Db {
             systemLogThreadLocal.set(systemLog);
         }
         return obj;
+    }
+
+    /**
+     * 获取IP 基于tomcat
+     *
+     * @return
+     */
+    private String findIpAddressByRequest() {
+        String ipAddr = null;
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (requestAttributes != null) {
+            HttpServletRequest request = (requestAttributes).getRequest();
+            ipAddr = IpUtils.getIpAddr(request);
+        }
+        return ipAddr;
     }
 
     @After("annotationPointCut()")
