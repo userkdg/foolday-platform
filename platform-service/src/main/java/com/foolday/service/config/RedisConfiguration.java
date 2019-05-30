@@ -69,11 +69,11 @@ public class RedisConfiguration implements RedisBeanNameApi {
 
     @Bean(REDIS_TEMPLATE_S_S)
     public RedisTemplate<String, String> redisTemplateString(RedisConnectionFactory redisConnectionFactory) {
-        return redisTemplateKeyString(redisConnectionFactory);
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        return redisTemplateKey(redisTemplate, redisConnectionFactory);
     }
 
-    private <T> RedisTemplate<String, T> redisTemplateKeyString(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, T> redisTemplate = new RedisTemplate<>();
+    private <T1, T2> RedisTemplate<T1, T2> redisTemplateKey(RedisTemplate<T1, T2> redisTemplate,RedisConnectionFactory redisConnectionFactory) {
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -99,7 +99,7 @@ public class RedisConfiguration implements RedisBeanNameApi {
     @Bean(REDIS_TEMPLATE_S_O)
     public RedisTemplate<String, Object> redisTemplateStringObject(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplateKeyString(redisConnectionFactory);
+        redisTemplateKey(redisTemplate, redisConnectionFactory);
         return redisTemplate;
     }
 
@@ -109,8 +109,7 @@ public class RedisConfiguration implements RedisBeanNameApi {
     @Bean(REDIS_TEMPLATE_O_O)
     public RedisTemplate<Object, Object> redisTemplateKeyObject(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplateKeyString(redisConnectionFactory);
-        redisTemplate.afterPropertiesSet();
+        redisTemplateKey(redisTemplate, redisConnectionFactory);
         return redisTemplate;
     }
 }
