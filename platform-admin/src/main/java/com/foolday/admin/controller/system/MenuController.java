@@ -7,7 +7,6 @@ import com.foolday.common.dto.FantPage;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.util.PlatformAssert;
-import com.foolday.dao.system.admin.AdminEntity;
 import com.foolday.dao.system.menu.SysMenuEntity;
 import com.foolday.service.api.menu.SysMenuServiceApi;
 import com.foolday.serviceweb.dto.menu.SysMenuVo;

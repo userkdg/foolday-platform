@@ -7,19 +7,14 @@ import com.foolday.common.dto.FantPage;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.UserStatus;
 import com.foolday.common.util.PlatformAssert;
-import com.foolday.core.init.ContextLoader;
 import com.foolday.dao.system.admin.AdminEntity;
-import com.foolday.dao.system.adminRole.SysAdminRoleEntity;
-import com.foolday.dao.system.menu.SysAdminMenuEntity;
 import com.foolday.dao.system.menu.SysMenuEntity;
 import com.foolday.dao.system.role.SysRoleEntity;
 import com.foolday.service.api.admin.SysAdminRoleServiceApi;
 import com.foolday.service.api.admin.SysAdminServiceApi;
 import com.foolday.service.api.adminMenu.SysAdminMenuServiceApi;
-import com.foolday.service.api.menu.SysMenuServiceApi;
 import com.foolday.serviceweb.dto.admin.SysAdminVo;
 import com.foolday.serviceweb.dto.adminRole.SysAdminRoleAndMenuVo;
-import com.foolday.serviceweb.dto.adminRole.SysAdminRoleVo;
 import com.foolday.serviceweb.dto.menu.SysMenuVo;
 import com.foolday.serviceweb.dto.role.AbstractQueryPageVo;
 import com.foolday.serviceweb.dto.role.SysRoleVo;
@@ -31,8 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 

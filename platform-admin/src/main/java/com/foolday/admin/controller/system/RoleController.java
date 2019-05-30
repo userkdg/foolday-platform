@@ -8,9 +8,7 @@ import com.foolday.common.dto.FantPage;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.util.PlatformAssert;
-import com.foolday.core.init.ContextLoader;
 import com.foolday.dao.system.auth.SysAuthEntity;
-import com.foolday.dao.system.role.SysRoleAuthEntity;
 import com.foolday.dao.system.role.SysRoleEntity;
 import com.foolday.service.api.role.SysRoleServiceApi;
 import com.foolday.service.api.roleAuth.SysRoleAuthServiceApi;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +30,7 @@ import java.util.stream.Collectors;
  * @author userkdg
  */
 @Slf4j
-@Api(value = "角色管理",tags = "角色管理")
+@Api(value = "角色管理", tags = "角色管理")
 @RequestMapping("/role")
 @RestController
 @CrossAuth
