@@ -50,7 +50,7 @@ public class SystemLog2Db {
     public void before(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        System.out.println("方法规则拦截：" + method.getName());
+       log.debug("方法规则拦截：{}", method.getName());
     }
 
     /**
@@ -101,7 +101,7 @@ public class SystemLog2Db {
      *
      * @return
      */
-    private String findIpAddressByRequest() {
+    private static String findIpAddressByRequest() {
         String ipAddr = null;
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
