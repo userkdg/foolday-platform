@@ -17,9 +17,8 @@ import javax.annotation.Resource;
 @Service
 public class RedisMessageService extends AbstractMessageService {
 
-    @SuppressWarnings({"unchecked", "SpringJavaInjectionPointsAutowiringInspection"})
-    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_O)
-    private RedisTemplate<String, MessageEntity> redisTemplate;
+    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_O_O)
+    private RedisTemplate<Object, Object> redisTemplate;
 
     @Override
     public void publish(MessageEntity messageEntity) {

@@ -46,6 +46,11 @@ public final class WebConstant {
         public static final String REDIS_PREFFIX = "platform:";
 
         /**
+         * 存储微信多用户登录会话信息
+         */
+        public static final String WEIXIN_USER_SESSION_INFO = REDIS_PREFFIX + "weixin:session_info:";
+
+        /**
          * 订单号前key
          */
         public static final String REDIS_ORDER_NO_KEY = REDIS_PREFFIX + "orderNo:";

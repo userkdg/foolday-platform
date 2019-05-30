@@ -8,6 +8,8 @@ import com.foolday.dao.test.TestMapper;
 import com.foolday.service.api.TestServiceApi;
 import com.foolday.service.config.WechatProperties;
 import com.foolday.serviceweb.dto.TestServiceWebDto;
+import com.foolday.wechat.base.bean.WxSessionResult;
+import com.foolday.wechat.base.session.WxUserSessionHandler;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
@@ -44,6 +46,9 @@ public class AppDaoDbRunnerTests {
     @Resource
     private WxMpService wxMpService;
 
+    @Resource
+    private WxUserSessionHandler wxUserSessionHandler;
+
     /**
      * 测试模板消息
      *
@@ -51,6 +56,9 @@ public class AppDaoDbRunnerTests {
      */
     @Test
     public void message() throws WxErrorException {
+        WxSessionResult wxSessionResult = WxSessionResult.newInstance();
+        wxUserSessionHandler.addUserSessionInfo("111", wxSessionResult);
+
         WxMpTemplateMessage orderPaySuccessTemplate = WxMpTemplateMessage.builder().build();
         orderPaySuccessTemplate.setToUser(wechatProperties.getMyOpenId());
         // 在公共平台定义的模板的id

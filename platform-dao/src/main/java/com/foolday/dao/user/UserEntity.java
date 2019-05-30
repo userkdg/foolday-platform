@@ -8,11 +8,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @TableName("t_user")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class UserEntity extends BaseEntity<UserEntity> {
+public class UserEntity extends BaseEntity<UserEntity> implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /*
     客户名称
      */

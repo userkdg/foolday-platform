@@ -22,9 +22,8 @@ import javax.annotation.Resource;
 @Service
 public class OrderMessageCustomer implements MessageListener {
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_O)
-    private RedisTemplate<String, Object> redisTemplate;
+    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_O_O)
+    private RedisTemplate<Object, Object> redisTemplate;
 
     @Resource
     private WxMpService wxMpService;

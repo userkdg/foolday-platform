@@ -14,6 +14,11 @@ import javax.annotation.concurrent.ThreadSafe;
 @Slf4j
 @UtilityClass
 public class GsonUtils {
+
+    public static String toJson(Object object) {
+        return create().toJson(object);
+    }
+
     /**
      * 线程安全的gsonBuilder类
      */

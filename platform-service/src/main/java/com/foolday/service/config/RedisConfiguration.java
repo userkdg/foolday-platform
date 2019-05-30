@@ -73,7 +73,7 @@ public class RedisConfiguration implements RedisBeanNameApi {
         return redisTemplateKey(redisTemplate, redisConnectionFactory);
     }
 
-    private <T1, T2> RedisTemplate<T1, T2> redisTemplateKey(RedisTemplate<T1, T2> redisTemplate,RedisConnectionFactory redisConnectionFactory) {
+    private <T1, T2> RedisTemplate<T1, T2> redisTemplateKey(RedisTemplate<T1, T2> redisTemplate, RedisConnectionFactory redisConnectionFactory) {
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -96,12 +96,14 @@ public class RedisConfiguration implements RedisBeanNameApi {
         return redisTemplate;
     }
 
+   /*
+   关闭 有问题！
     @Bean(REDIS_TEMPLATE_S_O)
     public RedisTemplate<String, Object> redisTemplateStringObject(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplateKey(redisTemplate, redisConnectionFactory);
         return redisTemplate;
-    }
+    }*/
 
     /**
      * 配置其他类型的redisTemplate

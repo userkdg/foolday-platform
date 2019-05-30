@@ -8,7 +8,8 @@ import com.foolday.common.dto.FantResult;
 import com.foolday.dao.user.UserEntity;
 import com.foolday.service.api.wechat.WxUserServiceApi;
 import com.foolday.service.config.WxMaConfiguration;
-import com.foolday.serviceweb.dto.admin.base.LoginUser;
+import com.foolday.wechat.base.bean.WxSessionResult;
+import com.foolday.wechat.base.session.WxUserSessionApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -17,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * 微信小程序用户接口
@@ -32,6 +35,8 @@ import javax.annotation.Resource;
 public class WxMaUserController {
     @Resource
     private WxUserServiceApi wxUserServiceApi;
+    @Resource
+    private WxUserSessionApi wxUserSessionApi;
 
     /**
      * 登陆接口
@@ -48,7 +53,11 @@ public class WxMaUserController {
         }
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
         WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
-        //TODO 可以增加自己的逻辑，关联业务相关数据
+        // 可以增加自己的逻辑，关联业务相关数据 只针对微信小程序端 用openId为map key 没有问题,
+        // 前端请求需要在header携带用户的WxMaJscode2SessionResult信息来请求，作为授权认证
+        // 针对系统独立维护的用户id，必须要在前端获取用户信息的时候更新到redis
+        WxSessionResult wxSessionResult = WxSessionResult.wrapper(session).setLoginTime(LocalDateTime.now());
+        wxUserSessionApi.addUserSessionInfo(session.getOpenid(), wxSessionResult);
         return FantResult.ok(session);
     }
 
@@ -77,7 +86,6 @@ public class WxMaUserController {
         if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
             return FantResult.fail("user check failed");
         }
-
         // 解密用户信息
         WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
         //手机号码
@@ -85,8 +93,17 @@ public class WxMaUserController {
         // 记录用户信息
         UserEntity userPoByOpenIdAndUnionId = wxUserServiceApi.findByOpenIdAndUnionId(userInfo.getOpenId(), userInfo.getUnionId())
                 .orElseGet(() -> wxUserServiceApi.addByWeixinInfo(userInfo, phoneNoInfo));
-        LoginUser loginUser = LoginUser.valueOf(userPoByOpenIdAndUnionId, LoginUser.LoginUserType.微信用户);
-        return FantResult.ok(loginUser);
+//        WxSessionResult wxSessionResult = (WxSessionResult) redisTemplate.opsForHash().get(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, userInfo.getOpenId());
+        Optional<WxSessionResult> wxSessionResultOpt = wxUserSessionApi.getSessionUserInfo(userInfo.getOpenId());
+        WxSessionResult wxSessionResult = wxSessionResultOpt.orElse(null);
+        if (wxSessionResult != null) {
+            wxSessionResult.setUserInfo(userPoByOpenIdAndUnionId);
+            wxSessionResult.setUserInfo(userPoByOpenIdAndUnionId);
+            wxUserSessionApi.addUserSessionInfo(userInfo.getOpenId(), wxSessionResult);
+        } else {
+            return FantResult.fail("user check failed");
+        }
+        return FantResult.ok(userPoByOpenIdAndUnionId);
     }
 
     /**
