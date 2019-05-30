@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.Topic;
@@ -67,10 +68,12 @@ public class RedisConfiguration implements RedisBeanNameApi {
         return container;
     }
 
-    @Bean(REDIS_TEMPLATE_S_S)
-    public RedisTemplate<String, String> redisTemplateString(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-        return redisTemplateKey(redisTemplate, redisConnectionFactory);
+
+    @Bean
+    public StringRedisTemplate redisTemplateString(RedisConnectionFactory redisConnectionFactory) {
+        StringRedisTemplate redisTemplate = new StringRedisTemplate();
+        redisTemplateKey(redisTemplate, redisConnectionFactory);
+        return redisTemplate;
     }
 
     private <T1, T2> RedisTemplate<T1, T2> redisTemplateKey(RedisTemplate<T1, T2> redisTemplate, RedisConnectionFactory redisConnectionFactory) {
@@ -108,7 +111,7 @@ public class RedisConfiguration implements RedisBeanNameApi {
     /**
      * 配置其他类型的redisTemplate
      ***/
-    @Bean(REDIS_TEMPLATE_O_O)
+    @Bean
     public RedisTemplate<Object, Object> redisTemplateKeyObject(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplateKey(redisTemplate, redisConnectionFactory);

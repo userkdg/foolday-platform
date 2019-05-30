@@ -9,7 +9,7 @@ import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,8 +22,8 @@ import javax.annotation.Resource;
 @Service
 public class OrderMessageCustomer implements MessageListener {
 
-    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_O_O)
-    private RedisTemplate<Object, Object> redisTemplate;
+    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
+    private StringRedisTemplate redisTemplate;
 
     @Resource
     private WxMpService wxMpService;

@@ -1,7 +1,7 @@
 package com.foolday.common.base;
 
 public interface RedisBeanNameApi {
-    String REDIS_TEMPLATE_S_S = "stringRedisTemplate";
+    String REDIS_TEMPLATE_S_S = "redisTemplateString";
 
     /**
      * 暂时关闭 存在为题
@@ -9,7 +9,7 @@ public interface RedisBeanNameApi {
     /*@Deprecated
     String REDIS_TEMPLATE_S_O = "stringObjectRedisTemplate";*/
 
-    String REDIS_TEMPLATE_O_O = "objectObjectRedisTemplate";
+    String REDIS_TEMPLATE_O_O = "redisTemplateKeyObject";
 
     static String of(RedisKvType kvType) {
         switch (kvType) {
