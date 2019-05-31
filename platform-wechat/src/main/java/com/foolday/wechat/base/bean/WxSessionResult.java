@@ -34,6 +34,7 @@ public class WxSessionResult extends WxMaJscode2SessionResult implements Seriali
     /**
      * 客户所选店铺 默认店铺
      */
+    @SerializedName("shopId")
     private String shopId;
 
     private WxMaJscode2SessionResult wxMaJscode2SessionResult;

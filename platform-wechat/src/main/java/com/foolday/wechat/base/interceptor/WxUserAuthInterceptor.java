@@ -1,6 +1,7 @@
 package com.foolday.wechat.base.interceptor;
 
 import com.foolday.common.constant.WebConstant;
+import com.foolday.common.exception.PlatformException;
 import com.foolday.common.util.GsonUtils;
 import com.foolday.wechat.base.bean.WxSessionResult;
 import com.foolday.wechat.base.session.WxUserSessionApi;
@@ -38,9 +39,9 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
         ) {
             Optional<WxSessionResult> sessionUserInfo = wxUserSessionApi.getSessionUserInfo(wxMaJscode2SessionResult.getOpenid());
             WxSessionResult wxSessionResult = sessionUserInfo.orElse(null);
-            if (wxSessionResult != null &&
-                    isNotBlank(wxSessionResult.getSessionKey()) &&
-                    wxSessionResult.getSessionKey().equals(wxMaJscode2SessionResult.getSessionKey())) {
+            /*isNotBlank(wxSessionResult.getSessionKey()) &&wxSessionResult.getSessionKey().equals(wxMaJscode2SessionResult.getSessionKey())*/
+            // 只要之前有存有openId说明用户已授权登录过，跳过拦截
+            if (wxSessionResult != null) {
                 // 增加最新访问时间
                 wxSessionResult.setLastTime(LocalDateTime.now());
                 wxUserSessionApi.addUserSessionInfo(wxMaJscode2SessionResult.getOpenid(), wxSessionResult);
@@ -48,7 +49,8 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
             }
         }
         log.error("登录失败，用户会话信息无效");
-        return false;
+        // end 重新登录
+        throw new PlatformException("用户会话信息无效,请重新登录");
     }
 
     @Override

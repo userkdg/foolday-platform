@@ -12,4 +12,6 @@ public interface WxUserSessionApi {
     void addUserSessionInfo(String openId, WxSessionResult wxSessionResult);
 
     Optional<WxSessionResult> getSessionUserInfo(String openId);
+
+    boolean preexistsLoginOpenId(String openId);
 }

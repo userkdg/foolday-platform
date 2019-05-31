@@ -47,4 +47,13 @@ public class WxUserSessionHandler implements WxUserSessionApi {
         }
         return Optional.empty();
     }
+
+    /*
+    判断是否之前已授权登录过，是则跳过拦截，否则为第一次登录小程序需要授权
+     */
+    @Override
+    public boolean preexistsLoginOpenId(String openId) {
+        Optional<WxSessionResult> sessionUserInfo = getSessionUserInfo(openId);
+        return sessionUserInfo.orElse(null) != null;
+    }
 }
