@@ -5,6 +5,7 @@ import com.foolday.common.exception.PlatformException;
 import com.foolday.common.util.GsonUtils;
 import com.foolday.wechat.base.bean.WxSessionResult;
 import com.foolday.wechat.base.session.WxUserSessionApi;
+import com.foolday.wechat.base.session.WxUserSessionHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -45,6 +46,7 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
                 // 增加最新访问时间
                 wxSessionResult.setLastTime(LocalDateTime.now());
                 wxUserSessionApi.addUserSessionInfo(wxMaJscode2SessionResult.getOpenid(), wxSessionResult);
+                WxUserSessionHolder.setWxSessionResultHolder(wxSessionResult);
                 return true;
             }
         }
@@ -60,6 +62,6 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
+        WxUserSessionHolder.clearWxSessionResult();
     }
 }
