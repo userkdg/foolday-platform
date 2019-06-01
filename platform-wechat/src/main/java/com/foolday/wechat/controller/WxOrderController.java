@@ -161,7 +161,8 @@ public class WxOrderController {
                                       @ApiParam(name = "commentVo", value = "评论内容", required = true)
                                       @RequestBody CommentVo commentVo) {
         // 评论管理
-        wxOrderServiceApi.addComment(orderId, commentVo);
+        wxOrderServiceApi.addComment(orderId, commentVo, WxUserSessionHolder.getUserId(),
+                WxUserSessionHolder.getShopId(), WxUserSessionHolder.getUserInfo().getName());
         return FantResult.ok();
     }
 

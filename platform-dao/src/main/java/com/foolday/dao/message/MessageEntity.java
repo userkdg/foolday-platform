@@ -60,4 +60,9 @@ public class MessageEntity extends BaseEntity<MessageEntity> implements Serializ
     @EnumValue
     private MessageAction action;
 
+    /**
+     * 0未读 1已读 -1无效/删除
+     */
+    private Boolean unread;
+
 }

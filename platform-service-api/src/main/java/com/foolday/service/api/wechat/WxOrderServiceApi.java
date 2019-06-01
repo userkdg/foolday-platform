@@ -43,5 +43,5 @@ public interface WxOrderServiceApi extends BaseServiceApi<OrderEntity> {
 
     void newBill(String orderId, EntInvoiceVo invoiceVo);
 
-    void addComment(String orderId, CommentVo commentVo);
+    void addComment(String orderId, CommentVo commentVo, String userId, String shopId, String name);
 }

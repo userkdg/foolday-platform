@@ -1,5 +1,6 @@
 package com.foolday.service.common;
 
+import com.foolday.common.base.BaseServiceUtils;
 import com.foolday.dao.message.MessageEntity;
 import com.foolday.dao.message.MessageMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,18 @@ public class RedisMessageService extends AbstractMessageService {
         int insert = messageMapper.insert(messageEntity);
         log.info("入库数据{},结果{}", messageEntity, insert);
         redisTemplate.convertAndSend(messageEntity.getChannelType().getValue(), messageEntity);
+    }
+
+    /**
+     * 更新消息为已读
+     * @param messageId
+     * @return
+     */
+    @Override
+    public boolean readMessage(String messageId) {
+        MessageEntity messageEntity = BaseServiceUtils.checkOneById(messageMapper, messageId, "查看消息已删除，请刷新");
+        messageEntity.setUnread(Boolean.TRUE);
+        return messageEntity.updateById();
     }
 
 

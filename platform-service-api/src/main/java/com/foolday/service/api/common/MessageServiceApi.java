@@ -4,4 +4,6 @@ import com.foolday.dao.message.MessageEntity;
 
 public interface MessageServiceApi {
     void publish(MessageEntity messageEntity);
+
+    boolean readMessage(String messageId);
 }

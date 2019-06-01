@@ -36,6 +36,7 @@ public class CommonMessageManager {
             messagePo.setAction(messageAction);
             messagePo.setCreateTime(LocalDateTime.now());
             messagePo.setChannelType(channelType);
+            messagePo.setUnread(Boolean.FALSE);
             SpringContextUtils.getBean(MessageServiceApi.class).publish(messagePo);
         }
     }

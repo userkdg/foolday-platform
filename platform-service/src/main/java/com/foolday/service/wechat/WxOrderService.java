@@ -24,7 +24,6 @@ import com.foolday.service.api.wechat.WxOrderServiceApi;
 import com.foolday.service.api.wechat.WxUserCouponServiceApi;
 import com.foolday.service.api.wechat.WxUserServiceApi;
 import com.foolday.service.common.CommonMessageManager;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.comment.CommentVo;
 import com.foolday.serviceweb.dto.wechat.order.EntInvoiceVo;
 import com.foolday.serviceweb.dto.wechat.order.OrderDetailVo;
@@ -309,10 +308,12 @@ public class WxOrderService implements WxOrderServiceApi {
      *
      * @param orderId
      * @param commentVo
+     * @param userName
+     * @param userId
      * @return
      */
     @Override
-    public void addComment(String orderId, CommentVo commentVo) {
+    public void addComment(String orderId, CommentVo commentVo, String userId, String shopId, String userName) {
         BaseServiceUtils.checkOneById(orderMapper, orderId, "订单信息不存在");
         String imgIdStr = null;
         if (commentVo.getImgIds() != null && !commentVo.getImgIds().isEmpty()) {
@@ -324,14 +325,15 @@ public class WxOrderService implements WxOrderServiceApi {
             CommentEntity commentEntity = new CommentEntity();
             BeanUtils.copyProperties(commentVo, commentEntity);
             commentEntity.setOrderId(orderId);
-            commentEntity.setUserId(LoginUserHolder.get().getUserId());
+            commentEntity.setUserId(userId);
             commentEntity.setCreateTime(LocalDateTime.now());
             commentEntity.setGoodsId(orderDetail.getGoodsId());
             commentEntity.setStatus(CommentStatus.有效);
             commentEntity.setAdminId("");
             commentEntity.setAdminName("");
             commentEntity.setImgIds(finalImgIdStr);
-            commentEntity.setShopId(LoginUserHolder.get().getShopId());
+            commentEntity.setShopId(shopId);
+            commentEntity.setUserName(userName);
             commentEntity.insert();
             return commentEntity;
         }).collect(Collectors.toList());
