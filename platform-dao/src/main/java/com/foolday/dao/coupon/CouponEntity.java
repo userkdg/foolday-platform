@@ -44,22 +44,22 @@ public class CouponEntity extends BaseEntity<CouponEntity> {
     其他优惠券(0);
      */
     @EnumValue
-    private CouponType type = CouponType.满减券;
+    private CouponType type;
 
     /**
      * 满fullPrice
      */
-    private Float fullPrice = 0F;
+    private Float fullPrice;
 
     /**
      * 满fullPrice 减subPrice
      */
-    private Float subPrice = 0F;
+    private Float subPrice;
 
     /**
      * 满fullPrice 打discnt折 1折 2折(0.2) 8折(80%>0.8)
      */
-    private Float discnt = 0F;
+    private Float discnt;
 
     /**
      * 基于数据计算最终价格
@@ -68,12 +68,14 @@ public class CouponEntity extends BaseEntity<CouponEntity> {
      * @return
      */
     public float getTargetPriceBySourcePrice(CouponType type, float sourcePrice) {
+        float subPrice = getSubPrice() == null ? 0F: getSubPrice();
+        float fullPrice = getFullPrice() == null ? 0F : getFullPrice();
         PlatformAssert.notNull(type, "当前优惠券类型，不提供优惠");
         switch (type) {
             case 满减券:
-                return (sourcePrice >= getFullPrice()) ? sourcePrice - getSubPrice() : sourcePrice;
+                return (sourcePrice >= fullPrice) ? sourcePrice - subPrice : sourcePrice;
             case 折扣券:
-                return (sourcePrice >= getFullPrice()) ? sourcePrice * (getDiscnt() * 0.1F) : sourcePrice;
+                return (sourcePrice >= fullPrice) ? sourcePrice * (getDiscnt() * 0.1F) : sourcePrice;
             case 其他优惠券:
                 return sourcePrice;
             default:

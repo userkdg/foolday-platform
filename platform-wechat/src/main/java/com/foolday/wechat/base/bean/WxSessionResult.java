@@ -73,6 +73,10 @@ public class WxSessionResult extends WxMaJscode2SessionResult implements Seriali
         return this;
     }
 
+    public WxMaJscode2SessionResult getWxMaJscode2SessionResult() {
+        return wxMaJscode2SessionResult;
+    }
+
     public LocalDateTime getLastTime() {
         return lastTime;
     }

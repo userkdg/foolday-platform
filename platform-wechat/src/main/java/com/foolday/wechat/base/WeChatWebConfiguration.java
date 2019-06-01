@@ -2,13 +2,18 @@ package com.foolday.wechat.base;
 
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.exception.PlatformException;
+import com.foolday.wechat.base.bean.WxTestSessionProperties;
+import com.foolday.wechat.base.interceptor.WxUserAuthInterceptor;
+import com.foolday.wechat.base.session.WxUserSessionApi;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.google.common.net.HttpHeaders;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -20,6 +25,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +41,19 @@ import java.util.stream.Collectors;
  * 可后续增加其他类型的异常类处理
  */
 @Configuration
-public class WeChatWebConfiguration {
+@EnableConfigurationProperties(value = {WxTestSessionProperties.class})
+public class WeChatWebConfiguration implements WebMvcConfigurer {
+    @Autowired
+    private WxUserSessionApi wxUserSessionApi;
+
+    @Autowired
+    private WxTestSessionProperties wxTestSessionProperties;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new WxUserAuthInterceptor(wxUserSessionApi,wxTestSessionProperties)).order(-100);
+    }
+
     /*
     为了避免与外部@ControllerAdvicec冲突
      */

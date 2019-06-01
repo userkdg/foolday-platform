@@ -3,18 +3,19 @@ package com.foolday.service.wechat;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseServiceUtils;
-import com.foolday.common.base.RedisBeanNameApi;
 import com.foolday.common.enums.*;
 import com.foolday.common.exception.PlatformException;
 import com.foolday.common.util.KeyUtils;
 import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.comment.CommentEntity;
 import com.foolday.dao.coupon.CouponEntity;
+import com.foolday.dao.couponUser.UserCouponMapper;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.dao.order.OrderDetailEntity;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.dao.order.OrderMapper;
+import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.shop.ShopMapper;
 import com.foolday.dao.specification.GoodsSpecEntity;
 import com.foolday.dao.user.UserEntity;
@@ -68,13 +69,52 @@ public class WxOrderService implements WxOrderServiceApi {
     private WxUserCouponServiceApi userCouponServiceApi;
 
     @Resource
+    private UserCouponMapper userCouponMapper;
+
+    @Resource
     private OrderDetailServiceApi orderDetailServiceApi;
 
-    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
+    @Resource
     private RedisTemplate<String, String> redisTemplate;
 
     @Resource
     private ShopMapper shopMapper;
+
+    /**
+     * 计算商品的总价格和是否含有折扣商品
+     *
+     * @param orderDetailsVo
+     * @param goodsMapper
+     * @return
+     */
+    public static Tuple2<Float, AtomicBoolean> calcGoodsSumPriceAndExistDiscntGoods(List<OrderDetailVo> orderDetailsVo, GoodsMapper goodsMapper) {
+        AtomicBoolean existDiscountGoods = new AtomicBoolean(false);
+        Float sumPrice = orderDetailsVo.stream().map(orderDetail -> {
+            GoodsEntity goodsEntity = BaseServiceUtils.checkOneById(goodsMapper, orderDetail.getGoodsId());
+            if (Boolean.TRUE.equals(goodsEntity.getDiscntGoods()) &&
+                    (goodsEntity.getDiscntPrice() != null && goodsEntity.getDiscntPrice() != 0.0F)) {
+                existDiscountGoods.set(true);
+            }
+            List<String> goodsSpecIds = orderDetail.getGoodsSpecIds();
+            // todo 增加规格计算判断价格
+            Float appendGoodsPrice = 0.0F;
+            if (goodsSpecIds.isEmpty()) {
+                log.debug("本商品没有选择规格信息");
+            } else {
+                log.debug("本商品进行规格信息计算");
+                appendGoodsPrice = goodsSpecIds.stream().map(goodsSpecId -> {
+                    GoodsSpecEntity goodsSpecEntity = new GoodsSpecEntity();
+                    goodsSpecEntity.setId(goodsSpecId);
+                    GoodsSpecEntity specEntity = goodsSpecEntity.selectById();
+                    return specEntity.getAdjustPrice() ? specEntity.getGoodsAppendPrice() : 0.0F;
+                }).reduce((f1, f2) -> f1 + f2).orElse(0.0F);
+            }
+            Float price = goodsEntity.getRealPriceByDiscntCondition();
+            Integer cnt = orderDetail.getCnt();
+            return price * cnt + appendGoodsPrice;
+        }).reduce((f1, f2) -> f1 + f2).orElseThrow(() -> new PlatformException("商品总价计算异常"));
+        return Tuples.of(sumPrice, existDiscountGoods);
+    }
 
     /**
      * @param orderVo
@@ -82,16 +122,19 @@ public class WxOrderService implements WxOrderServiceApi {
      * @return
      */
     @Override
-    public OrderEntity submitOrder(WxOrderVo orderVo, String shopId) {
+    public OrderEntity submitOrder(WxOrderVo orderVo, String userId,String userName, String shopId) {
         // 检查店铺信息有效性
-        checkOneById(shopId, "店铺信息无效,无法下单");
+        ShopEntity shopEntity = BaseServiceUtils.checkOneById(shopMapper, shopId, "店铺信息无效,无法下单");
         OrderEntity orderEntity = new OrderEntity();
         BeanUtils.copyProperties(orderVo, orderEntity);
         orderEntity.setCreateTime(LocalDateTime.now());
-        orderEntity.setShopId(LoginUserHolder.get().getShopId());
+        orderEntity.setUserId(userId);
+        orderEntity.setShopId(shopId);
+        orderEntity.setShopName(shopEntity.getName());
+        orderEntity.setShopAddress(shopEntity.getAddr());
+        orderEntity.setUserName(userName);
         final String orderNoOfDay = KeyUtils.generateOrderNoOfDay(redisTemplate);
         orderEntity.setOrderNo(orderNoOfDay);
-        String userId = orderVo.getUserId();
         // 判断订单类型
         if (StringUtils.isNotBlank(orderVo.getGroupbuyId())) {
             // todo 判断团购id是否存在
@@ -143,51 +186,17 @@ public class WxOrderService implements WxOrderServiceApi {
         if (StringUtils.isNotBlank(couponId)) {
             CouponEntity couponEntity = couponServiceApi.get(couponId).orElseThrow(() -> new PlatformException("订单优惠券异常"));
             couponRealPrice = couponEntity.getTargetPriceBySourcePrice(couponEntity.getType(), couponRealPrice);
-            userCouponServiceApi.updateUsedByUserIdAndCouponId(userId, couponId, true);
+//            userCouponServiceApi.updateUsedByUserIdAndCouponId(userId, couponId, true);
+            userCouponMapper.updateUsed(userId, couponId);
         }
         String otherCouponId = orderVo.getOtherCouponId();
         if (StringUtils.isNotBlank(otherCouponId)) {
             CouponEntity couponEntity = couponServiceApi.get(otherCouponId).orElseThrow(() -> new PlatformException("订单优惠券异常"));
             couponRealPrice = couponEntity.getTargetPriceBySourcePrice(couponEntity.getType(), couponRealPrice);
-            userCouponServiceApi.updateUsedByUserIdAndCouponId(userId, otherCouponId, true);
+//            userCouponServiceApi.updateUsedByUserIdAndCouponId(userId, otherCouponId, true);
+            userCouponMapper.updateUsed(userId, couponId);
         }
         return couponRealPrice;
-    }
-
-    /**
-     * 计算商品的总价格和是否含有折扣商品
-     *
-     * @param orderDetailsVo
-     * @param goodsMapper
-     * @return
-     */
-    public static Tuple2<Float, AtomicBoolean> calcGoodsSumPriceAndExistDiscntGoods(List<OrderDetailVo> orderDetailsVo, GoodsMapper goodsMapper) {
-        AtomicBoolean existDiscountGoods = new AtomicBoolean(false);
-        Float sumPrice = orderDetailsVo.stream().map(orderDetail -> {
-            GoodsEntity goodsEntity = BaseServiceUtils.checkOneById(goodsMapper, orderDetail.getGoodsId());
-            if (Boolean.TRUE.equals(goodsEntity.getDiscntGoods()) &&
-                    (goodsEntity.getDiscntPrice() != null && goodsEntity.getDiscntPrice() != 0.0F)) {
-                existDiscountGoods.set(true);
-            }
-            List<String> goodsSpecIds = orderDetail.getGoodsSpecIds();
-            // todo 增加规格计算判断价格
-            Float appendGoodsPrice = 0.0F;
-            if (goodsSpecIds.isEmpty()) {
-                log.debug("本商品没有选择规格信息");
-            } else {
-                log.debug("本商品进行规格信息计算");
-                appendGoodsPrice = goodsSpecIds.stream().map(goodsSpecId -> {
-                    GoodsSpecEntity goodsSpecEntity = new GoodsSpecEntity();
-                    goodsSpecEntity.setId(goodsSpecId);
-                    GoodsSpecEntity specEntity = goodsSpecEntity.selectById();
-                    return specEntity.getAdjustPrice() ? specEntity.getGoodsAppendPrice() : 0.0F;
-                }).reduce((f1, f2) -> f1 + f2).orElse(0.0F);
-            }
-            Float price = goodsEntity.getRealPriceByDiscntCondition();
-            Integer cnt = orderDetail.getCnt();
-            return price * cnt + appendGoodsPrice;
-        }).reduce((f1, f2) -> f1 + f2).orElseThrow(() -> new PlatformException("商品总价计算异常"));
-        return Tuples.of(sumPrice, existDiscountGoods);
     }
 
     /**

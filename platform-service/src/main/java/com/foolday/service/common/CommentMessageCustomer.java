@@ -1,6 +1,5 @@
 package com.foolday.service.common;
 
-import com.foolday.common.base.RedisBeanNameApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -16,7 +15,7 @@ import javax.annotation.Resource;
 @Slf4j
 @Service
 public class CommentMessageCustomer implements MessageListener {
-    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
+    @Resource
     private RedisTemplate<String, String> redisTemplate;
 
     @Override

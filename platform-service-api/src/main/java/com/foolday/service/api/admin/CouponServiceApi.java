@@ -19,9 +19,10 @@ public interface CouponServiceApi extends BaseServiceApi<CouponEntity> {
      * 新增优惠券返回实体类
      *
      * @param couponVo
+     * @param shopId
      * @return
      */
-    CouponEntity add(CouponVo couponVo);
+    CouponEntity add(CouponVo couponVo, String shopId);
 
     boolean delete(String... couponId);
 

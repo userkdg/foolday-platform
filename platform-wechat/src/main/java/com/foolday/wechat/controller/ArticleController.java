@@ -5,6 +5,7 @@ import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.exception.PlatformException;
 import com.foolday.dao.article.ArticleEntity;
 import com.foolday.service.api.wechat.WxArticleServiceApi;
+import com.foolday.wechat.base.session.WxUserSessionHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -26,8 +27,8 @@ public class ArticleController {
     public FantResult<String> add(@ApiParam("文章标题") @RequestParam("title") String title,
                                   @ApiParam("内容") @RequestParam("content") String content,
                                   @ApiParam("文章的类别 eg:餐饮行业等") @RequestParam("type") String type,
-                                  @ApiParam("店铺id") @RequestParam("shopId") String shopId,
                                   @ApiParam("文章列表的缩略图id") @RequestParam("imageId") String imageId) {
+        String shopId = WxUserSessionHolder.getShopId();
         ArticleEntity article = new ArticleEntity();
         article.setType(type);
         article.setStatus(CommonStatus.有效);

@@ -67,12 +67,14 @@ public class CouponService implements CouponServiceApi {
      * 新建优惠券
      *
      * @param couponVo
+     * @param shopId
      * @return
      */
     @Override
-    public CouponEntity add(CouponVo couponVo) {
+    public CouponEntity add(CouponVo couponVo, String shopId) {
         CouponEntity couponEntity = new CouponEntity();
         BeanUtils.copyProperties(couponVo, couponEntity);
+        couponEntity.setShopId(shopId);
         couponEntity.setCreateTime(LocalDateTime.now());
         couponMapper.insert(couponEntity);
         return couponEntity;

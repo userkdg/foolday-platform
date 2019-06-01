@@ -1,7 +1,9 @@
 package com.foolday.wechat.base.session;
 
-import com.foolday.common.base.RedisBeanNameApi;
+import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.foolday.common.constant.WebConstant;
+import com.foolday.common.util.GsonUtils;
+import com.foolday.dao.user.UserEntity;
 import com.foolday.wechat.base.bean.WxSessionResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -23,27 +26,38 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class WxUserSessionHandler implements WxUserSessionApi {
 
-    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_O_O)
+    @Resource
     private RedisTemplate<Object, Object> redisTemplate;
 
     @PostConstruct
     private void initKey() {
-        addUserSessionInfo("init", WxSessionResult.newInstance());
+        WxMaJscode2SessionResult wxMaJscode2SessionResult = new WxMaJscode2SessionResult();
+        wxMaJscode2SessionResult.setOpenid("testOpenId");
+        wxMaJscode2SessionResult.setSessionKey("testSessionKey");
+        wxMaJscode2SessionResult.setUnionid("testUnionId");
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId("testUserId");
+        userEntity.setName("testUserName");
+        userEntity.setShopId("testShopId");
+        WxSessionResult wxSessionResult = WxSessionResult.newInstance().setWxMaJscode2SessionResult(wxMaJscode2SessionResult)
+                .setLoginTime(LocalDateTime.now()).setUserInfo(userEntity).setShopId("testShopId");
+        addUserSessionInfo("testOpenId", wxSessionResult);
         redisTemplate.expire(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, 365 * 5, TimeUnit.DAYS);
-        Optional<WxSessionResult> init = getSessionUserInfo("init");
-        log.info("启动系统检查redis连接情况 init=>{}", init.isPresent() ? init.get() : "失败");
+        Optional<WxSessionResult> init = getSessionUserInfo("testOpenId");
+        log.info("启动系统检查redis连接情况 testOpenId=>{}", init.isPresent() ? init.get() : "失败");
     }
 
     @Override
     public void addUserSessionInfo(String openId, WxSessionResult wxSessionResult) {
-        redisTemplate.opsForHash().put(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, openId, wxSessionResult);
+        redisTemplate.opsForHash().put(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, openId, GsonUtils.toJson(wxSessionResult));
     }
 
     @Override
     public Optional<WxSessionResult> getSessionUserInfo(String openId) {
         Object obj = redisTemplate.opsForHash().get(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, openId);
-        if (obj instanceof WxSessionResult) {
-            return Optional.of((WxSessionResult) obj);
+        if (obj != null) {
+            WxSessionResult wxSessionResult = GsonUtils.fromJson(obj.toString(), WxSessionResult.class);
+            return Optional.of(wxSessionResult);
         }
         return Optional.empty();
     }

@@ -1,6 +1,8 @@
 package com.foolday.dao.couponUser;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,4 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserCouponMapper extends BaseMapper<UserCouponEntity> {
 
+    @Update("update t_coupon_usercreate_tim set used = 1, status = 0 where user_id = #{userId} and coupon_id = #{couponId} ")
+    int updateUsed(@Param("userId") String userId, @Param("couponId") String couponId);
 }

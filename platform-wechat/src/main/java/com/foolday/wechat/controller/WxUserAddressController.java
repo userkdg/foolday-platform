@@ -8,6 +8,7 @@ import com.foolday.common.exception.PlatformException;
 import com.foolday.dao.useraddr.UserAddressEntity;
 import com.foolday.service.api.useraddr.UserAddressServiceApi;
 import com.foolday.wechat.base.BaseController;
+import com.foolday.wechat.base.session.WxUserSessionHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -37,8 +38,8 @@ public class WxUserAddressController implements BaseController {
 
     @PostMapping("/add")
     @ApiOperation("写入")
-    public FantResult<String> add(@ApiParam("用户id") @RequestParam("userId") String userId,
-                                  @ApiParam("地址名称") @RequestParam("address") String address) {
+    public FantResult<String> add(@ApiParam("地址名称") @RequestParam("address") String address) {
+        String userId = WxUserSessionHolder.getUserId();
         UserAddressEntity userAddressEntity = new UserAddressEntity();
         userAddressEntity.setAddress(address);
         userAddressEntity.setUserId(userId);
@@ -49,9 +50,9 @@ public class WxUserAddressController implements BaseController {
 
     @PostMapping("/edit")
     @ApiOperation("编辑")
-    public FantResult<String> edit(@ApiParam("用户id") @RequestParam("userId") String userId,
-                                   @ApiParam("地址id") @RequestParam("addressId") String addressId,
+    public FantResult<String> edit(@ApiParam("地址id") @RequestParam("addressId") String addressId,
                                    @ApiParam("地址名称") @RequestParam("address") String address) {
+        String userId = WxUserSessionHolder.getUserId();
         UserAddressEntity addressEntity = userAddressServiceApi.checkOneById(addressId, "获取地址信息失败");
         addressEntity.setAddress(address);
         addressEntity.setUserId(userId);
@@ -81,7 +82,8 @@ public class WxUserAddressController implements BaseController {
 
     @GetMapping("/list")
     @ApiOperation("获取用户地址列表")
-    public FantResult<List<String>> listByUserId(@ApiParam("用户id") @RequestParam("userId") String userId) {
+    public FantResult<List<String>> listByUserId() {
+        String userId = WxUserSessionHolder.getUserId();
         LambdaQueryWrapper<UserAddressEntity> queryWrapper = userAddressServiceApi.lqWrapper()
                 .eq(UserAddressEntity::getUserId, userId)
                 .eq(UserAddressEntity::getStatus, CommonStatus.有效)

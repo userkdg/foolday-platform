@@ -36,7 +36,9 @@ public class WxOrderController {
     public FantResult<String> add(@ApiParam(value = "订单对象", required = true)
                                   @RequestBody WxOrderVo orderVo) {
         String shopId = WxUserSessionHolder.getShopId();
-        wxOrderServiceApi.submitOrder(orderVo, shopId);
+        String userId = WxUserSessionHolder.getUserId();
+        String userName = WxUserSessionHolder.getUserInfo().getName();
+        wxOrderServiceApi.submitOrder(orderVo, userId, userName, shopId);
         return FantResult.ok();
     }
 

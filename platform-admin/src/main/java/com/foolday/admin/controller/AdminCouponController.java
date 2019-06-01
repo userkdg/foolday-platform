@@ -3,6 +3,7 @@ package com.foolday.admin.controller;
 import com.foolday.common.dto.FantResult;
 import com.foolday.dao.coupon.CouponEntity;
 import com.foolday.service.api.admin.CouponServiceApi;
+import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.coupon.CouponVo;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class AdminCouponController {
     @PostMapping(value = "/add")
     public FantResult<String> add(@ApiParam(name = "couponVo", value = "商品对象", required = true)
                                   @RequestBody CouponVo couponVo) {
-        CouponEntity couponEntity = adminCouponServiceApi.add(couponVo);
+        CouponEntity couponEntity = adminCouponServiceApi.add(couponVo, LoginUserHolder.get().getShopId());
         return FantResult.ok(couponEntity.getId());
     }
 

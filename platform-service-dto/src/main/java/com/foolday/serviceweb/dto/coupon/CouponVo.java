@@ -57,4 +57,30 @@ public class CouponVo implements Serializable {
     @NotNull(message = "输入优惠券失效时间")
     private LocalDateTime endTime;
 
+    /**
+     * 满fullPrice
+     */
+    private Float fullPrice;
+
+    /**
+     * 满fullPrice 减subPrice
+     */
+    private Float subPrice;
+
+    /**
+     * 满fullPrice 打discnt折 1折 2折(0.2) 8折(80%>0.8)
+     */
+    private Float discnt;
+
+
+    /**
+     * 领取上限 用于判断客户可以领取多少张
+     */
+    private Integer limitCount;
+
+    /**
+     * 优惠券库存数，递减
+     */
+    private Integer kcCount;
+
 }

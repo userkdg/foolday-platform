@@ -39,7 +39,7 @@ public class WxUserService implements WxUserServiceApi {
     public Optional<UserEntity> findByOpenIdAndUnionId(String openId, String unionId) {
         return userMapper.selectList(Wrappers.lambdaQuery(new UserEntity())
                 .eq(UserEntity::getOpenId, openId).eq(UserEntity::getUnionId, unionId))
-                .stream().min(Comparator.comparing(UserEntity::getUpdateTime));
+                .stream().max(Comparator.comparing(UserEntity::getUpdateTime));
     }
 
     /**

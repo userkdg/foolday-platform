@@ -5,15 +5,18 @@ import com.foolday.common.enums.MessageAction;
 import com.foolday.dao.message.MessageEntity;
 import com.foolday.service.api.common.MessageServiceApi;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Slf4j
+@Component
 public class CommonMessageManager {
 
     /**
      * 订单消息内部类
      */
+    @Component
     public static class OrderMsgHandler {
 
         /**
@@ -33,9 +36,6 @@ public class CommonMessageManager {
             messagePo.setAction(messageAction);
             messagePo.setCreateTime(LocalDateTime.now());
             messagePo.setChannelType(channelType);
-            // 入库db
-            boolean insert = messagePo.insert();
-            log.info("入库数据{},结果{}", messagePo, insert);
             SpringContextUtils.getBean(MessageServiceApi.class).publish(messagePo);
         }
     }

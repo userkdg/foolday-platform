@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Service
 @Slf4j
@@ -26,15 +25,16 @@ public class WxUserCouponService implements WxUserCouponServiceApi {
 
     @Override
     public void updateUsedByUserIdAndCouponId(String userId, String couponId, boolean isUsed) {
-        LambdaQueryWrapper<UserCouponEntity> eq = Wrappers.lambdaQuery(new UserCouponEntity()).eq(UserCouponEntity::getUserId, userId).eq(UserCouponEntity::getCouponId, couponId);
+        LambdaQueryWrapper<UserCouponEntity> eq = Wrappers.lambdaQuery(new UserCouponEntity())
+                .eq(UserCouponEntity::getUserId, userId)
+                .eq(UserCouponEntity::getCouponId, couponId);
         UserCouponEntity userCoupon = userCouponMapper.selectOne(eq);
-        PlatformAssert.isTrue(Objects.nonNull(userCoupon), "您没有当前优惠券，请刷新");
+        PlatformAssert.isTrue(userCoupon != null, "您没有当前优惠券，请刷新");
         PlatformAssert.isFalse(userCoupon.getUsed(), "您所选优惠券已使用");
         PlatformAssert.isTrue(CommonStatus.有效.equals(userCoupon.getStatus()), "用户所选优惠券已失效");
-        userCoupon.setUsed(isUsed);
-        userCoupon.setUpdateTime(LocalDateTime.now());
-        int updateById = userCouponMapper.updateById(userCoupon);
-        log.info("更新用户{}的优惠券{}为已使用{}", userId, couponId, (updateById == 1));
+        int updateById = userCouponMapper.updateUsed(userId, couponId);
+//        int updateById = userCouponMapper.updateById(userCoupon);
+        log.info("更新用户{}的优惠券{}为已使用{}", userId, couponId, (updateById));
     }
 
     /**
@@ -74,6 +74,7 @@ public class WxUserCouponService implements WxUserCouponServiceApi {
         userCouponEntity.setUserId(userId);
         userCouponEntity.setCouponId(couponId);
         userCouponEntity.setStatus(CommonStatus.有效);
+        userCouponEntity.setUsed(Boolean.FALSE);
         Integer count = userCouponMapper.selectCount(Wrappers.lambdaQuery(userCouponEntity));
         PlatformAssert.isTrue(count.equals(0), "您已领取过本优惠券");
         userCouponEntity.setCreateTime(LocalDateTime.now());

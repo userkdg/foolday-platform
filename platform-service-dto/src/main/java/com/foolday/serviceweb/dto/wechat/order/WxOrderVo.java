@@ -48,9 +48,9 @@ public class WxOrderVo implements Serializable {
     /*
     客户id
      */
-    @ApiModelProperty(value = "用户id", required = true, dataType = "String")
+    /*@ApiModelProperty(value = "用户id", required = true, dataType = "String")
     @NotNull(message = "用户标识必填")
-    private String userId;
+    private String userId;*/
     /*
     团购id 默认为'' 若有值为团购/拼团产生的订单
      */

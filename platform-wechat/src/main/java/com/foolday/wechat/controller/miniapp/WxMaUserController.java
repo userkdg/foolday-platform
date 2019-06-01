@@ -99,10 +99,9 @@ public class WxMaUserController {
         if (wxSessionResult != null) {
             wxSessionResult.setUserInfo(userPoByOpenIdAndUnionId);
             wxUserSessionApi.addUserSessionInfo(userInfo.getOpenId(), wxSessionResult);
-        } else {
-            return FantResult.fail("user check failed");
+            return FantResult.ok(userPoByOpenIdAndUnionId);
         }
-        return FantResult.ok(userPoByOpenIdAndUnionId);
+        return FantResult.fail("user check failed");
     }
 
     /**

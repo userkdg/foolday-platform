@@ -22,7 +22,7 @@ public interface WxOrderServiceApi extends BaseServiceApi<OrderEntity> {
         return OrderEntity::new;
     }
 
-    OrderEntity submitOrder(WxOrderVo orderVo, String shopId);
+    OrderEntity submitOrder(WxOrderVo orderVo, String userId,String userName, String shopId);
 
     void toPay(String userId, String orderId);
 

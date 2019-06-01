@@ -1,13 +1,10 @@
 package com.foolday.admin.controller.system;
 
-import com.foolday.common.base.AdminBaseDataUtils;
-import com.foolday.common.base.RedisBeanNameApi;
 import com.foolday.common.constant.WebConstant;
 import com.foolday.common.dto.FantResult;
 import com.foolday.service.api.admin.LoginServiceApi;
 import com.foolday.service.common.JwtUtils;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.login.LoginVo;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
@@ -15,7 +12,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -37,8 +33,8 @@ public class LoginController {
     @Resource
     private LoginServiceApi loginServiceApi;
 
-    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
-    private RedisTemplate<String, String> redisTemplate;
+//    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
+//    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * simple login
@@ -52,7 +48,7 @@ public class LoginController {
             return FantResult.fail("验证码输入错误");
         // 判断是否存在
         if (loginServiceApi.checkLoginAccount(loginVo)) {
-            AdminBaseDataUtils.setShopId2Redis(redisTemplate, LoginUserHolder.get().getUserId(), LoginUserHolder.get().getShopId());
+//            AdminBaseDataUtils.setShopId2Redis(redisTemplate, LoginUserHolder.get().getUserId(), LoginUserHolder.get().getShopId());
             final LoginUser loginUser = loginServiceApi.getLoginUser(loginVo);
             final String jwtoken = JwtUtils.createJwt(loginUser.getUserId(), loginUser);
             return FantResult.ok("登录成功").addMoreData(WebConstant.AUTH_AUTHED_TOKEN, jwtoken);

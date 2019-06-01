@@ -1,6 +1,5 @@
 package com.foolday.service.wechat;
 
-import com.foolday.common.base.RedisBeanNameApi;
 import com.foolday.common.constant.WebConstant;
 import com.foolday.common.exception.PlatformException;
 import com.foolday.common.util.DateUtils;
@@ -31,7 +30,7 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
     @Resource
     private WechatProperties wechatProperties;
 
-    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
+    @Resource
     private RedisTemplate<String, String> redisTemplate;
 
 
