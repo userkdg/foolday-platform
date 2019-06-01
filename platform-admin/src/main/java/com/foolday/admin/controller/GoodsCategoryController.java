@@ -1,9 +1,9 @@
 package com.foolday.admin.controller;
 
+import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.dto.FantResult;
 import com.foolday.dao.category.GoodsCategoryEntity;
 import com.foolday.service.api.admin.GoodsCategoryServiceApi;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.category.GoodsCategoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

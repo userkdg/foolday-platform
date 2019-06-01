@@ -1,25 +1,13 @@
 package com.foolday.service.admin;
 
 import com.alibaba.fastjson.JSONArray;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.foolday.common.base.BaseServiceUtils;
-import com.foolday.common.enums.GoodsSpecType;
 import com.foolday.common.enums.GroupBuyStatus;
 import com.foolday.common.util.JodaTimeUtils;
-import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.groupbuy.GroupBuyEntity;
 import com.foolday.dao.groupbuy.GroupBuyMapper;
-import com.foolday.dao.shop.ShopEntity;
-import com.foolday.dao.specification.GoodsSpecEntity;
-import com.foolday.dao.specification.GoodsSpecMapper;
-import com.foolday.service.api.admin.GoodsSpecServiceApi;
 import com.foolday.service.api.admin.GroupBuyServiceApi;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.groupbuy.GroupBuyVo;
-import com.foolday.serviceweb.dto.admin.specification.GoodsSpecVo;
-import jdk.nashorn.internal.parser.JSONParser;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -42,11 +29,11 @@ public class GroupBuyService implements GroupBuyServiceApi {
     private GroupBuyMapper groupBuyMapper;
 
     @Override
-    public boolean add(GroupBuyVo vo) {
+    public boolean add(GroupBuyVo vo, String shopId) {
         GroupBuyEntity entity = GroupBuyEntity.newInstance();
 
         // 进行vo和entity的转化
-        entity.setShopId(LoginUserHolder.get().getShopId());
+        entity.setShopId(shopId);
         entity.setName(vo.getName());
         entity.setConditionNum(vo.getConditionNum());
         entity.setCurrPrice(vo.getCurrPrice());

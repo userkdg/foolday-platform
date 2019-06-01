@@ -4,6 +4,7 @@ import com.foolday.common.base.BaseServiceApi;
 import com.foolday.common.base.BeanFactory;
 import com.foolday.common.enums.GoodsStatus;
 import com.foolday.dao.goods.GoodsEntity;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import com.foolday.serviceweb.dto.admin.goods.GoodsVo;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface GoodsServiceApi extends BaseServiceApi<GoodsEntity> {
 
-    GoodsEntity newGoods(GoodsVo goodsVo, String categoryId);
+    GoodsEntity newGoods(GoodsVo goodsVo, String categoryId, LoginUser loginUser);
 
     boolean editGoods(GoodsVo goodsVo, String categoryId, String goodsId);
 

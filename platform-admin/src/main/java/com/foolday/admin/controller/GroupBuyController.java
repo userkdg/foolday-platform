@@ -1,7 +1,7 @@
 package com.foolday.admin.controller;
 
+import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.dto.FantResult;
-import com.foolday.dao.groupbuy.GroupBuyEntity;
 import com.foolday.service.api.admin.GroupBuyServiceApi;
 import com.foolday.serviceweb.dto.admin.groupbuy.GroupBuyVo;
 import io.swagger.annotations.Api;
@@ -32,7 +32,7 @@ public class GroupBuyController {
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
     @PostMapping("/add")
     public FantResult<Boolean> add(@RequestBody GroupBuyVo groupBuyVo){
-        boolean ret = groupBuyServiceApi.add(groupBuyVo);
+        boolean ret = groupBuyServiceApi.add(groupBuyVo, LoginUserHolder.get().getShopId());
         return ret ? FantResult.ok() : FantResult.fail();
     }
 }

@@ -1,4 +1,6 @@
-package com.foolday.serviceweb.dto.admin.base;
+package com.foolday.admin.base.bean;
+
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 
 /**
  * 本地内存存储用户信息

@@ -16,7 +16,7 @@ import com.foolday.dao.user.UserMapper;
 import com.foolday.service.api.admin.OrderServiceApi;
 import com.foolday.service.common.CommonMessageManager;
 import com.foolday.serviceweb.dto.admin.OrderQueryVo;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -88,21 +88,22 @@ public class OrderService implements OrderServiceApi {
      * @return
      */
     @Override
-    public List<OrderEntity> findCancelOrders() {
-        return findByOrderStatus(OrderStatus.同意退款);
+    public List<OrderEntity> findCancelOrders(LoginUser user) {
+        return findByOrderStatus(OrderStatus.同意退款, user);
     }
 
     /**
      * 根据订单状态分类
      *
      * @param orderStatus
+     * @param user
      * @return
      */
     @Override
-    public List<OrderEntity> findByOrderStatus(OrderStatus orderStatus) {
+    public List<OrderEntity> findByOrderStatus(OrderStatus orderStatus, LoginUser user) {
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setStatus(orderStatus);
-        orderEntity.setShopId(LoginUserHolder.get().getShopId());
+        orderEntity.setShopId(user.getShopId());
         return orderMapper.selectList(Wrappers.lambdaQuery(orderEntity))
                 .stream()
                 .filter(Objects::nonNull)

@@ -1,11 +1,13 @@
 package com.foolday.admin.controller;
 
+import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.dto.FantPage;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.OrderStatus;
 import com.foolday.dao.order.OrderEntity;
 import com.foolday.service.api.admin.OrderServiceApi;
 import com.foolday.serviceweb.dto.admin.OrderQueryVo;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,21 +55,24 @@ public class AdminOrderController {
     @ApiOperation(value = "后台人员获取对已退单列表")
     @GetMapping("/audit/cancelOrder/list")
     public FantResult<List<OrderEntity>> auditCancelOrders() {
-        List<OrderEntity> cancelOrders = adminOrderServiceApi.findByOrderStatus(OrderStatus.申请退款);
+        LoginUser loginUser = LoginUserHolder.get();
+        List<OrderEntity> cancelOrders = adminOrderServiceApi.findByOrderStatus(OrderStatus.申请退款, loginUser);
         return FantResult.ok(cancelOrders);
     }
 
     @ApiOperation(value = "后台人员获取对已退单列表")
     @GetMapping("/agreeCancel/list")
     public FantResult<List<OrderEntity>> agreeOrders() {
-        List<OrderEntity> cancelOrders = adminOrderServiceApi.findByOrderStatus(OrderStatus.同意退款);
+        LoginUser loginUser = LoginUserHolder.get();
+        List<OrderEntity> cancelOrders = adminOrderServiceApi.findByOrderStatus(OrderStatus.同意退款, loginUser);
         return FantResult.ok(cancelOrders);
     }
 
     @ApiOperation(value = "后台人员获取对已退单列表")
     @GetMapping("/disagressCancel/list")
     public FantResult<List<OrderEntity>> disagressCancelOrders() {
-        List<OrderEntity> cancelOrders = adminOrderServiceApi.findByOrderStatus(OrderStatus.不同意退款);
+        LoginUser loginUser = LoginUserHolder.get();
+        List<OrderEntity> cancelOrders = adminOrderServiceApi.findByOrderStatus(OrderStatus.不同意退款, loginUser);
         return FantResult.ok(cancelOrders);
     }
 

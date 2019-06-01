@@ -1,6 +1,7 @@
 package com.foolday.admin.controller;
 
 import com.foolday.admin.base.aspectj.PlatformLog;
+import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.dto.FantResult;
 import com.foolday.dao.comment.CommentEntity;
 import com.foolday.service.api.admin.AdminCommentServiceApi;
@@ -28,7 +29,7 @@ public class AdminCommentController {
     @PostMapping("/list")
     @PlatformLog(name = "按最新时间获取评论列表")
     public FantResult<List<CommentEntity>> list() {
-        return FantResult.ok(adminCommentServiceApi.list());
+        return FantResult.ok(adminCommentServiceApi.list(LoginUserHolder.get()));
     }
 
     @ApiOperation("回复评论, 返回正常，需要通过订单id或者评论id获取回复信息")
@@ -36,7 +37,7 @@ public class AdminCommentController {
     @PlatformLog(name = "回复评论")
     public FantResult<List<CommentEntity>> replay(@PathVariable(value = "commentId", required = true) String commentId,
                                                   @RequestBody CommentVo commentVo) {
-        adminCommentServiceApi.replay(commentId, commentVo);
+        adminCommentServiceApi.replay(commentId, commentVo, LoginUserHolder.get());
         return FantResult.ok();
     }
 

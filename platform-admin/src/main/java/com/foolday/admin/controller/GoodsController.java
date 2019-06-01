@@ -1,13 +1,13 @@
 package com.foolday.admin.controller;
 
 import com.foolday.admin.base.MultipartFileUtils;
+import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.GoodsStatus;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.service.api.admin.GoodsCouponServiceApi;
 import com.foolday.service.api.admin.GoodsServiceApi;
 import com.foolday.service.api.base.Image2DiskServiceApi;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.goods.GoodsVo;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class GoodsController {
             String imageId = image2DiskServiceApi.uploadImage(MultipartFileUtils.toFileDto(multipartFile)).orElse(null);
             goodsVo.setImgId(imageId);
         }
-        GoodsEntity goodsEntity = goodsServiceApi.newGoods(goodsVo, goodsVo.getCategoryId());
+        GoodsEntity goodsEntity = goodsServiceApi.newGoods(goodsVo, goodsVo.getCategoryId(), LoginUserHolder.get());
         // 关联优惠券
         goodsCouponServiceApi.relateGoodsCoupons(goodsEntity.getId(), couponIds);
         return FantResult.ok(goodsEntity.getId());

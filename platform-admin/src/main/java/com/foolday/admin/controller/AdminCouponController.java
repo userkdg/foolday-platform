@@ -1,9 +1,9 @@
 package com.foolday.admin.controller;
 
+import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.dto.FantResult;
 import com.foolday.dao.coupon.CouponEntity;
 import com.foolday.service.api.admin.CouponServiceApi;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.coupon.CouponVo;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;

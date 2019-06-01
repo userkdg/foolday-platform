@@ -7,7 +7,6 @@ import com.foolday.dao.comment.CommentEntity;
 import com.foolday.dao.comment.CommentMapper;
 import com.foolday.service.api.admin.AdminCommentServiceApi;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.comment.CommentVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -61,9 +60,9 @@ public class AdminCommentService implements AdminCommentServiceApi {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public List<CommentEntity> list() {
+    public List<CommentEntity> list(LoginUser loginUser) {
         CommentEntity comment = new CommentEntity();
-        comment.setShopId(LoginUserHolder.get().getShopId());
+        comment.setShopId(loginUser.getShopId());
         return commentMapper.selectList(Wrappers.lambdaQuery(comment)
                 .orderByDesc(CommentEntity::getUpdateTime, CommentEntity::getCreateTime));
     }
@@ -75,9 +74,8 @@ public class AdminCommentService implements AdminCommentServiceApi {
      * @param commentVo
      */
     @Override
-    public void replay(String commentId, CommentVo commentVo) {
+    public void replay(String commentId, CommentVo commentVo, LoginUser loginUser) {
         CommentEntity entity = BaseServiceUtils.checkOneById(commentMapper, commentId);
-        LoginUser loginUser = LoginUserHolder.get();
         CommentEntity commentEntity = new CommentEntity();
         BeanUtils.copyProperties(commentVo, commentEntity);
         commentEntity.setOrderId(entity.getOrderId());

@@ -2,11 +2,9 @@ package com.foolday.service.api.admin;
 
 import com.foolday.serviceweb.dto.admin.groupbuy.GroupBuyVo;
 
-import java.util.List;
-
 public interface GroupBuyServiceApi {
 
-    boolean add(GroupBuyVo groupBuyVo);
+    boolean add(GroupBuyVo vo, String shopId);
 
     boolean edit(GroupBuyVo shopVo);
 

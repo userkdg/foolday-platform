@@ -1,12 +1,12 @@
 package com.foolday.admin.base.intercepter;
 
+import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.admin.base.property.WebInterceptorStaticUrlProperties;
 import com.foolday.common.constant.WebConstant;
 import com.foolday.common.util.GsonUtils;
 import com.foolday.core.init.ContextLoader;
 import com.foolday.service.common.JwtUtils;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

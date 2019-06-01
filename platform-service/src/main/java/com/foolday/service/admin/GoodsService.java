@@ -10,7 +10,7 @@ import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.dao.image.ImageMapper;
 import com.foolday.service.api.admin.GoodsServiceApi;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import com.foolday.serviceweb.dto.admin.goods.GoodsVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -52,11 +52,11 @@ public class GoodsService implements GoodsServiceApi {
      * @return
      */
     @Override
-    public GoodsEntity newGoods(GoodsVo goodsVo, String categoryId) {
+    public GoodsEntity newGoods(GoodsVo goodsVo, String categoryId, LoginUser loginUser) {
         BaseServiceUtils.checkOneById(categoryMapper, categoryId);
         GoodsEntity goodsEntity = new GoodsEntity();
         BeanUtils.copyProperties(goodsVo, goodsEntity);
-        Optional<String> shopId4Redis = AdminBaseDataUtils.getShopId4Redis(redisTemplate, LoginUserHolder.get().getUserId());
+        Optional<String> shopId4Redis = AdminBaseDataUtils.getShopId4Redis(redisTemplate, loginUser.getUserId());
         String shopId = shopId4Redis.orElseThrow(() -> new PlatformException("用户无法获取店铺身份"));
         goodsEntity.setShopId(shopId);
         goodsEntity.setCreateTime(LocalDateTime.now());
