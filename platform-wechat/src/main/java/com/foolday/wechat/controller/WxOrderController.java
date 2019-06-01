@@ -134,12 +134,12 @@ public class WxOrderController {
 
     @ApiOperation(value = "订单发起加餐 数据合并")
     @PostMapping(value = "/addGood")
-    public FantResult<String> addGood(@ApiParam(name = "orderId", value = "订单id", required = true)
+    public FantResult<Object> addGood(@ApiParam(name = "orderId", value = "订单id", required = true)
                                       @RequestParam(value = "orderId") String orderId,
                                       @ApiParam(value = "商品列表", required = true)
                                       @RequestBody OrderDetailVo orderDetailvo) {
-        wxOrderServiceApi.appendOrderDetail(orderDetailvo, orderId);
-        return FantResult.ok();
+        OrderDetailEntity orderDetailEntity = wxOrderServiceApi.appendOrderDetail(orderDetailvo, orderId);
+        return FantResult.ok().addMoreData("新增详情id", orderDetailEntity.getId());
     }
 
 

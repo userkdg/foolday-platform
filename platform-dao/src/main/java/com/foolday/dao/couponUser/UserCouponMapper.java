@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserCouponMapper extends BaseMapper<UserCouponEntity> {
 
-    @Update("update t_coupon_usercreate_tim set used = 1, status = 0 where user_id = #{userId} and coupon_id = #{couponId} ")
+    @Update("update t_coupon_user set used = 1, status = 0 where user_id = #{userId} and coupon_id = #{couponId} ")
     int updateUsed(@Param("userId") String userId, @Param("couponId") String couponId);
 }

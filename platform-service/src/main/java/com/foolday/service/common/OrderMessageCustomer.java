@@ -29,7 +29,7 @@ public class OrderMessageCustomer implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] bytes) {
-        log.info("接收到订单类消息{}", message);
+        log.info("接收到订单类消息{}", message.getBody());
         Object deserialize = redisTemplate.getValueSerializer().deserialize(message.getBody());
         if (deserialize instanceof MessageEntity) {
             try {
@@ -113,6 +113,7 @@ public class OrderMessageCustomer implements MessageListener {
         WxMpTemplateData firstData = new WxMpTemplateData("first", messageEntity.getContent(), TEMPLATE_FRONT_COLOR);
         WxMpTemplateData remarkData = new WxMpTemplateData("Remark", messageEntity.getRemark(), TEMPLATE_FRONT_COLOR);
         orderMessageTemplate.addData(firstData).addData(remarkData);
+        log.info("开始发送消息");
         wxMpService.getTemplateMsgService().sendTemplateMsg(orderMessageTemplate);
     }
 }

@@ -9,7 +9,6 @@ import com.foolday.common.util.KeyUtils;
 import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.comment.CommentEntity;
 import com.foolday.dao.coupon.CouponEntity;
-import com.foolday.dao.couponUser.UserCouponMapper;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.dao.order.OrderDetailEntity;
@@ -69,12 +68,9 @@ public class WxOrderService implements WxOrderServiceApi {
     private WxUserCouponServiceApi userCouponServiceApi;
 
     @Resource
-    private UserCouponMapper userCouponMapper;
-
-    @Resource
     private OrderDetailServiceApi orderDetailServiceApi;
 
-    @Resource
+    @Resource(name = "stringRedisTemplate")
     private RedisTemplate<String, String> redisTemplate;
 
     @Resource
@@ -186,15 +182,15 @@ public class WxOrderService implements WxOrderServiceApi {
         if (StringUtils.isNotBlank(couponId)) {
             CouponEntity couponEntity = couponServiceApi.get(couponId).orElseThrow(() -> new PlatformException("订单优惠券异常"));
             couponRealPrice = couponEntity.getTargetPriceBySourcePrice(couponEntity.getType(), couponRealPrice);
-//            userCouponServiceApi.updateUsedByUserIdAndCouponId(userId, couponId, true);
-            userCouponMapper.updateUsed(userId, couponId);
+            userCouponServiceApi.updateUsedByUserIdAndCouponId(userId, couponId, true);
+//            userCouponMapper.updateUsed(userId, couponId);
         }
         String otherCouponId = orderVo.getOtherCouponId();
         if (StringUtils.isNotBlank(otherCouponId)) {
             CouponEntity couponEntity = couponServiceApi.get(otherCouponId).orElseThrow(() -> new PlatformException("订单优惠券异常"));
             couponRealPrice = couponEntity.getTargetPriceBySourcePrice(couponEntity.getType(), couponRealPrice);
-//            userCouponServiceApi.updateUsedByUserIdAndCouponId(userId, otherCouponId, true);
-            userCouponMapper.updateUsed(userId, couponId);
+            userCouponServiceApi.updateUsedByUserIdAndCouponId(userId, otherCouponId, true);
+//            userCouponMapper.updateUsed(userId, couponId);
         }
         return couponRealPrice;
     }
@@ -296,11 +292,11 @@ public class WxOrderService implements WxOrderServiceApi {
      * @return
      */
     @Override
-    public boolean appendOrderDetail(OrderDetailVo orderDetailvo, String orderId) {
+    public OrderDetailEntity appendOrderDetail(OrderDetailVo orderDetailvo, String orderId) {
         OrderEntity entity = BaseServiceUtils.checkOneById(orderMapper, orderId, "订单信息不存在");
         PlatformAssert.isTrue(OrderStatus.canAppendGoodsStatus(entity.getStatus()), "订单状态异常，无法加餐");
-        orderDetailServiceApi.add(orderDetailvo, orderId);
-        return false;
+        OrderDetailEntity orderDetailEntity = orderDetailServiceApi.add(orderDetailvo, orderId);
+        return orderDetailEntity;
     }
 
     @Override

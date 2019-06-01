@@ -42,12 +42,13 @@ public final class KeyUtils {
     public static String generateOrderNoOfDay(RedisTemplate<String, String> redisTemplate, LocalDateTime dateTime) {
         PlatformAssert.notNull(redisTemplate, "redis 客户端不可为空");
         String yyyyMMdd = dateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(yyyyMMdd))) {
-            redisTemplate.opsForValue().increment(yyyyMMdd, 1L);
-            return redisTemplate.opsForValue().get(yyyyMMdd);
+        String dayOrderKey = REDIS_ORDER_NO_KEY + yyyyMMdd;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(dayOrderKey))) {
+            redisTemplate.opsForValue().increment(dayOrderKey, 1L);
+            return redisTemplate.opsForValue().get(dayOrderKey);
         } else {
             String dayFirstNo = (yyyyMMdd + "00000000" + 1);
-            redisTemplate.opsForValue().set(REDIS_ORDER_NO_KEY + yyyyMMdd, dayFirstNo, REDIS_ORDER_NO_EXPIRE_DAY, TimeUnit.DAYS);
+            redisTemplate.opsForValue().set(dayOrderKey, dayFirstNo, REDIS_ORDER_NO_EXPIRE_DAY, TimeUnit.DAYS);
             return dayFirstNo;
         }
     }
