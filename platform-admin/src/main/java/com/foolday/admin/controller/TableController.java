@@ -1,21 +1,18 @@
 package com.foolday.admin.controller;
 
+import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.dto.FantResult;
-import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.table.TableEntity;
-import com.foolday.service.api.TestServiceApi;
 import com.foolday.service.api.admin.QrCodeServiceApi;
-import com.foolday.service.api.admin.ShopServiceApi;
 import com.foolday.service.api.admin.TableServiceApi;
-import com.foolday.serviceweb.dto.admin.shop.ShopVo;
 import com.foolday.serviceweb.dto.admin.table.TableVo;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-
-import static com.foolday.common.constant.WebConstant.RESPONSE_RESULT_MSG;
 
 @Api(value = "桌位接口", tags = {"桌位操作接口"})
 @RestController
@@ -33,7 +30,7 @@ public class TableController {
     public FantResult<String> add(
             @ApiParam(name = "tableVo", value = "店铺对象", required = true) @RequestBody TableVo tableVo) {
         FantResult<String> result = new FantResult<>();
-        boolean ret = tableServiceApi.add(tableVo);
+        boolean ret = tableServiceApi.add(tableVo, LoginUserHolder.get());
         return ret ? FantResult.ok() : FantResult.fail();
     }
 
@@ -74,7 +71,7 @@ public class TableController {
             @RequestBody TableVo tableVo
     ){
         FantResult result = FantResult.fail();
-        boolean addFlag = tableServiceApi.add(tableVo);
+        boolean addFlag = tableServiceApi.add(tableVo,LoginUserHolder.get());
         if(addFlag){
             String id = qrCodeServiceApi.createQrcodeImg(content);
             boolean bFlag = tableServiceApi.bindQrcode(tableVo, id);

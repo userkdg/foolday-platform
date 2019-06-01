@@ -4,7 +4,6 @@ import com.foolday.dao.table.TableEntity;
 import com.foolday.service.PlatformServiceApplication;
 import com.foolday.service.api.admin.TableServiceApi;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.table.TableVo;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,10 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = {"application.yml"}, classes = PlatformServiceApplication.class)
@@ -30,7 +26,7 @@ public class TableServiceTest {
     public void setUp() throws Exception {
         LoginUser user = new LoginUser();
         user.setShopId("b580ecf2f4c60c4a4ab3e7c1b7a7c07f");
-        LoginUserHolder.set(user);
+//        LoginUserHolder.set(user);
 
         tableVo = new TableVo();
         tableVo.setName("第005号桌");
@@ -38,7 +34,7 @@ public class TableServiceTest {
 
     @Test
     public void add() {
-        boolean add = tableServiceApi.add(tableVo);
+        boolean add = tableServiceApi.add(tableVo, null);
         System.out.println(add);
     }
 

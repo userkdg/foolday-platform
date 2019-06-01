@@ -1,14 +1,13 @@
 package com.foolday.service.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseServiceUtils;
 import com.foolday.common.enums.TableStatus;
 import com.foolday.dao.table.TableEntity;
 import com.foolday.dao.table.TableMapper;
 import com.foolday.service.api.admin.TableServiceApi;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import com.foolday.serviceweb.dto.admin.table.TableVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -27,10 +26,10 @@ public class TableService implements TableServiceApi {
     private TableMapper tableMapper;
 
     @Override
-    public boolean add(TableVo tableVo) {
+    public boolean add(TableVo tableVo, LoginUser loginUser) {
         TableEntity tableEntity = new TableEntity();
         BeanUtils.copyProperties(tableVo, tableEntity);
-        tableEntity.setShopId(LoginUserHolder.get().getShopId());
+        tableEntity.setShopId(loginUser.getShopId());
         tableEntity.setStatus(TableStatus.生效);
         int insert = tableMapper.insert(tableEntity);
         return insert > 0;

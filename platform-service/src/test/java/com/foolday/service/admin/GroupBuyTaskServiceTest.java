@@ -3,7 +3,6 @@ package com.foolday.service.admin;
 import com.foolday.common.enums.GroupBuyTaskStatus;
 import com.foolday.service.api.admin.GroupBuyTaskServiceApi;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.groupbuytask.GroupBuyTaskVo;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-
-import static org.junit.Assert.*;
 
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -26,14 +23,14 @@ public class GroupBuyTaskServiceTest {
     public void setUp(){
         LoginUser user = new LoginUser();
         user.setUserId("asdlkj123oiusdf098xcvpoi");
-        LoginUserHolder.set(user);
+//        LoginUserHolder.set(user);
     }
 
     @Test
     public void add() {
         GroupBuyTaskVo vo = new GroupBuyTaskVo();
         vo.setGroupbuyId("2e3082816908c361721ad997aa92f2eb");
-        groupBuyTaskServiceApi.add(vo);
+        groupBuyTaskServiceApi.add(vo, null);
 
     }
 

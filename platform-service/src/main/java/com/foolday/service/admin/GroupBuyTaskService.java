@@ -1,12 +1,10 @@
 package com.foolday.service.admin;
 
 import com.foolday.common.enums.GroupBuyTaskStatus;
-import com.foolday.dao.groupbuy.GroupBuyEntity;
 import com.foolday.dao.groupbuytask.GroupBuyTaskEntity;
 import com.foolday.dao.groupbuytask.GroupBuyTaskMapper;
 import com.foolday.service.api.admin.GroupBuyTaskServiceApi;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
-import com.foolday.serviceweb.dto.admin.groupbuy.GroupBuyVo;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import com.foolday.serviceweb.dto.admin.groupbuytask.GroupBuyTaskVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -27,12 +25,12 @@ public class GroupBuyTaskService implements GroupBuyTaskServiceApi {
     private GroupBuyTaskMapper groupBuyTaskMapper;
 
     @Override
-    public boolean add(GroupBuyTaskVo vo) {
+    public boolean add(GroupBuyTaskVo vo, LoginUser loginUser) {
         GroupBuyTaskEntity entity = new GroupBuyTaskEntity();
         BeanUtils.copyProperties(vo, entity);
         entity.setCreateTime(LocalDateTime.now());
         entity.setStatus(GroupBuyTaskStatus.有效);
-        entity.setUserId(LoginUserHolder.get().getUserId());
+        entity.setUserId(loginUser.getUserId());
         int ret = groupBuyTaskMapper.insert(entity);
         return ret > 0;
     }

@@ -2,9 +2,7 @@ package com.foolday.service.admin;
 
 import com.foolday.service.api.admin.GroupBuyServiceApi;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
-import com.foolday.serviceweb.dto.admin.base.LoginUserHolder;
 import com.foolday.serviceweb.dto.admin.groupbuy.GroupBuyVo;
-import com.foolday.serviceweb.dto.admin.table.TableVo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,8 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -35,7 +30,7 @@ public class GroupBuyServiceTest {
     public void setUp() throws Exception {
         LoginUser user = new LoginUser();
         user.setShopId("b580ecf2f4c60c4a4ab3e7c1b7a7c07f");
-        LoginUserHolder.set(user);
+//        LoginUserHolder.set(user);
     }
 
     @Test
@@ -91,7 +86,7 @@ public class GroupBuyServiceTest {
         includeGoods.add(type2);
         vo.setIncludeGoods(includeGoods);
 
-        boolean add = groupBuyServiceApi.add(vo);
+        boolean add = groupBuyServiceApi.add(vo, "shopId");
         Assert.assertTrue(add);
     }
 
