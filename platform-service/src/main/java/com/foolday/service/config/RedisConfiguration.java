@@ -86,7 +86,7 @@ public class RedisConfiguration implements RedisBeanNameApi {
     }
 
     private void redisTemplateKey(Object object, RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate redisTemplate = null;
+        RedisTemplate redisTemplate;
         if (object instanceof StringRedisTemplate)
             redisTemplate = (StringRedisTemplate) object;
         else
@@ -112,45 +112,4 @@ public class RedisConfiguration implements RedisBeanNameApi {
         redisTemplate.afterPropertiesSet();
     }
 
-//
-//    private <T1, T2> void redisTemplateKey(RedisTemplate<T1, T2> redisTemplate, RedisConnectionFactory redisConnectionFactory) {
-//        redisTemplate.setConnectionFactory(redisConnectionFactory);
-//        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-//        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-//        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-//        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-//        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
-//        /*
-//        普通结构：list set zset string
-//         */
-//        redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-//        /*
-//        目前定义redis的map结构中key1为string 序列化，而key1中的map(key,value)都是objectMapper对象
-//         */
-//        redisTemplate.setHashKeySerializer(jackson2JsonRedisSerializer);
-//        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
-//        redisTemplate.afterPropertiesSet();
-//    }
-
-   /*
-   关闭 有问题！
-    @Bean(REDIS_TEMPLATE_S_O)
-    public RedisTemplate<String, Object> redisTemplateStringObject(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplateKey(redisTemplate, redisConnectionFactory);
-        return redisTemplate;
-    }*/
-
-//    /**
-//     * 配置其他类型的redisTemplate
-//     ***/
-//    @Bean
-//    public RedisTemplate<Object, Object> redisTemplateKeyObject(RedisConnectionFactory redisConnectionFactory) {
-//        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-//        redisTemplateKey(redisTemplate, redisConnectionFactory);
-//        return redisTemplate;
-//    }
 }
