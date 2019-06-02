@@ -1,18 +1,28 @@
 package com.foolday.service.config;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.foolday.common.base.RedisBeanNameApi;
 import com.foolday.common.enums.ChannelType;
 import com.foolday.service.common.CommentMessageCustomer;
 import com.foolday.service.common.OrderMessageCustomer;
+import com.foolday.service.common.SpringContextUtils;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.Topic;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -35,6 +45,11 @@ public class RedisConfiguration implements RedisBeanNameApi {
     private OrderMessageCustomer orderMessageCustomer;
     @Autowired
     private CommentMessageCustomer commentMessageCustomer;
+
+    public RedisConfiguration() {
+        // 配置自动注入的redisTemplate 在注入之前的redisTemplate是没有调整的
+        initRedisTemplate();
+    }
 
     @Bean
     public ChannelTopic orderChannelTopic() {
@@ -59,15 +74,46 @@ public class RedisConfiguration implements RedisBeanNameApi {
         return container;
     }
 
+    /**
+     * 配置自动生成的bean
+     */
+    public void initRedisTemplate() {
+        RedisConnectionFactory redisConnectionFactory = SpringContextUtils.getBean(RedisConnectionFactory.class);
+        StringRedisTemplate stringRedisTemplate = (StringRedisTemplate) SpringContextUtils.getBean("stringRedisTemplate");
+        redisTemplateKey(stringRedisTemplate, redisConnectionFactory);
+        RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtils.getBean("redisTemplate");
+        redisTemplateKey(redisTemplate, redisConnectionFactory);
+    }
 
-//    @Bean
-//    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-//        StringRedisTemplate redisTemplate = new StringRedisTemplate();
-//        redisTemplateKey(redisTemplate, redisConnectionFactory);
-//        return redisTemplate;
-//    }
+    private void redisTemplateKey(Object object, RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate redisTemplate = null;
+        if (object instanceof StringRedisTemplate)
+            redisTemplate = (StringRedisTemplate) object;
+        else
+            redisTemplate = (RedisTemplate) object;
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+        /*
+        普通结构：list set zset string
+         */
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        /*
+        目前定义redis的map结构中key1为string 序列化，而key1中的map(key,value)都是objectMapper对象
+         */
+        redisTemplate.setHashKeySerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.afterPropertiesSet();
+    }
+
 //
-//    private <T1, T2> RedisTemplate<T1, T2> redisTemplateKey(RedisTemplate<T1, T2> redisTemplate, RedisConnectionFactory redisConnectionFactory) {
+//    private <T1, T2> void redisTemplateKey(RedisTemplate<T1, T2> redisTemplate, RedisConnectionFactory redisConnectionFactory) {
 //        redisTemplate.setConnectionFactory(redisConnectionFactory);
 //        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
 //        ObjectMapper objectMapper = new ObjectMapper();
@@ -87,7 +133,6 @@ public class RedisConfiguration implements RedisBeanNameApi {
 //        redisTemplate.setHashKeySerializer(jackson2JsonRedisSerializer);
 //        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
 //        redisTemplate.afterPropertiesSet();
-//        return redisTemplate;
 //    }
 
    /*

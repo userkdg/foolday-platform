@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -29,8 +28,8 @@ public class WxUserSessionHandler implements WxUserSessionApi {
     @Resource
     private RedisTemplate<Object, Object> redisTemplate;
 
-    @PostConstruct
-    private void initKey() {
+    @Override
+    public void initTestSession() {
         WxMaJscode2SessionResult wxMaJscode2SessionResult = new WxMaJscode2SessionResult();
         wxMaJscode2SessionResult.setOpenid("testOpenId");
         wxMaJscode2SessionResult.setSessionKey("testSessionKey");

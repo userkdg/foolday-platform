@@ -9,6 +9,8 @@ import java.util.Optional;
  * @date 2019/5/30 22:44
  **/
 public interface WxUserSessionApi {
+    void initTestSession();
+
     void addUserSessionInfo(String openId, WxSessionResult wxSessionResult);
 
     Optional<WxSessionResult> getSessionUserInfo(String openId);
