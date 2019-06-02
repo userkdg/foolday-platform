@@ -9,7 +9,9 @@ spring:
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://47.92.64.11:3306/foolday_platform?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: "jdbc:mysql://47.92.64.11:3306/foolday_platform?
+      useUnicode=true&characterEncoding=UTF-8&useSSL=false&
+      serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false"
     username: root
     password: dc@tiny401
     driver-class-name: com.mysql.jdbc.Driver

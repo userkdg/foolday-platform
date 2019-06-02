@@ -11,7 +11,6 @@ import com.foolday.service.common.CommentMessageCustomer;
 import com.foolday.service.common.OrderMessageCustomer;
 import com.foolday.service.common.SpringContextUtils;
 import com.google.common.collect.Maps;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.MessageListener;
@@ -41,14 +40,14 @@ import java.util.Map;
 @Configuration
 public class RedisConfiguration implements RedisBeanNameApi {
 
-    @Autowired
-    private OrderMessageCustomer orderMessageCustomer;
-    @Autowired
-    private CommentMessageCustomer commentMessageCustomer;
+    private final OrderMessageCustomer orderMessageCustomer;
+    private final CommentMessageCustomer commentMessageCustomer;
 
-    public RedisConfiguration() {
+    public RedisConfiguration(OrderMessageCustomer orderMessageCustomer, CommentMessageCustomer commentMessageCustomer) {
         // 配置自动注入的redisTemplate 在注入之前的redisTemplate是没有调整的
         initRedisTemplate();
+        this.orderMessageCustomer = orderMessageCustomer;
+        this.commentMessageCustomer = commentMessageCustomer;
     }
 
     @Bean
@@ -77,7 +76,7 @@ public class RedisConfiguration implements RedisBeanNameApi {
     /**
      * 配置自动生成的bean
      */
-    public void initRedisTemplate() {
+    private void initRedisTemplate() {
         RedisConnectionFactory redisConnectionFactory = SpringContextUtils.getBean(RedisConnectionFactory.class);
         StringRedisTemplate stringRedisTemplate = (StringRedisTemplate) SpringContextUtils.getBean("stringRedisTemplate");
         redisTemplateKey(stringRedisTemplate, redisConnectionFactory);
@@ -85,6 +84,7 @@ public class RedisConfiguration implements RedisBeanNameApi {
         redisTemplateKey(redisTemplate, redisConnectionFactory);
     }
 
+    @SuppressWarnings("unchecked")
     private void redisTemplateKey(Object object, RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate redisTemplate;
         if (object instanceof StringRedisTemplate)

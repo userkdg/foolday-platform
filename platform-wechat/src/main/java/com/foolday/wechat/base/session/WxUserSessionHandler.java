@@ -41,7 +41,7 @@ public class WxUserSessionHandler implements WxUserSessionApi {
         WxSessionResult wxSessionResult = WxSessionResult.newInstance().setWxMaJscode2SessionResult(wxMaJscode2SessionResult)
                 .setLoginTime(LocalDateTime.now()).setUserInfo(userEntity).setShopId("testShopId");
         addUserSessionInfo("testOpenId", wxSessionResult);
-        redisTemplate.expire(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, 365 * 5, TimeUnit.DAYS);
+        redisTemplate.expire(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, 365 << 1, TimeUnit.DAYS);
         Optional<WxSessionResult> init = getSessionUserInfo("testOpenId");
         log.info("启动系统检查redis连接情况 testOpenId=>{}", init.isPresent() ? init.get() : "失败");
     }
