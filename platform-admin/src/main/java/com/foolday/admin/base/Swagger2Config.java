@@ -32,7 +32,7 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //页面标题
-                .title("Spring Boot Swagger2 admin-web RESTful API")
+                .title("后台管理 RESTful API")
                 //创建人
                 .contact(new Contact("kong", "https://github.com/userkdg/foolday-platform", ""))
                 //版本号

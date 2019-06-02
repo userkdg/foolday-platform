@@ -28,7 +28,14 @@ hs_err_pid*
 
 # IntelliJ project files
 .idea
+foolday-logs
 *.iml
 findbugsXml.xml
 out
 gen
+**/target/classes
+**/target/test-classes
+**/target/generated-sources
+**/target/generated-test-sources
+**/target/maven-archiver
+**/target/maven-status

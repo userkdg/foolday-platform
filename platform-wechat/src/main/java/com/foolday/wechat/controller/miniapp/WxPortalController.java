@@ -4,6 +4,7 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaMessage;
 import cn.binarywang.wx.miniapp.constant.WxMaConstants;
 import com.foolday.service.config.WxMaConfiguration;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import java.util.Objects;
 /**
  * @author <a href="https://github.com/binarywang">Binary Wang</a>
  */
+@Api(value = "微信授权请求",tags = "微信授权请求")
 @RestController
 @RequestMapping("/wx/portal/{appid}")
 public class WxPortalController {

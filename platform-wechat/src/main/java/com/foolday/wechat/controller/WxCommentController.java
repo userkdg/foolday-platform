@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,12 +25,12 @@ import java.util.List;
 @Api(value = "微信评论管理", tags = {"微信评论管理"})
 @RestController
 @RequestMapping("/comment")
-public class WxGoodsController {
+public class WxCommentController {
 
     @Resource
     private WxCommentServiceApi wxCommentServiceApi;
 
-    @PostMapping("/list")
+    @GetMapping("/list")
     @ApiOperation("获取评论列表，根据订单id或者商品id")
     public FantResult<List<CommentEntity>> add(@ApiParam(name = "orderId", value = "订单id", required = false)
                                                @RequestParam(required = false) String orderId,

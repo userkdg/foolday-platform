@@ -5,6 +5,7 @@ import cn.binarywang.wx.miniapp.constant.WxMaConstants;
 import com.foolday.service.config.WxMaConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
+import io.swagger.annotations.Api;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ import java.util.List;
  *
  * @author <a href="https://github.com/binarywang">Binary Wang</a>
  */
+@Api(value = "小程序临时素材接口",tags = "小程序临时素材接口")
 @RestController
 @RequestMapping("/wx/media/{appid}")
 public class WxMaMediaController {

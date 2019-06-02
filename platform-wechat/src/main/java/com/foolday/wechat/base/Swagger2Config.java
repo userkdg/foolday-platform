@@ -32,7 +32,7 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //页面标题
-                .title("Spring Boot Swagger2 构建 wechat-web RESTful API")
+                .title("微信小程序 RESTful API")
                 //创建人
                 .contact(new Contact("kong", "https://github.com/userkdg/foolday-platform", "1265598443@qq.com"))
                 //版本号

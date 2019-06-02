@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 
 @Slf4j
-@Api("文件上传")
+@Api(value = "文件上传",tags = "文件上传")
 @RestController
 @RequestMapping("/file")
 public class FileController {

@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-@Api("文章管理")
+@Api(value = "文章管理",tags = "文章管理")
 @RequestMapping("/article")
 @RestController
 public class ArticleController {

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 
-@Api("意见反馈")
+@Api(value = "意见反馈",tags = "意见反馈")
 @RequestMapping("/advice")
 @RestController
 public class AdviceController {

@@ -23,7 +23,7 @@ import java.util.Date;
  * @author Binary Wang
  */
 @Slf4j
-@Api("微信支付")
+@Api(value = "微信支付",tags = "微信支付")
 @RestController
 @RequestMapping("/pay")
 public class WxPayController {

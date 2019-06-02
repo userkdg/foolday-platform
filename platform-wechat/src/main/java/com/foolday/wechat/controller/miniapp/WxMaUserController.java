@@ -29,7 +29,7 @@ import java.util.Optional;
  *
  * @author <a href="https://github.com/binarywang">Binary Wang</a>
  */
-@Api("微信小程序用户接口")
+@Api(value = "微信小程序用户接口",tags = "微信小程序用户接口")
 @RestController
 @RequestMapping("/wx/user/{appid}")
 public class WxMaUserController {

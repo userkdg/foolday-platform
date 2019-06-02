@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@Api("发票管理")
+@Api(value = "发票管理",tags = "发票管理")
 @Slf4j
 @RestController
 @RequestMapping("/invoice")

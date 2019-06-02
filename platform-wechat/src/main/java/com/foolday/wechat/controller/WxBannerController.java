@@ -25,7 +25,7 @@ import java.util.stream.Stream;
  *
  * @author userkdg
  */
-@Api("wxBanner管理管理")
+@Api(value = "wxBanner管理管理",tags = "wxBanner管理管理")
 @RestController
 @RequestMapping("/banner")
 public class WxBannerController {

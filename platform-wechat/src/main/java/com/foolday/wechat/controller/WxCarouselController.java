@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author userkdg
  */
-@Api("wx轮播管理")
+@Api(value = "wx轮播管理",tags = "wx轮播管理")
 @RestController
 @RequestMapping("/carousel")
 public class WxCarouselController {
