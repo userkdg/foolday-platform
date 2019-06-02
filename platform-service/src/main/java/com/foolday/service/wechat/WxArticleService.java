@@ -1,6 +1,7 @@
 package com.foolday.service.wechat;
 
 import com.foolday.common.base.annotation.PlatformService;
+import com.foolday.common.enums.CommonStatus;
 import com.foolday.dao.article.ArticleEntity;
 import com.foolday.service.api.wechat.WxArticleServiceApi;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,8 @@ public class WxArticleService implements WxArticleServiceApi {
      */
     @Override
     public Map<String, List<ArticleEntity>> listByShopIdGroupByType(String shopId) {
-        return selectList(lqWrapper().eq(ArticleEntity::getShopId, shopId))
+        return selectList(lqWrapper().eq(ArticleEntity::getShopId, shopId)
+                .eq(ArticleEntity::getStatus, CommonStatus.有效))
                 .stream()
                 .sorted(Comparator.comparing(ArticleEntity::getUpdateTime).reversed()
                         .thenComparing(ArticleEntity::getCreateTime).reversed())

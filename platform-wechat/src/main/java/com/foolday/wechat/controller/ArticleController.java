@@ -3,6 +3,7 @@ package com.foolday.wechat.controller;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.exception.PlatformException;
+import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.article.ArticleEntity;
 import com.foolday.service.api.wechat.WxArticleServiceApi;
 import com.foolday.wechat.base.session.WxUserSessionHolder;
@@ -15,7 +16,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-@Api(value = "文章管理",tags = "文章管理")
+@Api(value = "文章管理", tags = "文章管理")
 @RequestMapping("/article")
 @RestController
 public class ArticleController {
@@ -27,7 +28,7 @@ public class ArticleController {
     public FantResult<String> add(@ApiParam("文章标题") @RequestParam("title") String title,
                                   @ApiParam("内容") @RequestParam("content") String content,
                                   @ApiParam("文章的类别 eg:餐饮行业等") @RequestParam("type") String type,
-                                  @ApiParam("文章列表的缩略图id") @RequestParam("imageId") String imageId) {
+                                  @ApiParam("文章列表的缩略图id") @RequestParam(value = "imageId", required = false) String imageId) {
         String shopId = WxUserSessionHolder.getShopId();
         ArticleEntity article = new ArticleEntity();
         article.setType(type);
@@ -61,7 +62,8 @@ public class ArticleController {
 
     @ApiOperation("根据分类获取店铺的文章列表")
     @GetMapping("/list")
-    public FantResult<Map> list(@ApiParam("店铺id") @RequestParam("shopId") String shopId) {
+    public FantResult<Map> list() {
+        String shopId = WxUserSessionHolder.getShopId();
         Map<String, List<ArticleEntity>> map = wxArticleServiceApi.listByShopIdGroupByType(shopId);
         return FantResult.ok(map);
     }
@@ -70,6 +72,7 @@ public class ArticleController {
     @GetMapping("/get")
     public FantResult<ArticleEntity> get(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
         ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId).orElse(null);
+        PlatformAssert.isTrue(articleEntity != null && CommonStatus.有效.equals(articleEntity.getStatus()), "文章已下架或删除");
         return FantResult.ok(articleEntity);
     }
 
@@ -83,7 +86,7 @@ public class ArticleController {
     @ApiOperation("下架文章")
     @PostMapping("/down")
     public FantResult<String> down(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
-        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId).orElseThrow(()->new PlatformException("获取文章数据失败"));
+        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId).orElseThrow(() -> new PlatformException("获取文章数据失败"));
         articleEntity.setStatus(CommonStatus.无效);
         articleEntity.updateById();
         return FantResult.ok();
@@ -92,7 +95,7 @@ public class ArticleController {
     @ApiOperation("上架文章")
     @PostMapping("/up")
     public FantResult<String> up(@ApiParam("articleId") @RequestParam("articleId") String articleId) {
-        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId).orElseThrow(()->new PlatformException("获取文章数据失败"));
+        ArticleEntity articleEntity = wxArticleServiceApi.selectById(articleId).orElseThrow(() -> new PlatformException("获取文章数据失败"));
         articleEntity.setStatus(CommonStatus.有效);
         articleEntity.updateById();
         return FantResult.ok();
