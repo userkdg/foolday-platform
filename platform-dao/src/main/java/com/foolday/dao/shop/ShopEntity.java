@@ -30,4 +30,8 @@ public class ShopEntity extends BaseEntity<ShopEntity> {
     @EnumValue
     private ShopStatus status;
 
+    /**
+     * 默认店铺
+     */
+    private Boolean default_shop;
 }

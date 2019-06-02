@@ -25,18 +25,15 @@ public class ShopController {
     @PostMapping("/add")
     public FantResult<String> add(
             @ApiParam(name = "shopVo", value = "店铺对象", required = true) @RequestBody ShopVo shopVo) {
-        FantResult<String> result = new FantResult<>();
         boolean flag = shopServiceApi.createShop(shopVo);
-        return flag ? FantResult.ok() : FantResult.fail();
+        return FantResult.checkAs(flag);
     }
 
     @ApiOperation(value = "查看所有店铺")
     @GetMapping("/list")
     public FantResult<List<ShopEntity>> list() {
-        FantResult<List<ShopEntity>> ret = new FantResult<>();
         List<ShopEntity> shopList = shopServiceApi.list();
-        ret.setData(shopList);
-        return ret;
+        return FantResult.ok(shopList);
     }
 
     @ApiOperation(value = "修改店铺", notes = "传入json")

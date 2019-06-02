@@ -6,6 +6,7 @@ import com.foolday.dao.shop.ShopEntity;
 import com.foolday.serviceweb.dto.admin.shop.ShopVo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ShopServiceApi extends BaseServiceApi<ShopEntity> {
     boolean createShop(ShopVo shopVo);
@@ -30,4 +31,7 @@ public interface ShopServiceApi extends BaseServiceApi<ShopEntity> {
         return ShopEntity::new;
     }
 
+    Optional<String> findByLatitudeAndLonitude(float latitude, float longitude);
+
+    Optional<ShopEntity> getDefaultShop();
 }

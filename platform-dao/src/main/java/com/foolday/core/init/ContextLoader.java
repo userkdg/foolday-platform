@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseEntity;
 import com.foolday.common.enums.CommonStatus;
+import com.foolday.common.enums.ShopStatus;
 import com.foolday.common.enums.UserStatus;
+import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.system.auth.SysAdminAuthEntity;
 import com.foolday.dao.system.auth.SysAuthEntity;
 import com.foolday.dao.system.role.SysRoleEntity;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -32,19 +35,25 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public final class ContextLoader {
-    /**
-     * 以id=>key 装角色的缓存
-     */
-    private static Map<String, Map<String, List<SysRoleEntity>>> sysRoleAllMap = Maps.newHashMap();
 
+    private static final Cache<String, Set<ShopEntity>> shopsCache = CacheBuilder.newBuilder()
+            .maximumSize(100)
+            .refreshAfterWrite(3, TimeUnit.MINUTES)
+            .build(new CacheLoader<String, Set<ShopEntity>>() {
+                @Override
+                public Set<ShopEntity> load(String s) throws Exception {
+                    shopsCache.put(s, getShopEntities());
+                    return getShopEntities();
+                }
+            });
+    private static final String shopKey = "shopKey";
     /**
      * 以id=>key 装zain权限url的缓存
      */
     private static Map<String, SysAuthEntity> sysAuthAllMap = Maps.newHashMap();
-
     private static final Cache<String, Set<SysAuthEntity>> userAuthEntityLoadingCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
-            .refreshAfterWrite(10, TimeUnit.MINUTES)
+            .refreshAfterWrite(3, TimeUnit.MINUTES)
             .build(new CacheLoader<String, Set<SysAuthEntity>>() {
                 @Override
                 public Set<SysAuthEntity> load(final String userId) throws Exception {
@@ -52,6 +61,41 @@ public final class ContextLoader {
                     return userAuthEntityLoadingCache.get(userId, () -> loadUserAuth(userId));
                 }
             });
+    /**
+     * 以id=>key 装角色的缓存
+     */
+    private static Map<String, Map<String, List<SysRoleEntity>>> sysRoleAllMap = Maps.newHashMap();
+
+    /**
+     * 初始化每个有效用户的权限信息
+     *
+     * @return
+     */
+    private static Map<String, ShopEntity> loadShopAll() {
+        Set<ShopEntity> shopEntities = getShopEntities();
+        return shopEntities.stream()
+                .collect(Collectors.toMap(BaseEntity::getId, v -> v, (a, b) -> a));
+    }
+
+    private static Set<ShopEntity> getShopEntities() {
+        ShopEntity shopEntity = new ShopEntity();
+        return shopEntity.selectAll().stream().filter(s -> ShopStatus.生效.equals(s.getStatus())).collect(Collectors.toSet());
+    }
+
+
+    /**
+     * 获取店铺
+     *
+     * @return
+     */
+    public static Set<ShopEntity> getShopsCache() {
+        ConcurrentMap<String, Set<ShopEntity>> stringSetConcurrentMap = shopsCache.asMap();
+        if (stringSetConcurrentMap.containsKey(shopKey)) {
+            return stringSetConcurrentMap.get(shopKey);
+        }
+        stringSetConcurrentMap.putIfAbsent(shopKey, getShopEntities());
+        return stringSetConcurrentMap.get(shopKey);
+    }
 
     /**
      * 获取系统权限信息

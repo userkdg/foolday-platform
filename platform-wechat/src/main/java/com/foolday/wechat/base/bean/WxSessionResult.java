@@ -100,6 +100,10 @@ public class WxSessionResult extends WxMaJscode2SessionResult implements Seriali
     }
 
     public WxSessionResult setShopId(String shopId) {
+        UserEntity userInfo = getUserInfo();
+        if (userInfo != null) {
+            userInfo.setShopId(shopId);
+        }
         this.shopId = shopId;
         return this;
     }

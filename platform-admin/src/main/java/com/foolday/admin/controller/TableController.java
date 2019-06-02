@@ -29,7 +29,6 @@ public class TableController {
     @PostMapping("/add")
     public FantResult<String> add(
             @ApiParam(name = "tableVo", value = "店铺对象", required = true) @RequestBody TableVo tableVo) {
-        FantResult<String> result = new FantResult<>();
         boolean ret = tableServiceApi.add(tableVo, LoginUserHolder.get());
         return ret ? FantResult.ok() : FantResult.fail();
     }
@@ -37,10 +36,8 @@ public class TableController {
     @ApiOperation(value = "查看所有桌位")
     @GetMapping("/list")
     public FantResult<List<TableEntity>> list() {
-        FantResult<List<TableEntity>> ret = new FantResult<>();
         List<TableEntity> tableEntityList = tableServiceApi.list();
-        ret.setData(tableEntityList);
-        return ret;
+        return FantResult.ok(tableEntityList);
     }
 
     @ApiOperation(value = "修改桌位", notes = "传入json")

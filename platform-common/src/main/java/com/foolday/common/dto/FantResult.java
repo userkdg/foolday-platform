@@ -17,7 +17,7 @@ public class FantResult<T> implements Serializable {
     private T data;
     private Map<String, Object> moreData;
 
-    public FantResult() {
+    private FantResult() {
     }
 
     public FantResult(boolean ok, String message, T data) {

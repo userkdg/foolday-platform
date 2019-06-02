@@ -33,7 +33,7 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
     /**
      * 测试会话
      */
-    private WxTestSessionProperties wxTestSessionProperties ;
+    private WxTestSessionProperties wxTestSessionProperties;
 
     public WxUserAuthInterceptor(WxUserSessionApi wxUserSessionApi, WxTestSessionProperties wxTestSessionProperties) {
         this.wxUserSessionApi = wxUserSessionApi;
