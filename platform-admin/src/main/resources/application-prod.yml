@@ -6,7 +6,6 @@ server:
 spring:
   application:
     name: platform-admin
-
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: "jdbc:mysql://47.92.64.11:3306/foolday_platform?
@@ -28,9 +27,10 @@ spring:
       max-active: 50
       test-on-borrow: true
   servlet:
-    multipart.max-file-size: 10Mb
     multipart:
+      max-file-size: 10Mb
       max-request-size: 100Mb
+      file-size-threshold: 10
   redis:
     database: 0
     host: 47.92.64.11
@@ -43,10 +43,10 @@ mybatis-plus:
   mapper-locations: classpath:/com/foolday/dao/*/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔 com.yourpackage.*.entity
   typeAliasesPackage: com.foolday.dao.*
-  # 支持统配符 * 或者 ; 分割
+  # 支持统配符 * 或者 :  分割
   typeEnumsPackage: com.foolday.common.enums
   global-config:
-    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID":
     id-type: 3
     #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
     field-strategy: 2
@@ -74,3 +74,94 @@ logging:
   level:
     ROOT: INFO
     com.foolday: DEBUG
+
+#  platform.spring.web.mvc.loginUser
+platform:
+  spring:
+    web:
+      mvc:
+        init:
+          auth-url-data:
+            base-package: com.foolday.admin.controller
+            base-system-path: ${server.servlet.context-path}
+        url:
+          error-url:
+            # 错误的静态页面配置 对应resources/static/** spring mvc 默认去static下得静态资源
+            error404: /error/404.html
+            error403: /error/403.html
+            error500: /error/500.html
+        loginUser:
+          # isValid来控制当前配置是否有效，无效则取前端提供的base64
+          valid: true
+          userId: testUserId # 系统内部id
+          openId: openId # 针对存储微信信息
+          userName: admin
+          shopId: testShopId
+          browser: testBrowser
+          app: testApp
+          os: testOs
+          ip: testIp
+        # 跳过拦截
+        interceptor-config:
+          excludePathPatterns:
+            - /api/**
+            - /v2/api-docs
+            - /common/error/**
+            - /swagger-ui.html
+            - /webjars/**
+            - /swagger-resources/**
+            - /error/**
+  #          includePathPatterns:
+  #            -
+  # 图片定制
+  image:
+    # 支持的文件类型
+    enable-content-type:
+      - png
+      - jpeg
+      - jpg
+      - gif
+    # 存储在磁盘目录
+    store-path: /home/image
+
+
+
+# 下面是微信相关的配置
+wechat:
+  myOpenId: oxFFT0XhOLz-MeFpTMZ35kWFOaoM # 模拟客户身份1
+  toOpenId: oxFFT0Zfl2w5SWyYTH8bT91FHiYE # 模拟客户身份2
+  #  mpAppId: wxdcf91e9f784bfad0
+  #  mpAppSecret: c467c06d98a2447f5ddef6ca8f47f268 #测试号appId,appSecret
+  mpAppId: wx9ee98bd4f8d11ff0
+  mpAppSecret: a43e295acc1cbe68a48e8de50c430967 #借用号appId,appSecret
+  openAppId: wxef923e99135107cb
+  openAppSecret: 0b70ab77cd3432365b9bbe20448083d0 #开放平台测试号appId,appSecret
+  mchId: 1483469312
+  mchKey: C5245D70627C1F8E9964D494B0735025
+  keyPath: C:/Users/Administrator/Downloads/h5.p12
+  notifyUrl: http://j58v2f.natappfree.cc/wechat/auth
+  templateId:
+    orderStatus: GoCullfix05R-rCibvoyI87ZUg50cyieKA5AyX7pPzo
+
+# 基于weixin-sdk的配置
+wx:
+  miniapp:
+    configs:
+      - appid: wx9ee98bd4f8d11ff0 #微信小程序的appid
+        secret: a43e295acc1cbe68a48e8de50c430967 #微信小程序的Secret
+        token: my2019token #微信小程序消息服务器配置的token
+        aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #微信小程序消息服务器配置的EncodingAESKey
+  pay:
+    appId: wx9ee98bd4f8d11ff0 #微信公众号或者小程序等的appid
+    mchId: #微信支付商户号
+    mchKey: #微信支付商户密钥
+    subAppId: #服务商模式下的子商户公众账号ID
+    subMchId: #服务商模式下的子商户号
+    keyPath: # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
+  mp:
+    configs:
+      - appId: wx9ee98bd4f8d11ff0 #（一个公众号的appid）
+        secret: a43e295acc1cbe68a48e8de50c430967 #（公众号的appsecret）
+        token: my2019token #（接口配置里的Token值）
+        aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #（接口配置里的EncodingAESKey值）
+        contactPhone: 1881312121 # 开发票中需要联系电话号码

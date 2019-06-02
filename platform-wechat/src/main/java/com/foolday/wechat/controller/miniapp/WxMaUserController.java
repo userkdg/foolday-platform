@@ -142,7 +142,7 @@ public class WxMaUserController {
         Optional<WxSessionResult> wxSessionResultOpt = wxUserSessionApi.getSessionUserInfo(userInfo.getOpenId());
         WxSessionResult wxSessionResult = wxSessionResultOpt.orElse(null);
         if (wxSessionResult != null) {
-            PlatformAssert.isTrue(StringUtils.isNotBlank(wxSessionResult.getShopId()), "请获取经纬度后请求接口");
+            PlatformAssert.isTrue(StringUtils.isNotBlank(wxSessionResult.getShopId()), "请获取经纬度后请求接口【/wx/user/relateShop】");
             wxSessionResult.setUserInfo(userPoByOpenIdAndUnionId);
             wxUserSessionApi.addUserSessionInfo(userInfo.getOpenId(), wxSessionResult);
             return FantResult.ok(userPoByOpenIdAndUnionId);
