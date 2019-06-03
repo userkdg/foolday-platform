@@ -48,7 +48,7 @@ public final class ReflectScanClassUrl {
     public static Set<Class<?>> findClazzByPackage(String basePackage) throws IOException {
         String pkgDirName = basePackage;
         if (basePackage.contains(".")) {
-            pkgDirName = basePackage.replaceAll("\\.", "/");
+            pkgDirName = basePackage.replaceAll("\\.", File.separator);
         }
         /*保存包路径下class的集合*/
         final Set<Class<?>> classes = Sets.newHashSet();
@@ -85,7 +85,7 @@ public final class ReflectScanClassUrl {
         Class clz;
         for (File f : dirfiles) {
             if (f.isDirectory()) {
-                findClassesByFile(pkgName + "." + f.getName(), pkgPath + "/" + f.getName(), classes);
+                findClassesByFile(pkgName + "." + f.getName(), pkgPath + File.separator + f.getName(), classes);
                 continue;
             }
 

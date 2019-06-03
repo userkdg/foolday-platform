@@ -32,6 +32,7 @@ public class InitSystemData implements InitAuthUrl2DbApi {
             standardBaseUrl = "/".concat(baseSystemUrl);
         }
         Set<Class<?>> clazzByPackage = ReflectScanClassUrl.findClazzByPackage(basePackage);
+        log.info("扫描到接口controller类有{}", clazzByPackage);
         String finalStandardBaseUrl = standardBaseUrl;
 
         SysAuthEntity sysAuth = new SysAuthEntity();

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.foolday.common.base.BeanFactory;
 import com.foolday.common.base.annotation.PlatformService;
 import com.foolday.common.exception.PlatformException;
+import com.foolday.common.util.PlatformAssert;
 import com.foolday.core.init.ContextLoader;
 import com.foolday.dao.system.admin.AdminEntity;
 import com.foolday.dao.system.admin.AdminMapper;
@@ -11,13 +12,13 @@ import com.foolday.dao.system.adminRole.SysAdminRoleEntity;
 import com.foolday.dao.system.menu.SysAdminMenuEntity;
 import com.foolday.dao.system.menu.SysMenuEntity;
 import com.foolday.dao.system.role.SysRoleEntity;
+import com.foolday.service.api.admin.LoginServiceApi;
 import com.foolday.service.api.admin.SysAdminRoleServiceApi;
 import com.foolday.service.api.admin.SysAdminServiceApi;
 import com.foolday.service.api.adminMenu.SysAdminMenuServiceApi;
 import com.foolday.service.api.menu.SysMenuServiceApi;
 import com.foolday.serviceweb.dto.admin.SysAdminVo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -62,7 +63,17 @@ public class SysAdminService implements SysAdminServiceApi {
     @Override
     @Transactional(rollbackFor = PlatformException.class)
     public void editAdminAndRoleAndMenu(SysAdminVo sysAdminVo, String adminId, List<String> roleIds, List<String> menuIds) {
-        privateEditAdminAndRoleAndMenu(sysAdminVo, adminId, roleIds, menuIds);
+        checkAccountIfExists(sysAdminVo);
+        AdminEntity adminEntity = checkOneById(adminId, "编辑用户已删除，请刷新页面");
+        adminEntity.setStatus(sysAdminVo.getStatus());
+        adminEntity.setAccount(sysAdminVo.getAccount());
+        adminEntity.setShopId(sysAdminVo.getShopId());
+        adminEntity.setTelphone(sysAdminVo.getTelphone());
+        adminEntity.setNickname(sysAdminVo.getNickname());
+        adminEntity.setPassword(LoginServiceApi.md5DigestAsHex(sysAdminVo.getPassword()));
+        adminEntity.insertOrUpdate();
+        // 角色菜单
+        privateEditAdminAndRoleAndMenu(adminEntity, adminEntity.getId(),roleIds, menuIds);
     }
 
     /**
@@ -76,34 +87,41 @@ public class SysAdminService implements SysAdminServiceApi {
     @Override
     @Transactional(rollbackFor = PlatformException.class)
     public AdminEntity addAdminAndRoleAndMenu(SysAdminVo sysAdminVo, List<String> roleIds, List<String> menuIds) {
-        return privateAddAdminAndRoleAndMenu(sysAdminVo, roleIds, menuIds);
+        // 判断账号是否已存在
+        checkAccountIfExists(sysAdminVo);
+        AdminEntity adminEntity = of(sysAdminVo);
+        adminEntity.setPassword(LoginServiceApi.md5DigestAsHex(adminEntity.getPassword()));
+        AdminEntity insert = insert(adminEntity);
+        return privateAddAdminAndRoleAndMenu(insert, roleIds, menuIds);
     }
 
-    private AdminEntity privateAddAdminAndRoleAndMenu(SysAdminVo sysAdminVo, List<String> roleIds, List<String> menuIds) {
-        AdminEntity adminEntity = of(sysAdminVo);
-        AdminEntity insert = insert(adminEntity);
-        relateRoleOfUser(roleIds, insert.getId(), adminEntity.getShopId());
-        relateMenuOfUser(menuIds, insert.getId(), adminEntity.getShopId());
+    private AdminEntity privateAddAdminAndRoleAndMenu(AdminEntity insert, List<String> roleIds, List<String> menuIds) {
+        relateRoleOfUser(roleIds, insert.getId(), insert.getShopId());
+        relateMenuOfUser(menuIds, insert.getId(), insert.getShopId());
         return insert;
     }
 
-    private void privateEditAdminAndRoleAndMenu(SysAdminVo sysAdminVo, String id, List<String> roleIds, List<String> menuIds) {
-        AdminEntity adminEntity = checkOneById(id, "编辑用户已删除，请刷新页面");
-        adminEntity.setStatus(sysAdminVo.getStatus());
-        adminEntity.setAccount(sysAdminVo.getAccount());
-        adminEntity.setShopId(sysAdminVo.getShopId());
-        adminEntity.setTelphone(sysAdminVo.getTelphone());
-        adminEntity.setNickname(sysAdminVo.getNickname());
-        adminEntity.setPassword(sysAdminVo.getPassword());
-        adminEntity.insertOrUpdate();
-        boolean delete = sysAdminRoleServiceApi.deleteByUserId(id);
+    private void privateEditAdminAndRoleAndMenu(AdminEntity adminEntity, String adminId, List<String> roleIds, List<String> menuIds) {
+        boolean delete = sysAdminRoleServiceApi.deleteByUserId(adminId);
         log.info("清理old权限关联{}", delete);
-        delete = sysAdminMenuServiceApi.deleteByUserId(id);
+        delete = sysAdminMenuServiceApi.deleteByUserId(adminId);
         log.info("清理old菜单关联{}", delete);
         // 处理权限
-        relateRoleOfUser(roleIds, id, sysAdminVo.getShopId());
+        relateRoleOfUser(roleIds, adminId, adminEntity.getShopId());
         // 处理菜单
-        relateMenuOfUser(menuIds, id, adminEntity.getShopId());
+        relateMenuOfUser(menuIds, adminId, adminEntity.getShopId());
+    }
+
+    /**
+     * 判断账号是否已存在
+     *
+     * @param sysAdminVo
+     */
+    private void checkAccountIfExists(SysAdminVo sysAdminVo) {
+        // 判断账号是否已存在
+        String account = sysAdminVo.getAccount();
+        boolean existAccount = adminMapper.existAccount(account);
+        PlatformAssert.isFalse(existAccount, "本账号已被人注册，请使用其他账号名称");
     }
 
     /**

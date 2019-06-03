@@ -3,8 +3,10 @@ package com.foolday.service.wechat;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.user.UserEntity;
 import com.foolday.dao.user.UserMapper;
+import com.foolday.service.api.admin.ShopServiceApi;
 import com.foolday.service.api.wechat.WxUserServiceApi;
 import com.foolday.serviceweb.dto.wechat.user.WxUserVo;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,9 @@ import java.util.Optional;
 public class WxUserService implements WxUserServiceApi {
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private ShopServiceApi shopServiceApi;
 
     @Override
     public UserEntity add(WxUserVo userVo) {
@@ -65,7 +70,7 @@ public class WxUserService implements WxUserServiceApi {
                      */
         userEntity.setCountryCode(phoneNoInfo.getCountryCode());
         userEntity.setTel(phoneNoInfo.getPhoneNumber());
-        userEntity.setShopId("");// 获取用户所在/所选店铺 // TODO: 2019/5/2 需要获取新用户所在的shopId
+        userEntity.setShopId(shopServiceApi.getDefaultShop().orElse(new ShopEntity()).getId());// 获取用户所在/所选店铺 // TODO: 2019/5/2 需要获取新用户所在的shopId
         userEntity.setCreateTime(LocalDateTime.now());
         boolean insert = userEntity.insert();
         log.info("记录用户信息{}, 记录情况：{}", userEntity, insert);

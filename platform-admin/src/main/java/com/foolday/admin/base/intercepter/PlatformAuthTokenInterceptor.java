@@ -77,10 +77,10 @@ public class PlatformAuthTokenInterceptor implements HandlerInterceptor, Ordered
         String method = request.getMethod();
         String requestURI = request.getRequestURI();
         logger.debug("用户{}发起请求{}的url为{}", loginUser.getUserId(), method, requestURI);
-        Set<String> userAuthEntities = ContextLoader.getUrls(loginUser.getUserId(), true);
         if (loginUser.getUserName().equalsIgnoreCase(WebConstant.SYSTEM_ADMIN_NAME)) {
             return true;
         }
+        Set<String> userAuthEntities = ContextLoader.getUrls(loginUser.getUserId(), true);
         if (!userAuthEntities.contains(requestURI)) {
             //重定向到跳转到静态页面、没有经过spring mvc 视图处理
             response.sendRedirect(request.getContextPath() + errorUrl.getError403());
