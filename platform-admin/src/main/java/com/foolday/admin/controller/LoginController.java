@@ -1,4 +1,4 @@
-package com.foolday.admin.controller.system;
+package com.foolday.admin.controller;
 
 import com.foolday.common.constant.WebConstant;
 import com.foolday.common.dto.FantResult;

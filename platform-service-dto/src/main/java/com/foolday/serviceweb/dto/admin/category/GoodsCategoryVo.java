@@ -5,15 +5,13 @@ import com.foolday.common.enums.CommonStatus;
 import com.foolday.common.enums.TopDownStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-@ApiModel(value = "商品数据传输对象")
+@ApiModel(value = "分类传输对象")
 @Data
-@Builder
 public class GoodsCategoryVo implements Serializable {
 
     @NotNull(message = "商品分类名称不可为空")

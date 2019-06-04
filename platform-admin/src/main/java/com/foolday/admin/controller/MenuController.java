@@ -1,4 +1,4 @@
-package com.foolday.admin.controller.system;
+package com.foolday.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -36,7 +36,7 @@ public class MenuController {
     }
 
     @ApiOperation("菜单编辑")
-    @PostMapping("/edit/{id}")
+    @PostMapping("/edit")
     public FantResult<String> edit(@ApiParam("菜单") @RequestBody SysMenuVo sysMenuVo,
                                    @ApiParam("菜单id") @PathVariable("id") String id) {
         menuServiceApi.checkOneById(id, "编辑菜单已删除，请刷新页面");
@@ -47,29 +47,29 @@ public class MenuController {
     }
 
     @ApiOperation("菜单删除")
-    @PostMapping("/delete/{id}")
+    @PostMapping("/delete")
     public FantResult<String> delete(@ApiParam("菜单id") @PathVariable("id") String id) {
         updateStatus(id, CommonStatus.删除);
         return FantResult.ok();
     }
 
     @ApiOperation("菜单起效")
-    @PostMapping("/valid/{id}")
+    @PostMapping("/valid")
     public FantResult<String> valid(@ApiParam("菜单id") @PathVariable("id") String id) {
         updateStatus(id, CommonStatus.有效);
         return FantResult.ok();
     }
 
     @ApiOperation("菜单停用/失效")
-    @PostMapping("/noValid/{id}")
-    public FantResult<String> noValid(@ApiParam("菜单id") @PathVariable("id") String id) {
+    @PostMapping("/noValid")
+    public FantResult<String> noValid(@ApiParam("菜单id") @RequestParam("id") String id) {
         updateStatus(id, CommonStatus.无效);
         return FantResult.ok();
     }
 
     @ApiOperation("菜单查看")
-    @PostMapping("/get/{id}")
-    public FantResult<SysMenuEntity> get(@ApiParam("菜单id") @PathVariable("id") String id) {
+    @PostMapping("/get")
+    public FantResult<SysMenuEntity> get(@ApiParam("菜单id") @RequestParam("id") String id) {
         // 判断菜单是否存在
         SysMenuEntity sysRoleEntity = menuServiceApi.checkOneById(id, "菜单信息已被删除，请刷新页面");
         PlatformAssert.isTrue(CommonStatus.有效.equals(sysRoleEntity.getStatus()), "菜单已无效");

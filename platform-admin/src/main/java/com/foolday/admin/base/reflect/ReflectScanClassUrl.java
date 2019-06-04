@@ -4,6 +4,9 @@ import com.foolday.admin.base.aspectj.HttpUtils;
 import com.foolday.common.enums.CommonStatus;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.ReflectionUtils;
 import reactor.util.function.Tuple5;
@@ -48,19 +51,51 @@ public final class ReflectScanClassUrl {
     public static Set<Class<?>> findClazzByPackage(String basePackage) throws IOException {
         String pkgDirName = basePackage;
         if (basePackage.contains(".")) {
-            pkgDirName = basePackage.replaceAll("\\.", File.separator);
+            String[] uri = basePackage.split("\\.", -1);
+            pkgDirName = String.join(File.separator, uri);
         }
-        /*保存包路径下class的集合*/
-        final Set<Class<?>> classes = Sets.newHashSet();
-        Enumeration<URL> resources = ReflectScanClassUrl.class.getClassLoader().getResources(pkgDirName);
-        while (resources.hasMoreElements()) {
-            URL url = resources.nextElement();
+
+        Set<Class<?>> classes = Sets.newHashSet();
+        log.info("处理file的包路径{}", pkgDirName);
+        Enumeration resources = Thread.currentThread().getContextClassLoader().getResources(pkgDirName);
+
+        while(resources.hasMoreElements()) {
+            URL url = (URL)resources.nextElement();
             String protocol = url.getProtocol();
             if ("file".equalsIgnoreCase(protocol)) {
-                String filePath = URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8.name());// 获取包的物理路径
+                String filePath = URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8.name());
                 findClassesByFile(basePackage, filePath, classes);
             }
         }
+
+        String scanJarClassPath = "com/foolday/admin/controller/";
+        log.info("处理jar的包路径{}", scanJarClassPath);
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+
+        try {
+            Resource[] resourcesJar = resolver.getResources(scanJarClassPath + "*.*");
+            log.info("获取资源数量{}", resourcesJar.length);
+            Resource[] var7 = resourcesJar;
+            int var8 = resourcesJar.length;
+
+            for(int var9 = 0; var9 < var8; ++var9) {
+                Resource resource = var7[var9];
+                String fileStr = resource.getFilename();
+                if (StringUtils.isNotBlank(fileStr)) {
+                    String classesName = scanJarClassPath.replaceAll("/", "\\.").concat(fileStr.substring(0, fileStr.lastIndexOf(".class")));
+                    Class<?> aClass = loadClass(classesName);
+                    if (log.isInfoEnabled()) {
+                        log.info("放置位置  [" + aClass + "]");
+                    }
+
+                    classes.add(aClass);
+                }
+            }
+        } catch (Exception var14) {
+            log.error(var14.getMessage());
+            var14.printStackTrace();
+        }
+
         return classes;
     }
 
@@ -88,8 +123,6 @@ public final class ReflectScanClassUrl {
                 findClassesByFile(pkgName + "." + f.getName(), pkgPath + File.separator + f.getName(), classes);
                 continue;
             }
-
-
             // 获取类名，干掉 ".class" 后缀
             className = f.getName();
             className = className.substring(0, className.length() - 6);
@@ -100,6 +133,12 @@ public final class ReflectScanClassUrl {
                 classes.add(clz);
             }
         }
+    }
+
+    public static void main(String[] args) {
+        String s = "com/foolday/admin/controller/AdminBannerController.class".replaceAll("/", "\\.");
+        Class<?> aClass = loadClass(s.substring(0, s.lastIndexOf(".class")));
+        System.out.println(aClass);
     }
 
     public static Class<?> loadClass(String fullClzName) {

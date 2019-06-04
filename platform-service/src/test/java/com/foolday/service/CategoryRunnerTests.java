@@ -1,10 +1,7 @@
 package com.foolday.service;
 
-import com.foolday.common.enums.CommonStatus;
-import com.foolday.common.enums.TopDownStatus;
 import com.foolday.dao.category.GoodsCategoryEntity;
 import com.foolday.service.api.admin.GoodsCategoryServiceApi;
-import com.foolday.serviceweb.dto.admin.category.GoodsCategoryVo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,25 +22,25 @@ public class CategoryRunnerTests {
 
     @Test
     public void category() {
-        GoodsCategoryEntity categoryEntity = categoryServiceApi.
-                newGoodsCategory(GoodsCategoryVo.builder().name("热门推荐").status(CommonStatus.有效)
-                        .topDownStatus(TopDownStatus.置顶).build());
-        System.out.println("new add " + categoryEntity);
-        GoodsCategoryEntity categoryEntity2 = categoryServiceApi.
-                newGoodsCategory(GoodsCategoryVo.builder().name("热门推荐2").status(CommonStatus.有效)
-                        .topDownStatus(TopDownStatus.置底).build());
-        System.out.println("new add2 " + categoryEntity2);
-
-        List<GoodsCategoryEntity> categoryEntities = categoryServiceApi.listOrderCategory();
-        System.out.println("获取列表2" + categoryEntities);
-        boolean b = categoryServiceApi.updateStatus(CommonStatus.无效, categoryEntity.getId());
-        System.out.println("修改状态" + b);
-
-        boolean en2 = categoryServiceApi.editGoodsCategory(GoodsCategoryVo.builder().name("今日热推").topDownStatus(TopDownStatus.置顶).build(), categoryEntity2.getId());
-        System.out.println("修改" + categoryEntity2.getId() + en2);
-
-        List<GoodsCategoryEntity> categoryEntities2 = categoryServiceApi.listOrderCategory();
-        System.out.println("获取列表" + categoryEntities2);
+//        GoodsCategoryEntity categoryEntity = categoryServiceApi.
+//                newGoodsCategory(GoodsCategoryVo.builder().name("热门推荐").status(CommonStatus.有效)
+//                        .topDownStatus(TopDownStatus.置顶).build());
+//        System.out.println("new add " + categoryEntity);
+//        GoodsCategoryEntity categoryEntity2 = categoryServiceApi.
+//                newGoodsCategory(GoodsCategoryVo.builder().name("热门推荐2").status(CommonStatus.有效)
+//                        .topDownStatus(TopDownStatus.置底).build());
+//        System.out.println("new add2 " + categoryEntity2);
+//
+//        List<GoodsCategoryEntity> categoryEntities = categoryServiceApi.listOrderCategory();
+//        System.out.println("获取列表2" + categoryEntities);
+//        boolean b = categoryServiceApi.updateStatus(CommonStatus.无效, categoryEntity.getId());
+//        System.out.println("修改状态" + b);
+//
+//        boolean en2 = categoryServiceApi.editGoodsCategory(GoodsCategoryVo.builder().name("今日热推").topDownStatus(TopDownStatus.置顶).build(), categoryEntity2.getId());
+//        System.out.println("修改" + categoryEntity2.getId() + en2);
+//
+//        List<GoodsCategoryEntity> categoryEntities2 = categoryServiceApi.listOrderCategory();
+//        System.out.println("获取列表" + categoryEntities2);
 
     }
 

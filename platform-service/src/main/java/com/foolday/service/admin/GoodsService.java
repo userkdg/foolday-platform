@@ -1,28 +1,25 @@
 package com.foolday.service.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.foolday.common.base.AdminBaseDataUtils;
 import com.foolday.common.base.BaseServiceUtils;
 import com.foolday.common.enums.GoodsStatus;
-import com.foolday.common.exception.PlatformException;
 import com.foolday.dao.category.GoodsCategoryMapper;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.goods.GoodsMapper;
 import com.foolday.dao.image.ImageMapper;
+import com.foolday.service.api.admin.GoodsCouponServiceApi;
 import com.foolday.service.api.admin.GoodsServiceApi;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import com.foolday.serviceweb.dto.admin.goods.GoodsVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 商品具体业务
@@ -42,23 +39,24 @@ public class GoodsService implements GoodsServiceApi {
     private GoodsCategoryMapper categoryMapper;
 
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private GoodsCouponServiceApi goodsCouponServiceApi;
 
     /**
      * 分类+商品
      *
      * @param goodsVo
      * @param categoryId
+     * @param couponIds
      * @return
      */
     @Override
-    public GoodsEntity newGoods(GoodsVo goodsVo, String categoryId, LoginUser loginUser) {
+    public GoodsEntity newGoods(GoodsVo goodsVo, String categoryId, String[] couponIds, LoginUser loginUser) {
         BaseServiceUtils.checkOneById(categoryMapper, categoryId);
         GoodsEntity goodsEntity = new GoodsEntity();
         BeanUtils.copyProperties(goodsVo, goodsEntity);
-        Optional<String> shopId4Redis = AdminBaseDataUtils.getShopId4Redis(redisTemplate, loginUser.getUserId());
-        String shopId = shopId4Redis.orElseThrow(() -> new PlatformException("用户无法获取店铺身份"));
-        goodsEntity.setShopId(shopId);
+//        Optional<String> shopId4Redis = AdminBaseDataUtils.getShopId4Redis(redisTemplate, loginUser.getUserId());
+//        String shopId = shopId4Redis.orElseThrow(() -> new PlatformException("用户无法获取店铺身份"));
+        goodsEntity.setShopId(loginUser.getShopId());
         goodsEntity.setCreateTime(LocalDateTime.now());
         goodsEntity.setCategoryId(categoryId);
         final String imgId = goodsEntity.getImgId();
@@ -69,6 +67,8 @@ public class GoodsService implements GoodsServiceApi {
         }
         int insert = goodsMapper.insert(goodsEntity);
         log.info("新增商品{}为{}", goodsEntity, insert == 1);
+        // 关联优惠券
+        goodsCouponServiceApi.relateGoodsCoupons(goodsEntity.getId(), couponIds);
         return goodsEntity;
     }
 
@@ -77,11 +77,12 @@ public class GoodsService implements GoodsServiceApi {
      *
      * @param goodsVo
      * @param categoryId
+     * @param couponIds
      * @param goodsId
      * @return
      */
     @Override
-    public boolean editGoods(GoodsVo goodsVo, String categoryId, String goodsId) {
+    public boolean editGoods(GoodsVo goodsVo, String categoryId, String[] couponIds, String goodsId) {
         BaseServiceUtils.checkOneById(categoryMapper, categoryId);
         GoodsEntity goodsEntity = BaseServiceUtils.checkOneById(goodsMapper, goodsId);
         BeanUtils.copyProperties(goodsVo, goodsEntity);
@@ -94,6 +95,9 @@ public class GoodsService implements GoodsServiceApi {
         }
         int update = goodsMapper.updateById(goodsEntity);
         log.info("修改商品{}为{}", goodsEntity, update == 1);
+        // 1取消之前 2关联优惠券
+        goodsCouponServiceApi.cancelGoodsCouponByGoodsId(goodsEntity.getId());
+        goodsCouponServiceApi.relateGoodsCoupons(goodsEntity.getId(), couponIds);
         return update == 1;
     }
 

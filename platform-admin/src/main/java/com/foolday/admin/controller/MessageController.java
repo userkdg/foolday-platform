@@ -1,15 +1,17 @@
 package com.foolday.admin.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.dto.FantResult;
+import com.foolday.dao.message.MessageEntity;
 import com.foolday.service.api.common.MessageServiceApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 系统消息管理
@@ -30,4 +32,21 @@ public class MessageController {
         boolean b = messageServiceApi.readMessage(messageId);
         return FantResult.checkAs(b);
     }
+
+    @ApiOperation("消息列表")
+    @PostMapping("/list")
+    public FantResult<List<MessageEntity>> list() {
+        LambdaQueryWrapper<MessageEntity> eq = messageServiceApi.lqWrapper()
+                .eq(MessageEntity::getToShopId, LoginUserHolder.get().getShopId());
+        List<MessageEntity> b = messageServiceApi.selectList(eq);
+        return FantResult.ok(b);
+    }
+
+    @ApiOperation("get消息")
+    @GetMapping("/get")
+    public FantResult<MessageEntity> get(@ApiParam("id") @RequestParam("id") String id) {
+        MessageEntity messageEntity = messageServiceApi.selectById(id).orElse(null);
+        return FantResult.ok(messageEntity);
+    }
+
 }

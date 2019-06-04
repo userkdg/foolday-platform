@@ -3,11 +3,11 @@ package com.foolday.service.admin;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.common.base.BaseServiceUtils;
-import com.foolday.common.enums.GoodsSpecType;
 import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.specification.GoodsSpecEntity;
 import com.foolday.dao.specification.GoodsSpecMapper;
 import com.foolday.service.api.admin.GoodsSpecServiceApi;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import com.foolday.serviceweb.dto.admin.specification.GoodsSpecVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -39,10 +39,11 @@ public class GoodsSpecService implements GoodsSpecServiceApi {
      * @param goodsSpecVo
      * @return
      */
-    @Override
-    public GoodsSpecEntity add(GoodsSpecVo goodsSpecVo) {
+   @Override
+    public GoodsSpecEntity add(GoodsSpecVo goodsSpecVo, LoginUser loginUser) {
         GoodsSpecEntity entity = new GoodsSpecEntity();
         BeanUtils.copyProperties(goodsSpecVo, entity);
+        entity.setShopId(loginUser.getShopId());
         entity.insert();
         return entity;
     }
@@ -54,9 +55,10 @@ public class GoodsSpecService implements GoodsSpecServiceApi {
      * @param goodsSpecId
      */
     @Override
-    public boolean edit(GoodsSpecVo goodsSpecVo, String goodsSpecId) {
+    public boolean edit(GoodsSpecVo goodsSpecVo, String goodsSpecId, LoginUser loginUser) {
         GoodsSpecEntity entity = BaseServiceUtils.checkOneById(goodsSpecMapper, goodsSpecId);
         BeanUtils.copyProperties(goodsSpecVo, entity);
+        entity.setShopId(loginUser.getShopId());
         return entity.updateById();
     }
 
@@ -79,12 +81,12 @@ public class GoodsSpecService implements GoodsSpecServiceApi {
      * @return
      */
     @Override
-    public List<GoodsSpecType> findRootSpec() {
-        LambdaQueryWrapper<GoodsSpecEntity> queryWrapper = Wrappers.lambdaQuery(GoodsSpecEntity.newInstance()).select(GoodsSpecEntity::getType);
+    public List<GoodsSpecEntity> findRootSpec(LoginUser user) {
+        LambdaQueryWrapper<GoodsSpecEntity> queryWrapper = Wrappers.lambdaQuery(GoodsSpecEntity.newInstance())
+                .eq(GoodsSpecEntity::getShopId, user.getShopId());
         return goodsSpecMapper.selectList(queryWrapper).stream()
-                .map(GoodsSpecEntity::getType)
                 .distinct()
-                .sorted((g1, g2) -> g2.getValue().compareTo(g1.getValue()))
+                .sorted((g1, g2) -> g2.getId().compareTo(g1.getId()))
                 .collect(Collectors.toList());
     }
 

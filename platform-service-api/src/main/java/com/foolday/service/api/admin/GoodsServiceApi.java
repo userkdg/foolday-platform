@@ -14,9 +14,9 @@ import java.util.List;
  */
 public interface GoodsServiceApi extends BaseServiceApi<GoodsEntity> {
 
-    GoodsEntity newGoods(GoodsVo goodsVo, String categoryId, LoginUser loginUser);
+    GoodsEntity newGoods(GoodsVo goodsVo, String categoryId, String[] couponIds, LoginUser loginUser);
 
-    boolean editGoods(GoodsVo goodsVo, String categoryId, String goodsId);
+    boolean editGoods(GoodsVo goodsVo, String categoryId, String[] couponIds, String goodsId);
 
     boolean updateStatus(GoodsStatus goodsStatus, String goodsId);
 

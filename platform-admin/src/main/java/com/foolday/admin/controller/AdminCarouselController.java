@@ -1,18 +1,19 @@
 package com.foolday.admin.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.base.BaseEntity;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.enums.CommentStatus;
 import com.foolday.dao.carouse.CarouseEntity;
 import com.foolday.service.api.carouse.CarouseServiceApi;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import com.foolday.serviceweb.dto.carousel.CarouseVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
  *
  * @author userkdg
  */
-@Api(value = "后台 轮播管理",tags = "后台 轮播管理")
+@Api(value = "后台 轮播管理", tags = "后台 轮播管理")
 @Controller
 @RequestMapping("/carousel")
 public class AdminCarouselController {
@@ -35,11 +36,12 @@ public class AdminCarouselController {
     @PostMapping("add")
     @ApiOperation("轮播数据 图片")
     public FantResult<List<String>> add(@RequestBody CarouseVo carouseVo) {
+        LoginUser loginUser = LoginUserHolder.get();
         AtomicInteger level = new AtomicInteger(0);
         List<String> carouseIds = carouseVo.getImageIds().stream().map(imageId -> {
             CarouseEntity carouse = new CarouseEntity();
             carouse.setImageId(imageId);
-            carouse.setShopId(carouseVo.getShopId());
+            carouse.setShopId(loginUser.getShopId());
             carouse.setOrderNo(level.incrementAndGet());
             carouse.setStatus(CommentStatus.有效);
             return carouse;
@@ -47,12 +49,27 @@ public class AdminCarouselController {
         return FantResult.ok(carouseIds);
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/delete}")
     @ApiOperation("轮播数据 图片")
-    public FantResult<Boolean> delete(@PathVariable("id") String id) {
+    public FantResult<Boolean> delete(@RequestParam(value = "id",required = false) String id) {
         boolean b = carouseServiceApi.deleteById(id);
         return FantResult.ok(b);
     }
 
+    @ApiOperation("获取轮播")
+    @GetMapping("/get")
+    public FantResult<CarouseEntity> get(@ApiParam(value = "carouselId", required = true, name = "轮播id")
+                                         @RequestParam("carouselId") String carouselId) {
+        CarouseEntity goodsSpecEntity = carouseServiceApi.selectById(carouselId).orElse(null);
+        return FantResult.ok(goodsSpecEntity);
+    }
+
+    @ApiOperation("获取轮播 list")
+    @GetMapping("/list")
+    public FantResult<List<CarouseEntity>> list() {
+        LambdaQueryWrapper<CarouseEntity> eq = carouseServiceApi.lqWrapper().eq(CarouseEntity::getShopId, LoginUserHolder.get().getShopId());
+        List<CarouseEntity> entity = carouseServiceApi.selectList(eq);
+        return FantResult.ok(entity);
+    }
 
 }

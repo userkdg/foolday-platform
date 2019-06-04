@@ -59,11 +59,4 @@ public class GoodsSpecVo implements Serializable {
     @ApiModelProperty("规则状态，默认为有效")
     private CommonStatus status = CommonStatus.有效;
 
-    /*
-    店铺id
-     */
-    @ApiModelProperty("店铺id")
-    private String shopId;
-
-
 }

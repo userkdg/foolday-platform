@@ -42,8 +42,10 @@ public class RedisConfiguration implements RedisBeanNameApi {
 
     private final OrderMessageCustomer orderMessageCustomer;
     private final CommentMessageCustomer commentMessageCustomer;
+    private final RedisConnectionFactory redisConnectionFactory;
 
-    public RedisConfiguration(OrderMessageCustomer orderMessageCustomer, CommentMessageCustomer commentMessageCustomer) {
+    public RedisConfiguration(OrderMessageCustomer orderMessageCustomer, CommentMessageCustomer commentMessageCustomer, RedisConnectionFactory redisConnectionFactory) {
+        this.redisConnectionFactory = redisConnectionFactory;
         // 配置自动注入的redisTemplate 在注入之前的redisTemplate是没有调整的
         initRedisTemplate();
         this.orderMessageCustomer = orderMessageCustomer;
@@ -63,7 +65,7 @@ public class RedisConfiguration implements RedisBeanNameApi {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory) {
+    public RedisMessageListenerContainer redisMessageListenerContainer() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory);
         Map<MessageListener, Collection<? extends Topic>> listeners = Maps.newHashMap();
@@ -77,7 +79,6 @@ public class RedisConfiguration implements RedisBeanNameApi {
      * 配置自动生成的bean
      */
     private void initRedisTemplate() {
-        RedisConnectionFactory redisConnectionFactory = SpringContextUtils.getBean(RedisConnectionFactory.class);
         StringRedisTemplate stringRedisTemplate = (StringRedisTemplate) SpringContextUtils.getBean("stringRedisTemplate");
         redisTemplateKey(stringRedisTemplate, redisConnectionFactory);
         RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtils.getBean("redisTemplate");

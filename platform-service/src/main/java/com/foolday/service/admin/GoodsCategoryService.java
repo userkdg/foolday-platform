@@ -11,6 +11,7 @@ import com.foolday.dao.category.GoodsCategoryMapper;
 import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.service.api.admin.GoodsCategoryServiceApi;
 import com.foolday.service.api.admin.GoodsServiceApi;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import com.foolday.serviceweb.dto.admin.category.GoodsCategoryVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,14 +41,14 @@ public class GoodsCategoryService implements GoodsCategoryServiceApi {
      * 新增
      *
      * @param
+     * @param loginUser
      * @return
      */
     @Override
-    public GoodsCategoryEntity newGoodsCategory(GoodsCategoryVo categoryEntityVo) {
+    public GoodsCategoryEntity newGoodsCategory(GoodsCategoryVo categoryEntityVo, LoginUser loginUser) {
         GoodsCategoryEntity categoryEntity = new GoodsCategoryEntity();
         BeanUtils.copyProperties(categoryEntityVo, categoryEntity);
-        categoryEntity.setCreateTime(LocalDateTime.now());
-        categoryEntity.setUpdateTime(LocalDateTime.now());
+        categoryEntity.setShopId(loginUser.getShopId());
         categoryEntity.setStatus(CommonStatus.有效);
         categoryMapper.insert(categoryEntity);
         return categoryEntity;
@@ -65,7 +66,6 @@ public class GoodsCategoryService implements GoodsCategoryServiceApi {
         PlatformAssert.isTrue(StringUtils.isNotBlank(categoryId), "分类标识不可为空");
         GoodsCategoryEntity categoryEntity = BaseServiceUtils.checkOneById(categoryMapper, categoryId);
         BeanUtils.copyProperties(categoryEntityVo, categoryEntity);
-        categoryEntity.setUpdateTime(LocalDateTime.now());
         return categoryMapper.updateById(categoryEntity) == 1;
     }
 

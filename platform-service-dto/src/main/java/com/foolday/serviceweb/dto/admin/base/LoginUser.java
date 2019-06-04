@@ -1,11 +1,13 @@
 package com.foolday.serviceweb.dto.admin.base;
 
+import com.foolday.common.constant.WebConstant;
 import com.foolday.common.dto.ClientInfo;
 import com.foolday.common.exception.PlatformException;
 import com.foolday.dao.user.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
@@ -13,6 +15,15 @@ import java.io.Serializable;
 @Getter
 @ToString
 public class LoginUser implements Serializable {
+
+    public boolean nonAdmin(){
+        return !isAdmin();
+    }
+
+    public boolean isAdmin() {
+        return StringUtils.isNotBlank(userName) && WebConstant.SYSTEM_ADMIN_NAME.equalsIgnoreCase(userName);
+    }
+
     /**
      * 维护用户来源类型 目前分为web用户，微信用户
      */

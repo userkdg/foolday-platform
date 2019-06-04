@@ -44,7 +44,7 @@ public class GoodsCouponService implements GoodsCouponServiceApi {
      */
     @Override
     public void relateGoodsCoupons(String goodsId, String... couponIds) {
-        Stream.of(couponIds).forEach(couponId -> relateGoodsCoupon(goodsId, couponId));
+        Stream.of(couponIds).filter(StringUtils::isNotBlank).forEach(couponId -> relateGoodsCoupon(goodsId, couponId));
     }
 
     /**

@@ -11,7 +11,7 @@ import lombok.ToString;
  * 哪些商品可用优惠券
  * 多对多（优惠券<-> 商品）
  */
-@TableName("t_coupon_goods")
+@TableName("t_goods_coupon")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

@@ -68,9 +68,9 @@ public class ImageController {
 
     @ApiOperation(value = "下载文件")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "正常返回", response = ResponseEntity.class)})
-    @GetMapping("/{id}/download")
+    @GetMapping("/download")
     public ResponseEntity<FileSystemResource> download(@ApiParam(value = "文件id", required = true)
-                                                       @PathVariable("id") String id,
+                                                       @RequestParam("id") String id,
                                                        @ApiParam(value = "可指定下载文件的宽,填-1为原图下", required = true)
                                                        @RequestParam(value = "width", required = false) int width,
                                                        @ApiParam(value = "可指定下载文件的高,填-1为原图下", required = true)
@@ -95,10 +95,10 @@ public class ImageController {
 
     @ApiOperation(value = "查看图片")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "正常返回", response = ResponseEntity.class)})
-    @GetMapping("/{id}/size/{width}/{height}")
-    public ResponseEntity<FileSystemResource> view(@ApiParam("原文件id") @PathVariable("id") String id,
-                                                   @ApiParam("宽度(px)") @PathVariable("width") Integer width,
-                                                   @ApiParam("高度(px)") @PathVariable("height") Integer height) {
+    @GetMapping("/viewImage/size")
+    public ResponseEntity<FileSystemResource> view(@ApiParam("原文件id") @RequestParam("id") String id,
+                                                   @ApiParam("宽度(px)") @RequestParam("width") Integer width,
+                                                   @ApiParam("高度(px)") @RequestParam("height") Integer height) {
         File file = image2DiskServiceApi.getThumbnail(id, width, height).getFile();
         if (file == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)

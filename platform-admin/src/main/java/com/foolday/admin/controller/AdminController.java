@@ -1,4 +1,4 @@
-package com.foolday.admin.controller.system;
+package com.foolday.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -51,9 +51,9 @@ public class AdminController {
     }
 
     @ApiOperation("用户编辑+角色+菜单")
-    @PostMapping("/edit/{id}")
+    @PostMapping("/edit")
     public FantResult<String> edit(@ApiParam("用户") @RequestBody SysAdminVo sysAdminVo,
-                                   @ApiParam("用户id") @PathVariable("id") String id,
+                                   @ApiParam("用户id") @RequestParam(value = "id",required = false) String id,
                                    @ApiParam("勾选的权限ids") @RequestParam(required = false) List<String> roleIds,
                                    @ApiParam("勾选的菜单ids") @RequestParam(required = false) List<String> menuIds) {
         sysAdminServiceApi.editAdminAndRoleAndMenu(sysAdminVo, id, roleIds, menuIds);
@@ -61,29 +61,29 @@ public class AdminController {
     }
 
     @ApiOperation("用户删除")
-    @PostMapping("/delete/{id}")
-    public FantResult<String> delete(@ApiParam("用户id") @PathVariable("id") String id) {
+    @PostMapping("/delete")
+    public FantResult<String> delete(@ApiParam("用户id") @RequestParam("id") String id) {
         updateStatus(id, UserStatus.删除);
         return FantResult.ok();
     }
 
     @ApiOperation("用户起效")
-    @PostMapping("/valid/{id}")
-    public FantResult<String> valid(@ApiParam("用户id") @PathVariable("id") String id) {
+    @PostMapping("/valid")
+    public FantResult<String> valid(@ApiParam("用户id") @RequestParam("id") String id) {
         updateStatus(id, UserStatus.有效);
         return FantResult.ok();
     }
 
     @ApiOperation("用户停用/失效")
-    @PostMapping("/noValid/{id}")
-    public FantResult<String> noValid(@ApiParam("用户id") @PathVariable("id") String id) {
+    @PostMapping("/noValid")
+    public FantResult<String> noValid(@ApiParam("用户id") @RequestParam("id") String id) {
         updateStatus(id, UserStatus.无效);
         return FantResult.ok();
     }
 
     @ApiOperation("用户查看")
-    @PostMapping("/get/{id}")
-    public FantResult<SysAdminRoleAndMenuVo> get(@ApiParam("用户id") @PathVariable("id") String id) {
+    @PostMapping("/get")
+    public FantResult<SysAdminRoleAndMenuVo> get(@ApiParam("用户id") @RequestParam("id") String id) {
         // 判断用户是否存在
         // 获取用户的url权限信息
         AdminEntity sysRoleEntity = sysAdminServiceApi.checkOneById(id, "用户信息已被删除，请刷新页面");

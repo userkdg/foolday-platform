@@ -2,7 +2,6 @@ package com.foolday.admin.controller;
 
 import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.dto.FantResult;
-import com.foolday.common.enums.GoodsSpecType;
 import com.foolday.dao.specification.GoodsSpecEntity;
 import com.foolday.service.api.admin.GoodsSpecServiceApi;
 import com.foolday.serviceweb.dto.admin.specification.GoodsSpecVo;
@@ -23,42 +22,49 @@ public class GoodsSpecController {
 
     @ApiOperation("获取店铺商品规格列表,目前的规格数据为固定数据,后台定制的大类列表,存储到商品规格的type中")
     @GetMapping("/list/rootSpec")
-    public FantResult<List<GoodsSpecType>> listRootSpec() {
-        List<GoodsSpecType> list = goodsSpecServiceApi.findRootSpec();
+    public FantResult<List<GoodsSpecEntity>> listRootSpec() {
+        List<GoodsSpecEntity> list = goodsSpecServiceApi.findRootSpec(LoginUserHolder.get());
         return FantResult.ok(list);
     }
 
+    @ApiOperation("获取店铺商品分规格")
+    @GetMapping("/get")
+    public FantResult<GoodsSpecEntity> get(@ApiParam(value = "规格id", required = true)
+                                           @RequestParam("specId") String specId) {
+        GoodsSpecEntity goodsSpecEntity = goodsSpecServiceApi.selectById(specId).orElse(null);
+        return FantResult.ok(goodsSpecEntity);
+    }
 
     @ApiOperation("获取店铺商品分规格表")
-    @GetMapping("/list/{goodsId}/subSpec")
-    public FantResult<List<GoodsSpecEntity>> listSubSpec(@ApiParam(value = "goodsId", required = true, name = "商品id")
-                                                         @PathVariable("goodsId") String goodsId) {
+    @GetMapping("/list/subSpec")
+    public FantResult<List<GoodsSpecEntity>> listSubSpec(@ApiParam(value = "商品id", required = true)
+                                                         @RequestParam("goodsId") String goodsId) {
         List<GoodsSpecEntity> list = goodsSpecServiceApi.findByGoodsIdAndBaseInfo(goodsId, LoginUserHolder.get().getShopId());
         return FantResult.ok(list);
     }
 
-    @ApiOperation(value = "新增子类规格（父类已定制化)", notes = "json")
+    @ApiOperation(value = "新增子类规格")
     @PostMapping("/add")
     public FantResult<String> add(@ApiParam(value = "goodsSpecVo", required = true)
                                   @RequestBody GoodsSpecVo goodsSpecVo) {
-        GoodsSpecEntity entity = goodsSpecServiceApi.add(goodsSpecVo);
+        GoodsSpecEntity entity = goodsSpecServiceApi.add(goodsSpecVo, LoginUserHolder.get());
         return FantResult.ok(entity.getId());
     }
 
     @ApiOperation(value = "编辑分类", notes = "json")
-    @PostMapping("/{id}/edit")
+    @PostMapping("/edit")
     public FantResult<String> edit(@ApiParam(value = "goodsSpecVo", required = true)
                                    @RequestBody GoodsSpecVo goodsSpecVo,
                                    @ApiParam(value = "id", required = true)
-                                   @PathVariable("id") String id) {
-        boolean isOk = goodsSpecServiceApi.edit(goodsSpecVo, id);
+                                   @RequestParam("id") String id) {
+        boolean isOk = goodsSpecServiceApi.edit(goodsSpecVo, id, LoginUserHolder.get());
         return FantResult.checkAs(isOk);
     }
 
     @ApiOperation(value = "删除分类")
-    @PostMapping("/{id}/delete")
+    @PostMapping("/delete")
     public FantResult<String> delete(@ApiParam(value = "id", required = true)
-                                     @PathVariable("id") String id) {
+                                     @RequestParam("id") String id) {
         boolean delete = goodsSpecServiceApi.delete(id, LoginUserHolder.get().getShopId());
         return FantResult.checkAs(delete);
     }

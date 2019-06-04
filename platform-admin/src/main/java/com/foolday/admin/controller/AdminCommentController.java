@@ -33,25 +33,25 @@ public class AdminCommentController {
     }
 
     @ApiOperation("回复评论, 返回正常，需要通过订单id或者评论id获取回复信息")
-    @PostMapping("/replay/{commentId}")
+    @PostMapping("/replay")
     @PlatformLog(name = "回复评论")
-    public FantResult<List<CommentEntity>> replay(@PathVariable(value = "commentId", required = true) String commentId,
+    public FantResult<List<CommentEntity>> replay(@RequestParam(value = "commentId", required = false) String commentId,
                                                   @RequestBody CommentVo commentVo) {
         adminCommentServiceApi.replay(commentId, commentVo, LoginUserHolder.get());
         return FantResult.ok();
     }
 
     @ApiOperation("按评论id获取评论列表")
-    @GetMapping("/{commentId}/list")
+    @GetMapping("/listById")
     @PlatformLog(name = "按评论id获取评论列表")
-    public FantResult<List<CommentEntity>> list(@PathVariable(value = "commentId", required = true) String commentId) {
+    public FantResult<List<CommentEntity>> list(@RequestParam(value = "commentId", required = false) String commentId) {
         return FantResult.ok(adminCommentServiceApi.findById(commentId));
     }
 
     @ApiOperation("按订单id获取评论列表")
-    @GetMapping("/list/{orderId}")
+    @GetMapping("/listByOrderId")
     @PlatformLog(name = "按订单id获取评论列表")
-    public FantResult<List<CommentEntity>> listOf(@PathVariable(value = "orderId", required = true) String orderId) {
+    public FantResult<List<CommentEntity>> listOf(@RequestParam(value = "orderId", required = false) String orderId) {
         return FantResult.ok(adminCommentServiceApi.findByOrderId(orderId));
     }
 

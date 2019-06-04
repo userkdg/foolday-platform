@@ -1,6 +1,7 @@
 package com.foolday.service.common;
 
 import com.foolday.common.base.BaseServiceUtils;
+import com.foolday.common.base.BeanFactory;
 import com.foolday.dao.message.MessageEntity;
 import com.foolday.dao.message.MessageMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -43,4 +44,8 @@ public class RedisMessageService extends AbstractMessageService {
     }
 
 
+    @Override
+    public BeanFactory<MessageEntity> beanFactory() {
+        return MessageEntity::new;
+    }
 }

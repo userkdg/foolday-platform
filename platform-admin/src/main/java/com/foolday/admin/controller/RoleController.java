@@ -1,4 +1,4 @@
-package com.foolday.admin.controller.system;
+package com.foolday.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -50,38 +50,38 @@ public class RoleController {
     }
 
     @ApiOperation("角色编辑")
-    @PostMapping("/edit/{id}")
+    @PostMapping("/edit")
     public FantResult<String> edit(@ApiParam("角色") @RequestBody SysRoleVo sysRoleVo,
-                                   @ApiParam("角色id") @PathVariable("id") String id,
+                                   @ApiParam("角色id") @RequestParam("id") String id,
                                    @ApiParam("勾选的权限ids") @RequestParam(required = false) List<String> authIds) {
         roleServiceApi.editRoleAndAuth(sysRoleVo, id, authIds);
         return FantResult.ok();
     }
 
     @ApiOperation("角色删除")
-    @PostMapping("/delete/{id}")
-    public FantResult<String> delete(@ApiParam("角色id") @PathVariable("id") String id) {
+    @PostMapping("/delete")
+    public FantResult<String> delete(@ApiParam("角色id") @RequestParam("id") String id) {
         updateStatus(id, CommonStatus.删除);
         return FantResult.ok();
     }
 
     @ApiOperation("角色起效")
-    @PostMapping("/valid/{id}")
-    public FantResult<String> valid(@ApiParam("角色id") @PathVariable("id") String id) {
+    @PostMapping("/valid")
+    public FantResult<String> valid(@ApiParam("角色id") @RequestParam("id") String id) {
         updateStatus(id, CommonStatus.有效);
         return FantResult.ok();
     }
 
     @ApiOperation("角色停用/失效")
-    @PostMapping("/noValid/{id}")
-    public FantResult<String> noValid(@ApiParam("角色id") @PathVariable("id") String id) {
+    @PostMapping("/noValid")
+    public FantResult<String> noValid(@ApiParam("角色id") @RequestParam("id") String id) {
         updateStatus(id, CommonStatus.无效);
         return FantResult.ok();
     }
 
     @ApiOperation("角色查看")
-    @PostMapping("/get/{id}")
-    public FantResult<SysRoleAuthVo> get(@ApiParam("角色id") @PathVariable("id") String id) {
+    @PostMapping("/get")
+    public FantResult<SysRoleAuthVo> get(@ApiParam("角色id") @RequestParam("id") String id) {
         // 判断角色是否存在
         // 获取角色的url权限信息
         SysRoleEntity sysRoleEntity = roleServiceApi.checkOneById(id, "角色信息已被删除，请刷新页面");

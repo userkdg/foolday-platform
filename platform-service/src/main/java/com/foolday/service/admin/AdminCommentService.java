@@ -34,7 +34,7 @@ public class AdminCommentService implements AdminCommentServiceApi {
      */
     @Override
     public List<CommentEntity> findById(String commentId) {
-        CommentEntity comment = BaseServiceUtils.checkOneById(commentMapper, commentId);
+        CommentEntity comment = BaseServiceUtils.checkOneById(commentMapper, commentId, "获取评论信息失败");
         String orderId = comment.getOrderId();
         return findByOrderId(orderId);
     }
@@ -75,7 +75,7 @@ public class AdminCommentService implements AdminCommentServiceApi {
      */
     @Override
     public void replay(String commentId, CommentVo commentVo, LoginUser loginUser) {
-        CommentEntity entity = BaseServiceUtils.checkOneById(commentMapper, commentId);
+        CommentEntity entity = BaseServiceUtils.checkOneById(commentMapper, commentId, "获取评论信息失败");
         CommentEntity commentEntity = new CommentEntity();
         BeanUtils.copyProperties(commentVo, commentEntity);
         commentEntity.setOrderId(entity.getOrderId());

@@ -37,27 +37,34 @@ public class GoodsCategoryController {
     @PostMapping("/add")
     public FantResult<String> add(@ApiParam(value = "goodsCategoryVo", required = true)
                                   @RequestBody GoodsCategoryVo goodsCategoryVo) {
-        GoodsCategoryEntity category = goodsCategoryServiceApi.newGoodsCategory(goodsCategoryVo);
+        GoodsCategoryEntity category = goodsCategoryServiceApi.newGoodsCategory(goodsCategoryVo, LoginUserHolder.get());
         return FantResult.ok(category.getId());
     }
 
     @ApiOperation(value = "编辑分类", notes = "json")
-    @PostMapping("/{id}/edit")
+    @PostMapping("/edit")
     public FantResult<String> edit(@ApiParam(value = "goodsCategoryVo", required = true)
                                    @RequestBody GoodsCategoryVo goodsCategoryVo,
                                    @ApiParam(value = "id", required = true)
-                                   @PathVariable("id") String id) {
+                                   @RequestParam("id") String id) {
         boolean editGoodsCategory = goodsCategoryServiceApi.editGoodsCategory(goodsCategoryVo, id);
         return FantResult.checkAs(editGoodsCategory);
     }
 
     @ApiOperation(value = "删除分类")
-    @PostMapping("/{id}/delete")
+    @PostMapping("/delete")
     public FantResult<String> delete(@ApiParam(value = "id", required = true)
-                                     @PathVariable("id") String id) {
+                                     @RequestParam("id") String id) {
         boolean delete = goodsCategoryServiceApi.delete(id, LoginUserHolder.get().getShopId());
         return FantResult.checkAs(delete);
     }
 
+    @ApiOperation("获取分类")
+    @GetMapping("/get")
+    public FantResult<GoodsCategoryEntity> get(@ApiParam(value = "id", required = true)
+                                               @RequestParam("id") String id) {
+        GoodsCategoryEntity goodsSpecEntity = goodsCategoryServiceApi.selectById(id).orElse(null);
+        return FantResult.ok(goodsSpecEntity);
+    }
 
 }
