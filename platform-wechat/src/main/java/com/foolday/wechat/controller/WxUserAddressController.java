@@ -37,8 +37,8 @@ public class WxUserAddressController implements BaseController {
     }
 
     @PostMapping("/add")
-    @ApiOperation("写入")
-    public FantResult<String> add(@ApiParam("地址名称") @RequestParam("address") String address) {
+    @ApiOperation("用户地址")
+    public FantResult<String> add(@ApiParam("用户地址名称") @RequestParam("address") String address) {
         String userId = WxUserSessionHolder.getUserId();
         UserAddressEntity userAddressEntity = new UserAddressEntity();
         userAddressEntity.setAddress(address);

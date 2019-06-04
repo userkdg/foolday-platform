@@ -5,8 +5,8 @@ import com.foolday.common.enums.CommonStatus;
 import com.foolday.dao.article.ArticleEntity;
 import com.foolday.service.api.wechat.WxArticleServiceApi;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,11 +23,15 @@ public class WxArticleService implements WxArticleServiceApi {
      */
     @Override
     public Map<String, List<ArticleEntity>> listByShopIdGroupByType(String shopId) {
-        return selectList(lqWrapper().eq(ArticleEntity::getShopId, shopId)
-                .eq(ArticleEntity::getStatus, CommonStatus.有效))
+        @SuppressWarnings("unchecked")
+        List<ArticleEntity> articleEntities = selectList(lqWrapper()
+                .eq(ArticleEntity::getShopId, shopId)
+                .eq(ArticleEntity::getStatus, CommonStatus.有效)
+                .orderByDesc(ArticleEntity::getUpdateTime, ArticleEntity::getCreateTime)
+        );
+        return articleEntities
                 .stream()
-                .sorted(Comparator.comparing(ArticleEntity::getUpdateTime).reversed()
-                        .thenComparing(ArticleEntity::getCreateTime).reversed())
+                .filter(articleEntity -> StringUtils.isNotBlank(articleEntity.getType()))
                 .collect(Collectors.groupingBy(ArticleEntity::getType));
     }
 }

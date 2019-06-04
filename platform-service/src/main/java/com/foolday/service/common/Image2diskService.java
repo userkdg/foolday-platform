@@ -1,6 +1,7 @@
 package com.foolday.service.common;
 
 import com.foolday.common.base.BaseServiceUtils;
+import com.foolday.common.base.BeanFactory;
 import com.foolday.common.enums.ImageType;
 import com.foolday.common.enums.ThreadPoolType;
 import com.foolday.common.util.ImageUtils;
@@ -142,7 +143,7 @@ public class Image2diskService implements Image2DiskServiceApi {
      */
     @Override
     public Optional<String> uploadImage(FileDto fileDto) {
-        if (fileDto != null && fileDto.getFile() != null) {
+        if (fileDto != null && !fileDto.isEmpty()) {
             List<String> imageIds = uploadImages(Collections.singletonList(fileDto));
             if (!imageIds.isEmpty())
                 return Optional.ofNullable(imageIds.get(0));
@@ -240,7 +241,7 @@ public class Image2diskService implements Image2DiskServiceApi {
             Files.copy(inputStream, path);
             fileDto.setFile(path.toFile());
         } catch (IOException e) {
-            log.error("文件上传失败，e=>{}", e);
+            log.error("文件上传失败，e=>{}", e.toString());
             imageId = null;
         }
         if (imageId != null) {
@@ -248,5 +249,10 @@ public class Image2diskService implements Image2DiskServiceApi {
             log.info("文件{}上传成功", imageId);
         }
         return fileDto;
+    }
+
+    @Override
+    public BeanFactory<ImageEntity> beanFactory() {
+        return ImageEntity::new;
     }
 }

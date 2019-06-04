@@ -27,6 +27,7 @@ public class ArticleEntity extends BaseEntity<ArticleEntity> {
      */
     @NotNull
     private String type;
+
     @NotNull
     private String shopId;
 }

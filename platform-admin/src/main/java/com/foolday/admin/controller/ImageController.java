@@ -1,8 +1,10 @@
 package com.foolday.admin.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.foolday.admin.base.MultipartFileUtils;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.util.PlatformAssert;
+import com.foolday.dao.image.ImageEntity;
 import com.foolday.service.api.base.Image2DiskServiceApi;
 import com.foolday.serviceweb.dto.image.FileDto;
 import io.swagger.annotations.*;
@@ -105,5 +107,15 @@ public class ImageController {
                 .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
                 .body(new FileSystemResource(file));
 
+    }
+
+    @ApiOperation("获取图片 list")
+    @GetMapping("/list")
+    public FantResult<List<ImageEntity>> list() {
+        @SuppressWarnings("unchecked")
+        LambdaQueryWrapper<ImageEntity> eq = image2DiskServiceApi.lqWrapper()
+                .orderByDesc(ImageEntity::getType, ImageEntity::getUpdateTime);
+        List<ImageEntity> entity = image2DiskServiceApi.selectList(eq);
+        return FantResult.ok(entity);
     }
 }

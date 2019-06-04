@@ -8,11 +8,9 @@ import com.foolday.common.enums.CommentStatus;
 import com.foolday.dao.carouse.CarouseEntity;
 import com.foolday.service.api.carouse.CarouseServiceApi;
 import com.foolday.serviceweb.dto.admin.base.LoginUser;
-import com.foolday.serviceweb.dto.carousel.CarouseVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -26,7 +24,7 @@ import java.util.stream.Collectors;
  * @author userkdg
  */
 @Api(value = "后台 轮播管理", tags = "后台 轮播管理")
-@Controller
+@RestController
 @RequestMapping("/carousel")
 public class AdminCarouselController {
 
@@ -35,10 +33,10 @@ public class AdminCarouselController {
 
     @PostMapping("add")
     @ApiOperation("轮播数据 图片")
-    public FantResult<List<String>> add(@RequestBody CarouseVo carouseVo) {
+    public FantResult<List<String>> add(@ApiParam("轮播内容")@RequestParam("imageIds") List<String> imageIds) {
         LoginUser loginUser = LoginUserHolder.get();
         AtomicInteger level = new AtomicInteger(0);
-        List<String> carouseIds = carouseVo.getImageIds().stream().map(imageId -> {
+        List<String> carouseIds = imageIds.stream().map(imageId -> {
             CarouseEntity carouse = new CarouseEntity();
             carouse.setImageId(imageId);
             carouse.setShopId(loginUser.getShopId());
@@ -51,14 +49,14 @@ public class AdminCarouselController {
 
     @PostMapping("/delete}")
     @ApiOperation("轮播数据 图片")
-    public FantResult<Boolean> delete(@RequestParam(value = "id",required = false) String id) {
+    public FantResult<Boolean> delete(@RequestParam(value = "id", required = false) String id) {
         boolean b = carouseServiceApi.deleteById(id);
         return FantResult.ok(b);
     }
 
     @ApiOperation("获取轮播")
     @GetMapping("/get")
-    public FantResult<CarouseEntity> get(@ApiParam(value = "carouselId", required = true, name = "轮播id")
+    public FantResult<CarouseEntity> get(@ApiParam(value = "轮播id", required = true, name = "carouselId")
                                          @RequestParam("carouselId") String carouselId) {
         CarouseEntity goodsSpecEntity = carouseServiceApi.selectById(carouselId).orElse(null);
         return FantResult.ok(goodsSpecEntity);

@@ -28,7 +28,7 @@ public class WxCarouselController {
     @Resource
     private CarouseServiceApi carouseServiceApi;
 
-    @GetMapping("/{shopId}/list")
+    @GetMapping("/list")
     @ApiOperation("获取轮播数据 图片ids")
     public FantResult<List<CarouseEntity>> list() {
         String shopId = WxUserSessionHolder.getShopId();

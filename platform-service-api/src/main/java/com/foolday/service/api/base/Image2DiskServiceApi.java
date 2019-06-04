@@ -1,5 +1,7 @@
 package com.foolday.service.api.base;
 
+import com.foolday.common.base.BaseServiceApi;
+import com.foolday.dao.image.ImageEntity;
 import com.foolday.serviceweb.dto.image.FileDto;
 
 import java.io.File;
@@ -7,7 +9,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-public interface Image2DiskServiceApi {
+public interface Image2DiskServiceApi extends BaseServiceApi<ImageEntity> {
 
     File download(String imageId);
 
