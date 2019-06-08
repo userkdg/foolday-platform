@@ -9,7 +9,6 @@ import com.foolday.serviceweb.dto.banner.BannerVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,7 +20,7 @@ import java.util.List;
  * @author userkdg
  */
 @Api(value = "Banner管理",tags = "Banner管理")
-@Controller
+@RestController
 @RequestMapping("/banner")
 public class AdminBannerController {
 
@@ -32,6 +31,7 @@ public class AdminBannerController {
     @ApiOperation("banner新增")
     public FantResult<String> add(@RequestBody BannerVo bannerVo) {
         BannerEntity bannerEntity = bannerServiceApi.of(bannerVo);
+        bannerEntity.setShopId(LoginUserHolder.get().getShopId());
         BannerEntity insert = bannerServiceApi.insert(bannerEntity);
         return FantResult.ok(insert.getId());
     }
@@ -43,6 +43,7 @@ public class AdminBannerController {
         bannerServiceApi.checkOneById(id, "获取banner数据不存在");
         BannerEntity banner = bannerServiceApi.of(bannerVo);
         banner.setId(id);
+        banner.setShopId(LoginUserHolder.get().getShopId());
         bannerServiceApi.insertOrUpdate(banner);
         return FantResult.ok();
     }

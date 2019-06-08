@@ -44,6 +44,7 @@ public class WxUserAddressController implements BaseController {
         userAddressEntity.setAddress(address);
         userAddressEntity.setUserId(userId);
         userAddressEntity.setStatus(CommonStatus.有效);
+        userAddressEntity.setShopId(WxUserSessionHolder.getShopId());
         UserAddressEntity insert = userAddressServiceApi.insert(userAddressEntity);
         return FantResult.ok(insert.getId());
     }
@@ -56,6 +57,7 @@ public class WxUserAddressController implements BaseController {
         UserAddressEntity addressEntity = userAddressServiceApi.checkOneById(addressId, "获取地址信息失败");
         addressEntity.setAddress(address);
         addressEntity.setUserId(userId);
+        addressEntity.setShopId(WxUserSessionHolder.getShopId());
         UserAddressEntity insert = userAddressServiceApi.insertOrUpdate(addressEntity);
         return FantResult.ok(insert.getId());
     }
