@@ -27,6 +27,11 @@ public class ImageEntity extends BaseEntity<ImageEntity> {
     private Integer width;
 
     private Integer height;
+
+    /**
+     * 磁盘路径
+     */
+    private String filePath;
     /**
      * 文件类型
      * MediaType.valueOf(firmFile.getContentType()

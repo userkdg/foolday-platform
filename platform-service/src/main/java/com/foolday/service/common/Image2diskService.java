@@ -58,10 +58,20 @@ public class Image2diskService implements Image2DiskServiceApi {
         return getThumbnail(imageId, width, height);
     }
 
+    /**
+     * 获取缩列图
+     *
+     * @param sourceImageId
+     * @param width
+     * @param height
+     * @return
+     */
     @Override
     public FileDto getThumbnail(String sourceImageId, int width, int height) {
         ImageEntity oldImage = BaseServiceUtils.checkOneById(imageMapper, sourceImageId);
         if (oldImage.getWidth().equals(width) && oldImage.getHeight().equals(height)) {
+            return FileDto.builder().file(filePathByImageIdAndName(oldImage.getId(), oldImage.getName()).toFile()).build();
+        } else if (width == 0 && height == 0) {
             return FileDto.builder().file(filePathByImageIdAndName(oldImage.getId(), oldImage.getName()).toFile()).build();
         } else {
             return createThumbnail(oldImage, width, height);
@@ -216,6 +226,7 @@ public class Image2diskService implements Image2DiskServiceApi {
             int[] sizeInfo = ImageUtils.getSizeInfo(file);
             imageEntity.setWidth(sizeInfo[0]);
             imageEntity.setHeight(sizeInfo[1]);
+            imageEntity.setFilePath(file.getAbsolutePath());
         }
         imageEntity.setDescription(fileDto.getDescription());
         imageEntity.setSize(fileDto.getSize());
