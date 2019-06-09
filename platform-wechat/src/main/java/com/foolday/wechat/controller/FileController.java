@@ -13,6 +13,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Api(value = "文件上传", tags = "文件上传")
-@RestController
+@Controller
 @RequestMapping("/file")
 public class FileController {
     @Resource
@@ -42,6 +43,7 @@ public class FileController {
 
     @ApiOperation(value = "文件删除功能")
     @PostMapping(value = "/delete")
+    @ResponseBody
     public FantResult<String> delete(@ApiParam(value = "文件id", required = true)
                                      @RequestParam(value = "fileIdArr") String... fileIdArr) {
         image2DiskServiceApi.deleteAll(fileIdArr);
@@ -51,7 +53,7 @@ public class FileController {
 
     @ApiOperation(value = "查看图片")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "正常返回", response = ResponseEntity.class)})
-    @GetMapping("/viewImage/size")
+    @PostMapping("/viewImage/size")
     public ResponseEntity<FileSystemResource> view(@ApiParam("原文件id") @RequestParam("id") String id,
                                                    @ApiParam("宽度(px)") @RequestParam("width") Integer width,
                                                    @ApiParam("高度(px)") @RequestParam("height") Integer height) {
@@ -65,6 +67,7 @@ public class FileController {
 
     @ApiOperation("获取图片 list")
     @GetMapping("/list")
+    @ResponseBody
     public FantResult<List<ImageEntity>> list() {
         @SuppressWarnings("unchecked")
         LambdaQueryWrapper<ImageEntity> eq = image2DiskServiceApi.lqWrapper()
