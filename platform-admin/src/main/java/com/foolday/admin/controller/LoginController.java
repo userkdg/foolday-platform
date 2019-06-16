@@ -33,15 +33,12 @@ public class LoginController {
     @Resource
     private LoginServiceApi loginServiceApi;
 
-//    @Resource(name = RedisBeanNameApi.REDIS_TEMPLATE_S_S)
-//    private RedisTemplate<String, String> redisTemplate;
-
     /**
      * simple login
      */
     @ApiOperation("登录")
     @ApiResponses(@ApiResponse(code = 200, message = "正常返回", response = FantResult.class))
-    @PostMapping
+    @PostMapping("/login")
     public FantResult<String> login(@RequestBody LoginVo loginVo, HttpServletRequest request) throws IOException {
         // 必须有获取验证码到session中
         if (request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY) == null || !Objects.equals(request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY), loginVo.getCaptcha())) // 验证码有效性
