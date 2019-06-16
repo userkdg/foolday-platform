@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Api(value = "登陆控制器",tags = "登陆控制器")
-@RequestMapping("/admin")
+@RequestMapping
 @RestController
 public class LoginController {
     @Resource(name = "captchaProducer")
