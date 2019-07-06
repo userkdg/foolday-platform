@@ -115,17 +115,17 @@ public class WxMaUserController {
     @ApiOperation(value = "获取用户信息接口", notes = "用户登录后必须获取用户信息，否则后台无法分析用户身份")
     @GetMapping("/info/{appid}")
     public FantResult<Object> info(@ApiParam(value = "用户appid", required = true)
-                                   @PathVariable String appid,
+                                   @PathVariable("appid") String appid,
                                    @ApiParam(value = "用户登录后的会话key", required = true)
-                                   @RequestParam String sessionKey,
+                                   @RequestParam("sessionKey") String sessionKey,
                                    @ApiParam(value = "用户签字类型", required = true)
-                                   @RequestParam String signature,
+                                   @RequestParam("signature") String signature,
                                    @ApiParam(value = "用户内容", required = true)
-                                   @RequestParam String rawData,
+                                   @RequestParam("rawData") String rawData,
                                    @ApiParam(value = "消息密文", required = true)
-                                   @RequestParam String encryptedData,
+                                   @RequestParam("encryptedData") String encryptedData,
                                    @ApiParam(value = "iv字符串", required = true)
-                                   @RequestParam String iv) {
+                                   @RequestParam("iv") String iv) {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
         // 用户信息校验
         if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
@@ -157,8 +157,12 @@ public class WxMaUserController {
      */
     @ApiOperation("获取用户绑定手机号信息")
     @GetMapping("/phone/{appid}")
-    public FantResult<WxMaPhoneNumberInfo> phone(@PathVariable(value = "appid") String appid, String sessionKey, String signature,
-                                                 String rawData, String encryptedData, String iv) {
+    public FantResult<WxMaPhoneNumberInfo> phone(@PathVariable(value = "appid") String appid,
+                                                 @RequestParam("sessionKey") String sessionKey,
+                                                 @RequestParam("signature") String signature,
+                                                 @RequestParam("rawData") String rawData,
+                                                 @RequestParam("encryptedData") String encryptedData,
+                                                 @RequestParam("iv") String iv) {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
         // 用户信息校验

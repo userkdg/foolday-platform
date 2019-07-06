@@ -32,6 +32,7 @@ public class FileController {
 
     @ApiOperation(value = "文件上传功能")
     @PostMapping(value = "/upload")
+    @ResponseBody
     public FantResult<String> upload(@ApiParam(value = "file", required = true) @RequestParam(value = "file", required = false) MultipartFile multipartFile) {
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String imageId = image2DiskServiceApi.uploadImage(MultipartFileUtils.toFileDto(multipartFile))
