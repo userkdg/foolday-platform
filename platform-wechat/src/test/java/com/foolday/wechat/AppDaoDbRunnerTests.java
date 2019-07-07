@@ -9,6 +9,7 @@ import com.foolday.service.api.TestServiceApi;
 import com.foolday.service.config.WechatProperties;
 import com.foolday.serviceweb.dto.TestServiceWebDto;
 import com.foolday.wechat.base.bean.WxSessionResult;
+import com.foolday.wechat.base.session.WxUserSessionApi;
 import com.foolday.wechat.base.session.WxUserSessionHandler;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -31,6 +32,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -49,6 +51,8 @@ public class AppDaoDbRunnerTests {
     @Resource
     private WxUserSessionHandler wxUserSessionHandler;
 
+    @Resource
+    private WxUserSessionApi wxUserSessionApi;
     /**
      * 测试模板消息
      *
@@ -56,6 +60,10 @@ public class AppDaoDbRunnerTests {
      */
     @Test
     public void message() throws WxErrorException {
+        Optional<WxSessionResult> oTeUN5Mz09IIvYtMAREUUm1fsGnA = wxUserSessionApi.getSessionUserInfo("oTeUN5Mz09IIvYtMAREUUm1fsGnA");
+
+
+
         WxSessionResult wxSessionResult = WxSessionResult.newInstance();
         wxUserSessionHandler.addUserSessionInfo("111", wxSessionResult);
 

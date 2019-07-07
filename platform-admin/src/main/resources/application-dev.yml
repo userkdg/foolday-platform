@@ -11,7 +11,7 @@ spring:
     url: "jdbc:mysql://47.92.64.11:3306/foolday_platform?
       useUnicode=true&characterEncoding=UTF-8&useSSL=false&
       serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false"
-    username: root
+    username: foolday_platform
     password: dc@tiny401
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
@@ -132,8 +132,8 @@ wechat:
   toOpenId: oxFFT0Zfl2w5SWyYTH8bT91FHiYE # 模拟客户身份2
   #  mpAppId: wxdcf91e9f784bfad0
   #  mpAppSecret: c467c06d98a2447f5ddef6ca8f47f268 #测试号appId,appSecret
-  mpAppId: wx9ee98bd4f8d11ff0
-  mpAppSecret: a43e295acc1cbe68a48e8de50c430967 #借用号appId,appSecret
+  mpappId: wxe8650214ca46a5c9
+  mpAppSecret: 2a8d079bbcba0ac3d51cd0c40387e8f6 #借用号appId,appSecret
   openAppId: wxef923e99135107cb
   openAppSecret: 0b70ab77cd3432365b9bbe20448083d0 #开放平台测试号appId,appSecret
   mchId: 1483469312
@@ -147,12 +147,12 @@ wechat:
 wx:
   miniapp:
     configs:
-    - appid: wx9ee98bd4f8d11ff0 #微信小程序的appid
-      secret: a43e295acc1cbe68a48e8de50c430967 #微信小程序的Secret
+    - appId: wxe8650214ca46a5c9 #微信小程序的appid
+      secret: 2a8d079bbcba0ac3d51cd0c40387e8f6 #微信小程序的Secret
       token: my2019token #微信小程序消息服务器配置的token
       aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #微信小程序消息服务器配置的EncodingAESKey
   pay:
-    appId: wx9ee98bd4f8d11ff0 #微信公众号或者小程序等的appid
+    appId: wxe8650214ca46a5c9 #微信公众号或者小程序等的appid
     mchId: #微信支付商户号
     mchKey: #微信支付商户密钥
     subAppId: #服务商模式下的子商户公众账号ID
@@ -160,8 +160,8 @@ wx:
     keyPath: # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
   mp:
     configs:
-    - appId: wx9ee98bd4f8d11ff0 #（一个公众号的appid）
-      secret: a43e295acc1cbe68a48e8de50c430967 #（公众号的appsecret）
+    - appId: wxe8650214ca46a5c9 #（一个公众号的appid）
+      secret: 2a8d079bbcba0ac3d51cd0c40387e8f6 #（公众号的appsecret）
       token: my2019token #（接口配置里的Token值）
       aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #（接口配置里的EncodingAESKey值）
       contactPhone: 1881312121 # 开发票中需要联系电话号码

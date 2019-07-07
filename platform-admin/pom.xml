@@ -56,7 +56,16 @@
 
     <build>
         <finalName>platform-admin</finalName>
-
+       <!-- <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.html</include>
+                    <include>**/*.js</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>-->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

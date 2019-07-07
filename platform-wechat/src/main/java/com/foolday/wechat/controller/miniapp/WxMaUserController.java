@@ -17,7 +17,9 @@ import com.foolday.wechat.base.session.WxUserSessionApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +35,7 @@ import java.util.Optional;
  *
  * @author <a href="https://github.com/binarywang">Binary Wang</a>
  */
+@Slf4j
 @Api(value = "微信小程序用户接口", tags = "微信小程序用户接口")
 @RestController
 @RequestMapping("/wx/user")
@@ -58,6 +61,7 @@ public class WxMaUserController {
         if (StringUtils.isBlank(code)) {
             return FantResult.fail("empty jscode");
         }
+        log.info("微信用户请求的code为{},appid{}", code, appid);
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
         WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
         // 可以增加自己的逻辑，关联业务相关数据 只针对微信小程序端 用openId为map key 没有问题,
@@ -83,11 +87,11 @@ public class WxMaUserController {
     @PostMapping("/relateShop")
     public FantResult<String> relateShop(@ApiParam(value = "用户openid", required = true)
                                          @RequestParam("openid") String openid,
-                                         @ApiParam(value = "用户经度", required = true)
+                                         @ApiParam(value = "用户纬度", required = true)
                                          @RequestParam("latitude") Float latitude,
                                          @ApiParam(value = "用户经度", required = true)
                                          @RequestParam("longitude") Float longitude) {
-
+        log.info("纬度{}-经度{}, appid={}", latitude, longitude, openid);
         Optional<String> shopIdOpt = shopServiceApi.findByLatitudeAndLonitude(latitude, longitude);
         String shopId = shopIdOpt.orElseGet(this::getDefaultShopId);
         Optional<WxSessionResult> sessionUserInfo = wxUserSessionApi.getSessionUserInfo(openid);
@@ -129,25 +133,37 @@ public class WxMaUserController {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
         // 用户信息校验
         if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            return FantResult.fail("user check failed");
+            return FantResult.fail("user check failed 1");
         }
         // 解密用户信息
         WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
+        log.info("用户信息{}", userInfo);
         //手机号码
         WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
+        log.info("用户手机信息{}", phoneNoInfo);
         // 记录用户信息
         UserEntity userPoByOpenIdAndUnionId = wxUserServiceApi.findByOpenIdAndUnionId(userInfo.getOpenId(), userInfo.getUnionId())
                 .orElseGet(() -> wxUserServiceApi.addByWeixinInfo(userInfo, phoneNoInfo));
 //        WxSessionResult wxSessionResult = (WxSessionResult) redisTemplate.opsForHash().get(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, userInfo.getOpenId());
         Optional<WxSessionResult> wxSessionResultOpt = wxUserSessionApi.getSessionUserInfo(userInfo.getOpenId());
         WxSessionResult wxSessionResult = wxSessionResultOpt.orElse(null);
+        log.info("微信session 信息{}", wxSessionResult);
         if (wxSessionResult != null) {
             PlatformAssert.isTrue(StringUtils.isNotBlank(wxSessionResult.getShopId()), "请获取经纬度后请求接口【/wx/user/relateShop】");
             wxSessionResult.setUserInfo(userPoByOpenIdAndUnionId);
             wxUserSessionApi.addUserSessionInfo(userInfo.getOpenId(), wxSessionResult);
             return FantResult.ok(userPoByOpenIdAndUnionId);
         }
-        return FantResult.fail("user check failed");
+        return FantResult.fail("user check failed 2 ");
+    }
+
+    public static void main(String[] args) {
+        String rawData = "{\"nickName\":\"Eric\",\"gender\":1,\"language\":\"zh_CN\",\"city\":\"\",\"province\":\"\",\"country\":\"Aruba\",\"avatarUrl\":\"https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqAqX1wxd7jpIGQCWGz1m9kGQ50l3uZ5tusB8SOKdt8iaRialM3UiaHUaEBibtIhP6YoNgTDyH2YibcOicA/132\"}";
+        String sessionKey = "y9LD3Tm1g0VQ0LL56tr5cQ==";
+        String generatedSignature = DigestUtils.sha1Hex(rawData + sessionKey);
+        String signature = "fc6426f438f0c72014ce78c45cefeabe166008d2";
+        boolean equals = generatedSignature.equals(signature);
+        System.out.println(equals);
     }
 
     /**
@@ -167,7 +183,7 @@ public class WxMaUserController {
 
         // 用户信息校验
         if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            return FantResult.fail("user check failed");
+            return FantResult.fail("获取手机信息时,user check failed");
         }
         // 解密
         WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
