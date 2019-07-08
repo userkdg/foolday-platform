@@ -22,6 +22,7 @@ import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -47,6 +48,15 @@ public class WxMaUserController {
 
     @Resource
     private ShopServiceApi shopServiceApi;
+
+//    @GetMapping("/login")
+//    @ApiOperation("l")
+//    public FantResult<String> l(){
+//        String s = "https://api.weixin.qq.com/sns/jscode2session?appid=wx9ee98bd4f8d11ff0&secret=a43e295acc1cbe68a48e8de50c430967&js_code=JSCODE&grant_type=authorization_code";
+//        String s1 = HttpUtils.getInstance().executeGetRequestResult(s, null);
+//        System.out.println();
+//        return FantResult.ok(s1);
+//    }
 
     /**
      * 登陆接口
@@ -86,11 +96,11 @@ public class WxMaUserController {
     @ApiOperation(value = "根据前端授权后调用地址接口获取到的经纬度，标记用户所在的店铺")
     @PostMapping("/relateShop")
     public FantResult<String> relateShop(@ApiParam(value = "用户openid", required = true)
-                                         @RequestParam("openid") String openid,
+                                         @RequestParam(value = "openid", required = false) String openid,
                                          @ApiParam(value = "用户纬度", required = true)
-                                         @RequestParam("latitude") Float latitude,
+                                         @RequestParam(value = "latitude", required = false) Float latitude,
                                          @ApiParam(value = "用户经度", required = true)
-                                         @RequestParam("longitude") Float longitude) {
+                                         @RequestParam(value = "longitude", required = false) Float longitude) {
         log.info("纬度{}-经度{}, appid={}", latitude, longitude, openid);
         Optional<String> shopIdOpt = shopServiceApi.findByLatitudeAndLonitude(latitude, longitude);
         String shopId = shopIdOpt.orElseGet(this::getDefaultShopId);
@@ -117,7 +127,7 @@ public class WxMaUserController {
      * </pre>
      */
     @ApiOperation(value = "获取用户信息接口", notes = "用户登录后必须获取用户信息，否则后台无法分析用户身份")
-    @GetMapping("/info/{appid}")
+    @PostMapping("/info/{appid}")
     public FantResult<Object> info(@ApiParam(value = "用户appid", required = true)
                                    @PathVariable("appid") String appid,
                                    @ApiParam(value = "用户登录后的会话key", required = true)
@@ -131,8 +141,10 @@ public class WxMaUserController {
                                    @ApiParam(value = "iv字符串", required = true)
                                    @RequestParam("iv") String iv) {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
+        log.info("请求参数为{},sessionKey{},sign:{},rawData:{},en{},iv{}", appid, sessionKey, signature, rawData, encryptedData, iv);
         // 用户信息校验
         if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
+            log.error("用户信息验证不通过");
             return FantResult.fail("user check failed 1");
         }
         // 解密用户信息
@@ -171,8 +183,9 @@ public class WxMaUserController {
      * 获取用户绑定手机号信息
      * </pre>
      */
+    @ApiIgnore
     @ApiOperation("获取用户绑定手机号信息")
-    @GetMapping("/phone/{appid}")
+    @PostMapping("/phone/{appid}")
     public FantResult<WxMaPhoneNumberInfo> phone(@PathVariable(value = "appid") String appid,
                                                  @RequestParam("sessionKey") String sessionKey,
                                                  @RequestParam("signature") String signature,
