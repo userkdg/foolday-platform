@@ -52,6 +52,8 @@ public class WeChatWebConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new WxUserAuthInterceptor(wxUserSessionApi,wxTestSessionProperties))
+                .excludePathPatterns("/v2/api-docs/**")
+                .excludePathPatterns("/swagger-resources/**")
                 .excludePathPatterns("/wx/user/**")//开放获取用户授权
                 .order(-100);
     }

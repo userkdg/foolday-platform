@@ -1,3 +1,6 @@
+cors:
+  host: http://47.92.64.11:81
+
 spring:
   profiles:
     active:

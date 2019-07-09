@@ -100,12 +100,12 @@ wechat:
   #  mpAppId: wxdcf91e9f784bfad0
   #  mpAppSecret: c467c06d98a2447f5ddef6ca8f47f268 #测试号appId,appSecret
   mpappId: wxe8650214ca46a5c9
-  mpAppSecret: 2a8d079bbcba0ac3d51cd0c40387e8f6 #借用号appId,appSecret
+  mpAppSecret: 4a027a82f8fa2ee453a679d7b4a4ac01 #借用号appId,appSecret
   openAppId: wxef923e99135107cb
   openAppSecret: 0b70ab77cd3432365b9bbe20448083d0 #开放平台测试号appId,appSecret
   mchId: 1483469312
   mchKey: C5245D70627C1F8E9964D494B0735025
-  keyPath: C:/Users/Administrator/Downloads/h5.p12
+  keyPath: ./pay_key/apiclient_cert.p12
   notifyUrl: http://j58v2f.natappfree.cc/wechat/auth
   templateId:
     orderStatus: GoCullfix05R-rCibvoyI87ZUg50cyieKA5AyX7pPzo
@@ -115,20 +115,20 @@ wx:
   miniapp:
     configs:
       - appId: wxe8650214ca46a5c9 #微信小程序的appid 小程序的appid,前端需要提供来确保对应的配置信息
-        secret: 2a8d079bbcba0ac3d51cd0c40387e8f6 #微信小程序的Secret
+        secret: 4a027a82f8fa2ee453a679d7b4a4ac01 #微信小程序的Secret
         token: my2019token #微信小程序消息服务器配置的token
         aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #微信小程序消息服务器配置的EncodingAESKey
   pay:
     appId: wxe8650214ca46a5c9 #微信公众号或者小程序等的appid
     mchId: 1543442491 #微信支付商户号
-    mchKey: trXdYY9InKllVfQWjRKAHx10saKHm0Np#微信支付商户密钥
+    mchKey: trXdYY9InKllVfQWjRKAHx10saKHm0Np #微信支付商户密钥
     subAppId: #服务商模式下的子商户公众账号ID
     subMchId: #服务商模式下的子商户号
-    keyPath: # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
+    keyPath: classpath:pay_key/apiclient_cert.p12 # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
   mp:
     configs:
-      - appId: wx0d83b30d6a1b5ea3 #（一个公众号的appid）
-        secret: a43e295acc1cbe68a48e8de50c430967 #（公众号的appsecret）
+      - appId: wxe8650214ca46a5c9 #（一个公众号的appid）
+        secret: 4a027a82f8fa2ee453a679d7b4a4ac01 #（公众号的appsecret）
         token: my2019token #（接口配置里的Token值）
         aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #（接口配置里的EncodingAESKey值）
         contactPhone: 1881312121 # 开发票中需要联系电话号码
