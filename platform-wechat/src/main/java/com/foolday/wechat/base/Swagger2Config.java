@@ -33,7 +33,7 @@ public class Swagger2Config implements WebMvcConfigurer {
 //                .allowedOrigins("http://47.92.64.11:81")
                 .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
                 .maxAge(3600)
-                .allowCredentials(true);;
+                .allowCredentials(true);
     }
 
     //swagger2的配置文件，这里可以配置swagger2的一些基本的内容，比如扫描的包等等
