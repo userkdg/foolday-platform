@@ -13,7 +13,7 @@ spring:
       serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false"
     username: foolday_platform
     password: dc@tiny401
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       data-source-properties:
         cachePrepStmts: true
@@ -93,10 +93,10 @@ platform:
         loginUser:
           # isValid来控制当前配置是否有效，无效则取前端提供的base64
           valid: true
-          userId: testUserId # 系统内部id
-          openId: openId # 针对存储微信信息
-          userName: admin
-          shopId: testShopId
+          userId: b1868b88e54b89047199a15ca684f00f # 系统内部id
+          openId: oTeUN5Mz09IIvYtMAREUUm1fsGnA # 针对存储微信信息
+          userName: Eric
+          shopId: 280763b0bc926997b5d0708a6d9db73b
           browser: testBrowser
           app: testApp
           os: testOs

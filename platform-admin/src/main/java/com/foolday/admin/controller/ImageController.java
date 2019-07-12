@@ -95,7 +95,7 @@ public class ImageController {
                 ));
     }
 
-    @ApiOperation(value = "查看图片")
+    @ApiOperation(value = "查看图片, width=0,height=0取原图文件大小")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "正常返回", response = ResponseEntity.class)})
     @GetMapping("/viewImage/size")
     public ResponseEntity<FileSystemResource> view(@ApiParam("原文件id") @RequestParam("id") String id,

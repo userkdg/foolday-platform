@@ -13,7 +13,7 @@ spring:
       serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false"
     username: foolday_platform
     password: dc@tiny401
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       data-source-properties:
         cachePrepStmts: true

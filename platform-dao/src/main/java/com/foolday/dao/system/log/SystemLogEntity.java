@@ -11,7 +11,7 @@ import lombok.ToString;
  * @author userkdg
  * @date 2019/5/22 22:06
  **/
-@TableName("t_system_log")
+@TableName("t_sys_log")
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)

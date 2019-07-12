@@ -45,7 +45,7 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
         String wxAuthHeader = request.getHeader(WebConstant.AUTH_AUTHED_TOKEN);
         WxMaJscode2SessionResult wxMaJscode2SessionResult = GsonUtils.fromJson(wxAuthHeader, WxMaJscode2SessionResult.class);
         if (wxMaJscode2SessionResult == null && wxTestSessionProperties.getOpenTestSession()) {
-            Optional<WxSessionResult> sessionUserInfo = wxUserSessionApi.getSessionUserInfo("testOpenId");
+            Optional<WxSessionResult> sessionUserInfo = wxUserSessionApi.getSessionUserInfo(wxTestSessionProperties.getTestOpenId());
             wxMaJscode2SessionResult = sessionUserInfo.map(WxSessionResult::getWxMaJscode2SessionResult)
                     .orElseThrow(() -> new PlatformException("获取测试用户会话失败，请检查redis初始化的用户会话信息"));
         }

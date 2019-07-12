@@ -9,7 +9,6 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @ApiModel(value = "优惠券对象")
 @Data
@@ -51,36 +50,43 @@ public class CouponVo implements Serializable {
      */
     @ApiModelProperty(value = "优惠券起效时间", required = true, example = "2019-01-11 11:11:11")
     @NotNull(message = "输入优惠券起效时间")
-    private LocalDateTime startTime;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String startTime;
 
     @ApiModelProperty(value = "优惠券失效时间", required = true, example = "2019-01-11 11:11:11")
     @NotNull(message = "输入优惠券失效时间")
-    private LocalDateTime endTime;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String endTime;
 
     /**
      * 满fullPrice
      */
+    @ApiModelProperty("满多少")
     private Float fullPrice;
 
     /**
      * 满fullPrice 减subPrice
      */
+    @ApiModelProperty("减多少")
     private Float subPrice;
 
     /**
      * 满fullPrice 打discnt折 1折 2折(0.2) 8折(80%>0.8)
      */
+    @ApiModelProperty("折扣多少")
     private Float discnt;
 
 
     /**
      * 领取上限 用于判断客户可以领取多少张
      */
+    @ApiModelProperty("最多张数")
     private Integer limitCount;
 
     /**
      * 优惠券库存数，递减
      */
+    @ApiModelProperty("库存")
     private Integer kcCount;
 
 }

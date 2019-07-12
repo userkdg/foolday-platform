@@ -19,11 +19,13 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -60,6 +62,14 @@ public class AdminWebConfiguration implements WebMvcConfigurer {
     @Autowired
     private WebInterceptorStaticUrlProperties webInterceptorStaticUrlProperties;
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH")
+                .allowCredentials(true).maxAge(3600);
+    }
+
     /**
      * 注入拦截
      *
@@ -70,15 +80,16 @@ public class AdminWebConfiguration implements WebMvcConfigurer {
         if (this.webLoginUserMvcProperties.getLoginUser() != null &&
                 this.webLoginUserMvcProperties.getLoginUser().isValid()) {
             logger.debug("启用登录测试用户：{}", this.webLoginUserMvcProperties.getLoginUser());
-            registry.addInterceptor(new PlatformAuthTokenInterceptor(this.webLoginUserMvcProperties.getLoginUser(),
-                    webInterceptorStaticUrlProperties.getErrorUrl()))
-                    .excludePathPatterns(webInterceptorPatternProperties.getExcludePathPatternsList())
-                    .order(-100);
         /*  registry.addInterceptor(new PlatformUrlAuthInterceptor(LoginUserHolder.get(),
                     webInterceptorStaticUrlProperties.getErrorUrl()))
                     .excludePathPatterns(webInterceptorPatternProperties.getExcludePathPatternsList())
                     .addPathPatterns("/**").order(-99);*/
         }
+        registry.addInterceptor(new PlatformAuthTokenInterceptor(this.webLoginUserMvcProperties.getLoginUser(),
+                webInterceptorStaticUrlProperties.getErrorUrl()))
+                .addPathPatterns("/**")
+                .excludePathPatterns(webInterceptorPatternProperties.getExcludePathPatternsList())
+                .order(-100);
     }
 
     @ControllerAdvice
@@ -107,6 +118,9 @@ public class AdminWebConfiguration implements WebMvcConfigurer {
                     Set<ConstraintViolation<?>> constraintViolations = ((ConstraintViolationException) throwable).getConstraintViolations();
                     List validMessages = constraintViolations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toList());
                     return this.buildValidateResponse(validMessages, request.toString());
+                } else if (throwable instanceof HttpMessageNotReadableException) {
+                    this.logger.warn("VO赋值异常[{}],e=>{}.", request.toString(), ex);
+                    return new ResponseEntity("系统异常，请稍候重试", HttpStatus.INTERNAL_SERVER_ERROR);
                 } else {
                     this.logger.error(request.getRequestURI(), ex);
                     return new ResponseEntity("系统异常，请稍候重试", HttpStatus.INTERNAL_SERVER_ERROR);

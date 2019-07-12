@@ -82,6 +82,7 @@ platform:
   web:
     session:
       openTestSession: true
+      testOpenId: oTeUN5Mz09IIvYtMAREUUm1fsGnA
   # 图片定制
   image:
     # 支持的文件类型

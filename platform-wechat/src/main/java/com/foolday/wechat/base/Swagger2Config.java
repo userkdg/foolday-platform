@@ -29,10 +29,8 @@ public class Swagger2Config implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(corsHost)
-//                .allowedOrigins("http://47.92.64.11:81")
-                .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
-                .maxAge(3600)
+                .allowedOrigins("*")
+                .allowedMethods("*")
                 .allowCredentials(true);
     }
 

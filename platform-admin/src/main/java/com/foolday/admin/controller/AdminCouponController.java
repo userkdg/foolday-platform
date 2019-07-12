@@ -27,7 +27,6 @@ public class AdminCouponController {
     private CouponServiceApi adminCouponServiceApi;
 
     @ApiOperation(value = "新增优惠券", notes = "传入json格式")
-    @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
     @PostMapping(value = "/add")
     public FantResult<String> add(@ApiParam(name = "couponVo", value = "商品对象", required = true)
                                   @RequestBody CouponVo couponVo) {
@@ -59,7 +58,7 @@ public class AdminCouponController {
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
     @PostMapping(value = "/list")
     public FantResult<List<CouponEntity>> list() {
-        List<CouponEntity> list = adminCouponServiceApi.list();
+        List<CouponEntity> list = adminCouponServiceApi.list(LoginUserHolder.get().getShopId());
         return FantResult.ok(list);
     }
 

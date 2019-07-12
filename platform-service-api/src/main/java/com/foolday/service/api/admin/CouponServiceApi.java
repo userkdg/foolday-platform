@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface CouponServiceApi extends BaseServiceApi<CouponEntity> {
 
-    List<CouponEntity> list();
+    List<CouponEntity> list(String shopId);
 
     Optional<CouponEntity> get(String couponId);
 

@@ -31,18 +31,18 @@ public class WxUserSessionHandler implements WxUserSessionApi {
     @Override
     public void initTestSession() {
         WxMaJscode2SessionResult wxMaJscode2SessionResult = new WxMaJscode2SessionResult();
-        wxMaJscode2SessionResult.setOpenid("testOpenId");
+        wxMaJscode2SessionResult.setOpenid("oTeUN5Mz09IIvYtMAREUUm1fsGnA");
         wxMaJscode2SessionResult.setSessionKey("testSessionKey");
-        wxMaJscode2SessionResult.setUnionid("testUnionId");
+        wxMaJscode2SessionResult.setUnionid("");
         UserEntity userEntity = new UserEntity();
-        userEntity.setId("testUserId");
-        userEntity.setName("testUserName");
-        userEntity.setShopId("testShopId");
+        userEntity.setId("13a9cb603f02453e8d3701f5ceb8fad3");
+        userEntity.setName("Eric");
+        userEntity.setShopId("280763b0bc926997b5d0708a6d9db73b");
         WxSessionResult wxSessionResult = WxSessionResult.newInstance().setWxMaJscode2SessionResult(wxMaJscode2SessionResult)
-                .setLoginTime(LocalDateTime.now()).setUserInfo(userEntity).setShopId("testShopId");
-        addUserSessionInfo("testOpenId", wxSessionResult);
+                .setLoginTime(LocalDateTime.now()).setUserInfo(userEntity).setShopId("280763b0bc926997b5d0708a6d9db73b");
+        addUserSessionInfo("oTeUN5Mz09IIvYtMAREUUm1fsGnA", wxSessionResult);
         redisTemplate.expire(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, 365 << 1, TimeUnit.DAYS);
-        Optional<WxSessionResult> init = getSessionUserInfo("testOpenId");
+        Optional<WxSessionResult> init = getSessionUserInfo("oTeUN5Mz09IIvYtMAREUUm1fsGnA");
         log.info("启动系统检查redis连接情况 testOpenId=>{}", init.isPresent() ? init.get() : "失败");
     }
 

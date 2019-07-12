@@ -6,6 +6,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.exception.PlatformException;
+import com.foolday.common.util.HttpUtils;
 import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.user.UserEntity;
@@ -14,6 +15,7 @@ import com.foolday.service.api.wechat.WxUserServiceApi;
 import com.foolday.service.config.WxMaConfiguration;
 import com.foolday.wechat.base.bean.WxSessionResult;
 import com.foolday.wechat.base.session.WxUserSessionApi;
+import com.github.binarywang.wxpay.config.WxPayConfig;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,6 +27,10 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -49,14 +55,47 @@ public class WxMaUserController {
     @Resource
     private ShopServiceApi shopServiceApi;
 
-//    @GetMapping("/login")
-//    @ApiOperation("l")
-//    public FantResult<String> l(){
-//        String s = "https://api.weixin.qq.com/sns/jscode2session?appid=wx9ee98bd4f8d11ff0&secret=a43e295acc1cbe68a48e8de50c430967&js_code=JSCODE&grant_type=authorization_code";
-//        String s1 = HttpUtils.getInstance().executeGetRequestResult(s, null);
-//        System.out.println();
-//        return FantResult.ok(s1);
-//    }
+    public static void main(String[] args) {
+        String keyPath = "classpath:pay_key/apiclient_cert.p12";
+        String prefix = "classpath:";
+        InputStream inputStream;
+        if (keyPath.startsWith(prefix)) {
+            String path = StringUtils.removeFirst(keyPath, prefix);
+            if (!path.startsWith("/")) {
+                path = "/" + path;
+            }
+            inputStream = WxPayConfig.class.getResourceAsStream(path);
+            if (inputStream == null) {
+                throw new PlatformException();
+            }
+        } else {
+            try {
+                File file = new File(keyPath);
+                if (!file.exists()) {
+                    throw new PlatformException();
+                }
+
+                inputStream = new FileInputStream(file);
+            } catch (IOException e) {
+                throw new PlatformException();
+            }
+        }
+        String rawData = "{\"nickName\":\"Eric\",\"gender\":1,\"language\":\"zh_CN\",\"city\":\"\",\"province\":\"\",\"country\":\"Aruba\",\"avatarUrl\":\"https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqAqX1wxd7jpIGQCWGz1m9kGQ50l3uZ5tusB8SOKdt8iaRialM3UiaHUaEBibtIhP6YoNgTDyH2YibcOicA/132\"}";
+        String sessionKey = "y9LD3Tm1g0VQ0LL56tr5cQ==";
+        String generatedSignature = DigestUtils.sha1Hex(rawData + sessionKey);
+        String signature = "fc6426f438f0c72014ce78c45cefeabe166008d2";
+        boolean equals = generatedSignature.equals(signature);
+        System.out.println(equals);
+    }
+
+    @ApiIgnore
+    @GetMapping("/test")
+    public FantResult<String> test() {
+        String s = "https://api.weixin.qq.com/sns/jscode2session?appid=wx9ee98bd4f8d11ff0&secret=a43e295acc1cbe68a48e8de50c430967&js_code=JSCODE&grant_type=authorization_code";
+        String s1 = HttpUtils.getInstance().executeGetRequestResult(s, null);
+        System.out.println("ok = " + s1);
+        return FantResult.ok("ok");
+    }
 
     /**
      * 登陆接口
@@ -167,15 +206,6 @@ public class WxMaUserController {
             return FantResult.ok(userPoByOpenIdAndUnionId);
         }
         return FantResult.fail("user check failed 2 ");
-    }
-
-    public static void main(String[] args) {
-        String rawData = "{\"nickName\":\"Eric\",\"gender\":1,\"language\":\"zh_CN\",\"city\":\"\",\"province\":\"\",\"country\":\"Aruba\",\"avatarUrl\":\"https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqAqX1wxd7jpIGQCWGz1m9kGQ50l3uZ5tusB8SOKdt8iaRialM3UiaHUaEBibtIhP6YoNgTDyH2YibcOicA/132\"}";
-        String sessionKey = "y9LD3Tm1g0VQ0LL56tr5cQ==";
-        String generatedSignature = DigestUtils.sha1Hex(rawData + sessionKey);
-        String signature = "fc6426f438f0c72014ce78c45cefeabe166008d2";
-        boolean equals = generatedSignature.equals(signature);
-        System.out.println(equals);
     }
 
     /**

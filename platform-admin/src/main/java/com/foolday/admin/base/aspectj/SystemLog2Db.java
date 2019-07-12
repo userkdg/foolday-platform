@@ -1,10 +1,14 @@
 package com.foolday.admin.base.aspectj;
 
+import com.baomidou.mybatisplus.core.toolkit.EncryptUtils;
 import com.foolday.admin.base.bean.LoginUserHolder;
 import com.foolday.common.enums.ActionStatus;
+import com.foolday.common.enums.ThreadPoolType;
 import com.foolday.common.util.IpUtils;
 import com.foolday.dao.system.log.SystemLogEntity;
+import com.foolday.serviceweb.dto.admin.base.LoginUser;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -16,10 +20,12 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import reactor.util.function.Tuple3;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 /**
  * aop 扫描类的权限url 然后写入db
@@ -42,7 +48,27 @@ public class SystemLog2Db {
      */
     private static final ThreadLocal<SystemLogEntity> systemLogThreadLocal = new ThreadLocal<>();
 
-    @Pointcut("@annotation(com.foolday.admin.base.aspectj.PlatformLog)")
+
+    @Resource(name = ThreadPoolType.SingleThreadPool)
+    private ExecutorService singleThreadPool;
+
+    /**
+     * 获取IP 基于tomcat
+     *
+     * @return
+     */
+    private static String findIpAddressByRequest() {
+        String ipAddr = null;
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (requestAttributes != null) {
+            HttpServletRequest request = (requestAttributes).getRequest();
+            ipAddr = IpUtils.getIpAddr(request);
+        }
+        return ipAddr;
+    }
+
+    @Pointcut("execution(* com.foolday.admin.controller..*(..))")
+//    @Pointcut("@annotation(com.foolday.admin.base.aspectj.PlatformLog)")
     public void annotationPointCut() {
     }
 
@@ -50,7 +76,7 @@ public class SystemLog2Db {
     public void before(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-       log.debug("方法规则拦截：{}", method.getName());
+        log.debug("方法规则拦截：{}", method.getName());
     }
 
     /**
@@ -89,37 +115,30 @@ public class SystemLog2Db {
             systemLog.setCost(cost);
             String logMsg = sb.toString();
             log.debug("日志情况{}", logMsg);
-            systemLog.setResponseBody(Objects.toString(obj, null));
+            if (obj != null) {
+                systemLog.setResponseBody(Objects.toString(EncryptUtils.md5Base64(obj.toString()), null));
+            }
         } finally {
             systemLogThreadLocal.set(systemLog);
         }
         return obj;
     }
 
-    /**
-     * 获取IP 基于tomcat
-     *
-     * @return
-     */
-    private static String findIpAddressByRequest() {
-        String ipAddr = null;
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
-            HttpServletRequest request = (requestAttributes).getRequest();
-            ipAddr = IpUtils.getIpAddr(request);
-        }
-        return ipAddr;
-    }
-
     @After("annotationPointCut()")
     public void after(JoinPoint joinPoint) {
         SystemLogEntity systemLog = systemLogThreadLocal.get();
         try {
+            LoginUser loginUser = LoginUserHolder.get();
+            if (loginUser == null || StringUtils.isBlank(loginUser.getShopId())) log.error("获取用户信息失败");
+            else systemLog.setShopId(loginUser.getShopId());
+
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
             PlatformLog action = method.getAnnotation(PlatformLog.class);
-            log.debug("注解式拦截：" + action.name());
-            systemLog.setResourceName(action.name());
+            if (action != null) {
+                log.debug("注解式拦截：" + action.name());
+                systemLog.setResourceName(action.name());
+            }
             Tuple3<HttpMethod, String, String> httpMethodAnnotation = HttpUtils.methodOf(method);
             if (httpMethodAnnotation != null) {
                 HttpMethod httpMethod = httpMethodAnnotation.getT1();
@@ -131,7 +150,8 @@ public class SystemLog2Db {
             log.info("请求情况：{}", systemLog);
         } finally {
             try {
-                systemLog.insert();
+                //异步处理日志
+                singleThreadPool.execute(systemLog::insert);
             } catch (Exception e) {
 //                e.printStackTrace();
                 log.error("日志写入失败{}", e.toString());

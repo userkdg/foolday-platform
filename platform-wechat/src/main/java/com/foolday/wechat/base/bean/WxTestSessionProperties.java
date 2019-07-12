@@ -10,4 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class WxTestSessionProperties {
     private Boolean openTestSession;
 
+    private String testOpenId;
+
 }
