@@ -58,7 +58,8 @@ public class AdminCouponController {
     @ApiResponses(@ApiResponse(code = 200, message = RESPONSE_RESULT_MSG, response = FantResult.class))
     @PostMapping(value = "/list")
     public FantResult<List<CouponEntity>> list() {
-        List<CouponEntity> list = adminCouponServiceApi.list(LoginUserHolder.get().getShopId());
+        String shopId = LoginUserHolder.get().getShopId();
+        List<CouponEntity> list = adminCouponServiceApi.list(shopId);
         return FantResult.ok(list);
     }
 
