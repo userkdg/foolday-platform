@@ -134,7 +134,7 @@ public class WxMaUserController {
      */
     @ApiOperation(value = "根据前端授权后调用地址接口获取到的经纬度，标记用户所在的店铺")
     @PostMapping("/relateShop")
-    public FantResult<String> relateShop(@ApiParam(value = "用户openid", required = true)
+    public FantResult<ShopEntity> relateShop(@ApiParam(value = "用户openid", required = true)
                                          @RequestParam(value = "openid", required = false) String openid,
                                          @ApiParam(value = "用户纬度", required = true)
                                          @RequestParam(value = "latitude", required = false) Float latitude,
@@ -147,7 +147,8 @@ public class WxMaUserController {
         WxSessionResult wxSessionResult = sessionUserInfo.orElseThrow(() -> new PlatformException("用户未授权成功"));
         wxSessionResult.setShopId(shopId);
         wxUserSessionApi.addUserSessionInfo(openid, wxSessionResult);
-        return FantResult.ok();
+        Optional<ShopEntity> shopEntity = shopServiceApi.selectById(shopId);
+        return FantResult.ok(shopEntity.orElse(null));
     }
 
     /**

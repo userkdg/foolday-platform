@@ -3,14 +3,17 @@ package com.foolday.wechat;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
 import com.foolday.service.api.TestServiceApi;
+import com.foolday.service.api.admin.ShopServiceApi;
 import com.foolday.service.config.WechatProperties;
 import com.foolday.serviceweb.dto.TestServiceWebDto;
 import com.foolday.wechat.base.bean.WxSessionResult;
 import com.foolday.wechat.base.session.WxUserSessionApi;
 import com.foolday.wechat.base.session.WxUserSessionHandler;
+import com.foolday.wechat.controller.miniapp.WxMaUserController;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
@@ -43,16 +46,39 @@ import java.util.concurrent.Future;
 @SpringBootTest(classes = PlatformWechatApplication.class, properties = {"application.yml"})
 @Controller
 public class AppDaoDbRunnerTests {
+    @Autowired
+    TestMapper testMapper;
+    @Autowired
+    DataSource dataSource;
+    @Resource(name = "queryRunner")
+    QueryRunner queryRunner;
+    @Autowired
+    AsyncQueryRunner asyncQueryRunner;
     @Resource
     private WechatProperties wechatProperties;
     @Resource
     private WxMpService wxMpService;
-
     @Resource
     private WxUserSessionHandler wxUserSessionHandler;
-
     @Resource
     private WxUserSessionApi wxUserSessionApi;
+    @Resource
+    private WxMaUserController wxMaUserController;
+
+//    @Autowired
+//    private WechatProperties wechatProperties;
+    @Resource
+    private ShopServiceApi shopServiceApi;
+    @Autowired
+    private TestServiceApi testService;
+
+    @Test
+    public void t2() {
+        Optional<String> shopIdOpt = shopServiceApi.findByLatitudeAndLonitude(24.30996f, 116.11699f);
+        Optional<ShopEntity> shopEntity = shopServiceApi.selectById(shopIdOpt.orElse(shopServiceApi.getDefaultShop().get().getId()));
+        System.out.println(shopEntity);
+    }
+
     /**
      * 测试模板消息
      *
@@ -61,7 +87,6 @@ public class AppDaoDbRunnerTests {
     @Test
     public void message() throws WxErrorException {
         Optional<WxSessionResult> oTeUN5Mz09IIvYtMAREUUm1fsGnA = wxUserSessionApi.getSessionUserInfo("oTeUN5Mz09IIvYtMAREUUm1fsGnA");
-
 
 
         WxSessionResult wxSessionResult = WxSessionResult.newInstance();
@@ -83,13 +108,6 @@ public class AppDaoDbRunnerTests {
         wxMpService.getTemplateMsgService().sendTemplateMsg(orderPaySuccessTemplate);
     }
 
-
-    @Autowired
-    TestMapper testMapper;
-
-//    @Autowired
-//    private WechatProperties wechatProperties;
-
     @Test
     public void t() {
         System.out.println(wechatProperties);
@@ -107,9 +125,6 @@ public class AppDaoDbRunnerTests {
         System.out.println(testEntity);
 
     }
-
-    @Autowired
-    private TestServiceApi testService;
 
     @GetMapping("/test")
     public void test2() {
@@ -143,15 +158,6 @@ public class AppDaoDbRunnerTests {
         Integer integer2 = testMapper.selectCount(null);
         System.out.println(integer);
     }
-
-    @Autowired
-    DataSource dataSource;
-
-    @Resource(name = "queryRunner")
-    QueryRunner queryRunner;
-
-    @Autowired
-    AsyncQueryRunner asyncQueryRunner;
 
     /**
      * test datasource success

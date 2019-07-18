@@ -56,9 +56,9 @@ public class InvoiceController {
         // 0
         String accessToken = wxService.getAccessToken();
         // 1
+        String ticket = wxMpService.getTicket(TicketType.WX_CARD, true);
         WxRequestBaseResult wxRequestBaseResult = shopContact();
         // 2
-        String ticket = wxMpService.getTicket(TicketType.WX_CARD, true);
 
         WxRequestAuthUrlResult wxRequestAuthUrlResult = getAuthUrl(ticket);
 

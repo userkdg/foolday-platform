@@ -74,7 +74,7 @@ public enum WxResponseInvoiceEnum implements BaseEnum {
         }
         WxResponseInvoiceEnum invoiceResult;
         try {
-            invoiceResult = BaseEnum.of(WxResponseInvoiceEnum.class, "_".concat(errcode.toString()));
+            invoiceResult = BaseEnum.valueOrNull(WxResponseInvoiceEnum.class, "_".concat(errcode.toString()));
         } catch (Exception e) {
             e.printStackTrace();
             return errcode.toString();
@@ -90,7 +90,7 @@ public enum WxResponseInvoiceEnum implements BaseEnum {
      */
     public static boolean successOf(Integer errcode) {
         if (errcode == null) return false;
-        WxResponseInvoiceEnum invoiceResult = BaseEnum.of(WxResponseInvoiceEnum.class, "_".concat(errcode.toString()));
+        WxResponseInvoiceEnum invoiceResult = BaseEnum.valueOrNull(WxResponseInvoiceEnum.class, "_".concat(errcode.toString()));
         return _0.equals(invoiceResult);
     }
 

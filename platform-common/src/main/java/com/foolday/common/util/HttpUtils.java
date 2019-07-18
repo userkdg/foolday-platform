@@ -117,6 +117,7 @@ public class HttpUtils {
      */
     public ResponseBody executePostRequest(String url, RequestParams params) {
         Request postRequest = createPostRequest(url, params);
+        log.debug("post请求的url:{}", postRequest.url().toString());
         Call call = getOkHttpClient().newCall(postRequest);
         return callExecute(call);
     }
@@ -156,7 +157,7 @@ public class HttpUtils {
                 return responseBody.string();
         } catch (IOException e) {
 //            e.printStackTrace();
-            log.error("http请求的网络有问题，e=>{}", e);
+            log.error("http请求的网络有问题，e=>{}", e.toString());
             throw new PlatformException("http请求的网络有问题,message:" + e.getMessage());
         }
         return null;
@@ -169,7 +170,7 @@ public class HttpUtils {
                 return responseBody.string();
         } catch (IOException e) {
 //            e.printStackTrace();
-            log.error("http请求的网络有问题，e=>{}", e);
+            log.error("http请求的网络有问题，e=>{}", e.toString());
             throw new PlatformException("http请求的网络有问题,message:" + e.getMessage());
         }
         return null;
@@ -177,6 +178,7 @@ public class HttpUtils {
 
     public ResponseBody executeGetRequest(String url, RequestParams params) {
         Request postRequest = createGetRequest(url, params);
+        log.debug("get请求的url:{}", postRequest.url().toString());
         Call call = getOkHttpClient().newCall(postRequest);
         return callExecute(call);
     }
@@ -187,7 +189,7 @@ public class HttpUtils {
             return execute.body();
         } catch (IOException e) {
 //            e.printStackTrace();
-            log.error("http请求的网络有问题，e=>{}", e);
+            log.error("http请求的网络有问题，e=>{}", e.toString());
             throw new PlatformException("http请求的网络有问题,message:" + e.getMessage());
         }
     }

@@ -24,4 +24,10 @@ public interface BaseEnum extends IEnum, Serializable {
                 .orElseThrow(() -> new IllegalArgumentException("通过 " + enumClass.getName() + "类，找不到 Enum 对应的Value '" + value + "' "));
     }
 
+    static <E extends Enum<?> & IEnum> E valueOrNull(Class<E> enumClass, Serializable value) {
+        return Stream.of(enumClass.getEnumConstants())
+                .filter((e) -> e.getValue().equals(value))
+                .findFirst()
+                .orElse(null);
+    }
 }
