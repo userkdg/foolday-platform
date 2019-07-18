@@ -7,8 +7,8 @@ import com.foolday.dao.goods.GoodsEntity;
 import com.foolday.dao.user.UserEntity;
 import com.foolday.service.api.admin.GoodsCategoryServiceApi;
 import com.foolday.service.api.admin.GoodsServiceApi;
+import com.foolday.serviceweb.dto.wechat.goodscategory.GoodsCategoryAndGoodsVo;
 import com.foolday.wechat.base.session.WxUserSessionHolder;
-import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -44,14 +44,21 @@ public class WxGoodsController {
 
     @ApiOperation(value = "根据店铺id获取分类id分组获取商品列表")
     @PostMapping(value = "/shop/list")
-    public FantResult<Map<GoodsCategoryEntity, List<GoodsEntity>>> listByShop() {
+    public FantResult<List<GoodsCategoryAndGoodsVo>> listByShop() {
         UserEntity loginUser = WxUserSessionHolder.getUserInfo();
         LambdaQueryWrapper<GoodsEntity> eq = goodsServiceApi.lqWrapper().eq(GoodsEntity::getShopId, loginUser.getShopId());
         List<GoodsEntity> list = goodsServiceApi.selectList(eq);
         Map<String, List<GoodsEntity>> collect = list.stream().filter(g -> StringUtils.isNotBlank(g.getCategoryId())).collect(Collectors.groupingBy(GoodsEntity::getCategoryId));
-        Map<GoodsCategoryEntity, List<GoodsEntity>> linkedHashMap = Maps.newLinkedHashMap();
-        collect.forEach((catoryId, goodsEntities) -> goodsCategoryServiceApi.selectById(catoryId).ifPresent(categoryEntity -> linkedHashMap.put(categoryEntity, goodsEntities)));
-        return FantResult.ok(linkedHashMap);
+        List<GoodsCategoryAndGoodsVo> goodsCategoryAndGoodsVos = collect.entrySet().stream().map(e -> {
+            String catoryId = e.getKey();
+            List<GoodsEntity> goodsEntities = e.getValue();
+            GoodsCategoryEntity categoryEntity = goodsCategoryServiceApi.selectById(catoryId).orElse(null);
+            GoodsCategoryAndGoodsVo categoryAndGoodsVo = new GoodsCategoryAndGoodsVo();
+            categoryAndGoodsVo.setGoodsCategoryEntity(categoryEntity);
+            categoryAndGoodsVo.setGoodsEntitys(goodsEntities);
+            return categoryAndGoodsVo;
+        }).collect(Collectors.toList());
+        return FantResult.ok(goodsCategoryAndGoodsVos);
     }
 
     @ApiOperation("获取商品")

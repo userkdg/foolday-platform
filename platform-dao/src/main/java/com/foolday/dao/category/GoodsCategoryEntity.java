@@ -37,4 +37,6 @@ public class GoodsCategoryEntity extends BaseEntity<GoodsCategoryEntity> {
      */
     private String shopId;
 
+
+
 }
