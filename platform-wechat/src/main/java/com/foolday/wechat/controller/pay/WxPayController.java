@@ -1,5 +1,9 @@
 package com.foolday.wechat.controller.pay;
 
+import com.foolday.common.dto.FantResult;
+import com.foolday.common.util.KeyUtils;
+import com.foolday.service.api.wechat.WxOrderServiceApi;
+import com.foolday.wechat.base.session.WxUserSessionHolder;
 import com.github.binarywang.wxpay.bean.coupon.*;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
@@ -12,9 +16,11 @@ import com.github.binarywang.wxpay.service.WxPayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.util.Date;
 
@@ -23,11 +29,14 @@ import java.util.Date;
  * @author Binary Wang
  */
 @Slf4j
-@Api(value = "微信支付",tags = "微信支付")
+@Api(value = "微信支付", tags = "微信支付")
 @RestController
 @RequestMapping("/pay")
 public class WxPayController {
     private WxPayService wxService;
+
+    @Resource
+    private WxOrderServiceApi wxOrderServiceApi;
 
     @Autowired
     public WxPayController(WxPayService wxService) {
@@ -89,6 +98,14 @@ public class WxPayController {
         return this.wxService.closeOrder(wxPayOrderCloseRequest);
     }
 
+    @ApiOperation(value = "提供系统内部单号，在下单前获取")
+    @GetMapping("/outTradeNo")
+    public FantResult<Long> outTradeNo() {
+        long uniqueOrderNo = KeyUtils.generateUniqueOrderNo();
+        log.info("用户{}生成订单编号{}", WxUserSessionHolder.getUserInfo(), uniqueOrderNo);
+        return FantResult.ok(uniqueOrderNo);
+    }
+
     /**
      * 调用统一下单接口，并组装生成支付所需参数对象.
      *
@@ -96,9 +113,13 @@ public class WxPayController {
      * @param <T>     请使用{@link com.github.binarywang.wxpay.bean.order}包下的类
      * @return 返回 {@link com.github.binarywang.wxpay.bean.order}包下的类对象
      */
-    @ApiOperation(value = "统一下单，并组装所需支付参数,请求对象，注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）")
+    @ApiOperation(value = "下单前要拿到/outTradeNo的唯一单号,统一下单，并组装所需支付参数,请求对象，注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）")
     @PostMapping("/createOrder")
     public <T> T createOrder(@RequestBody WxPayUnifiedOrderRequest request) throws WxPayException {
+        String outTradeNo = request.getOutTradeNo();
+        if (StringUtils.isBlank(outTradeNo)) {
+            throw new WxPayException("必须先获取唯一单号");
+        }
         return this.wxService.createOrder(request);
     }
 
@@ -109,9 +130,13 @@ public class WxPayController {
      *
      * @param request 请求对象，注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）
      */
-    @ApiOperation(value = "原生的统一下单接口,请求对象，注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）")
+    @ApiOperation(value = "在发起微信支付前，需要调用统一下单接口，获取\"预支付交易会话标识\",原生的统一下单接口,请求对象，注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）")
     @PostMapping("/unifiedOrder")
     public WxPayUnifiedOrderResult unifiedOrder(@RequestBody WxPayUnifiedOrderRequest request) throws WxPayException {
+        String outTradeNo = request.getOutTradeNo();
+        if (StringUtils.isBlank(outTradeNo)) {
+            throw new WxPayException("必须先获取唯一单号");
+        }
         return this.wxService.unifiedOrder(request);
     }
 
@@ -128,6 +153,8 @@ public class WxPayController {
     @ApiOperation(value = "退款")
     @PostMapping("/refund")
     public WxPayRefundResult refund(@RequestBody WxPayRefundRequest request) throws WxPayException {
+        String outTradeNo = request.getOutTradeNo();
+        log.info("用户{}单号{}发起退款", WxUserSessionHolder.getUserInfo(), outTradeNo);
         return this.wxService.refund(request);
     }
 
@@ -166,30 +193,36 @@ public class WxPayController {
 
     @ApiOperation(value = "支付回调通知处理")
     @PostMapping("/notify/order")
-    public String parseOrderNotifyResult(@RequestBody String xmlData) throws WxPayException {
+    public String parseOrderNotifyResult(@RequestParam String xmlData) throws WxPayException {
         final WxPayOrderNotifyResult notifyResult = this.wxService.parseOrderNotifyResult(xmlData);
         // TODO 根据自己业务场景需要构造返回对象
-        log.info("微信openId=>{},支付完成{}", notifyResult.getOpenid(), notifyResult.getTransactionId());
+        log.info("微信openId=>{},微信订单号{},系统商户单号{}", notifyResult.getOpenid(), notifyResult.getTransactionId(), notifyResult.getOutTradeNo());
+        wxOrderServiceApi.pay(notifyResult.getOpenid(), notifyResult.getOutTradeNo(), notifyResult.getTransactionId());
         return WxPayNotifyResponse.success("成功");
     }
 
+    /**
+     * @param xmlData WxPayRefundNotifyResult 属性性
+     * @return
+     * @throws WxPayException
+     */
     @ApiOperation(value = "退款回调通知处理")
     @PostMapping("/notify/refund")
-    public String parseRefundNotifyResult(@RequestBody String xmlData) throws WxPayException {
+    public String parseRefundNotifyResult(@RequestParam String xmlData) throws WxPayException {
         final WxPayRefundNotifyResult result = this.wxService.parseRefundNotifyResult(xmlData);
         WxPayRefundNotifyResult.ReqInfo reqInfo = result.getReqInfo();
-        log.info("退款{}", result);
+        log.info("退款{}", reqInfo);
         // TODO 根据自己业务场景需要构造返回对象
         return WxPayNotifyResponse.success("成功");
     }
 
     @ApiOperation(value = "扫码支付回调通知处理")
     @PostMapping("/notify/scanpay")
-    public String parseScanPayNotifyResult(String xmlData) throws WxPayException {
+    public String parseScanPayNotifyResult(@RequestParam String xmlData) throws WxPayException {
         final WxScanPayNotifyResult result = this.wxService.parseScanPayNotifyResult(xmlData);
         // TODO 根据自己业务场景需要构造返回对象
         String openid = result.getOpenid();
-        log.info("openId=>{}发起扫码支付", openid);
+        log.info("openId=>{}发起扫码支付{}", openid, result);
         return WxPayNotifyResponse.success("成功");
     }
 
@@ -208,6 +241,7 @@ public class WxPayController {
     @ApiOperation(value = "发送红包")
     @PostMapping("/sendRedpack")
     public WxPaySendRedpackResult sendRedpack(@RequestBody WxPaySendRedpackRequest request) throws WxPayException {
+        log.info("分送红包{}", request);
         return this.wxService.sendRedpack(request);
     }
 
@@ -225,6 +259,7 @@ public class WxPayController {
     @ApiOperation(value = "查询红包")
     @GetMapping("/queryRedpack/{mchBillNo}")
     public WxPayRedpackQueryResult queryRedpack(@PathVariable String mchBillNo) throws WxPayException {
+        log.info("查询红包{}", mchBillNo);
         return this.wxService.queryRedpack(mchBillNo);
     }
 
@@ -242,7 +277,9 @@ public class WxPayController {
      * @param sideLength 要生成的二维码的边长，如果为空，则取默认值400
      * @return 生成的二维码的字节数组
      */
-    public byte[] createScanPayQrcodeMode1(String productId, File logoFile, Integer sideLength) {
+    @ApiOperation("扫码支付模式一生成二维码的方法,二维码中的内容为链接[https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=6_4]")
+    @GetMapping("/createScanQrcode/style")
+    public byte[] createScanPayQrcodeMode1(@RequestParam String productId, @RequestParam(required = false) File logoFile, @RequestParam(required = false) Integer sideLength) {
         return this.wxService.createScanPayQrcodeMode1(productId, logoFile, sideLength);
     }
 
@@ -258,7 +295,9 @@ public class WxPayController {
      * @param productId 产品Id
      * @return 生成的二维码URL连接
      */
-    public String createScanPayQrcodeMode1(String productId) {
+    @ApiOperation("扫码支付模式一生成二维码的方法,二维码中的内容为链接[https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=6_4]")
+    @GetMapping("/createScanQrcode/simple")
+    public String createScanPayQrcodeMode1(@RequestParam String productId) {
         return this.wxService.createScanPayQrcodeMode1(productId);
     }
 
@@ -275,7 +314,7 @@ public class WxPayController {
      * @param sideLength 要生成的二维码的边长，如果为空，则取默认值400
      * @return 生成的二维码的字节数组
      */
-    public byte[] createScanPayQrcodeMode2(String codeUrl, File logoFile, Integer sideLength) {
+    public byte[] createScanPayQrcodeMode2(@RequestParam String codeUrl, @RequestParam File logoFile, @RequestParam Integer sideLength) {
         return this.wxService.createScanPayQrcodeMode2(codeUrl, logoFile, sideLength);
     }
 

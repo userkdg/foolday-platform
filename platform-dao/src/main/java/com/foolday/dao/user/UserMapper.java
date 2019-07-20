@@ -1,7 +1,8 @@
 package com.foolday.dao.user;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.foolday.dao.order.OrderEntity;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserMapper extends BaseMapper<UserEntity> {
 
+    @Select("select * from foolday_platform.t_user where open_id=#{openId} order by create_time desc, update_time desc limit 1")
+    UserEntity findOneByOpenId(@Param("openId") String openId);
 }

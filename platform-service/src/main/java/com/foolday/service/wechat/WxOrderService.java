@@ -18,6 +18,7 @@ import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.shop.ShopMapper;
 import com.foolday.dao.specification.GoodsSpecEntity;
 import com.foolday.dao.user.UserEntity;
+import com.foolday.dao.user.UserMapper;
 import com.foolday.service.api.admin.CouponServiceApi;
 import com.foolday.service.api.admin.OrderDetailServiceApi;
 import com.foolday.service.api.wechat.WxOrderServiceApi;
@@ -74,6 +75,8 @@ public class WxOrderService implements WxOrderServiceApi {
 
     @Resource
     private ShopMapper shopMapper;
+    @Resource
+    private UserMapper userMapper;
 
     /**
      * 计算商品的总价格和是否含有折扣商品
@@ -117,7 +120,7 @@ public class WxOrderService implements WxOrderServiceApi {
      * @return
      */
     @Override
-    public OrderEntity submitOrder(WxOrderVo orderVo, String userId,String userName, String shopId) {
+    public OrderEntity submitOrder(WxOrderVo orderVo, String userId, String userName, String shopId) {
         // 检查店铺信息有效性
         ShopEntity shopEntity = BaseServiceUtils.checkOneById(shopMapper, shopId, "店铺信息无效,无法下单");
         OrderEntity orderEntity = new OrderEntity();
@@ -195,22 +198,18 @@ public class WxOrderService implements WxOrderServiceApi {
     }
 
     /**
-     * 发起支付 使用微信支付
+     * 支付成功 使用微信支付
      *
-     * @param userId
-     * @param orderId
+     * @param openId
+     * @param outTradeNo    商户单号
+     * @param transactionId 微信单号
      */
     @Override
-    @Deprecated
-    public void toPay(String userId, String orderId) {
-        OrderEntity orderEntity = BaseServiceUtils.checkOneById(orderMapper, orderId);
-        if (StringUtils.equals(orderEntity.getUserId(), userId)) {
-            //发起pay
-            String accessToken = wxAccessTokenService.returnAccessToken().orElse(wxAccessTokenService.forceRefreshAccessToken());
-
-        } else {
-            throw new PlatformException("用户与订单信息关系不符");
-        }
+    public void pay(String openId, String outTradeNo, String transactionId) {
+        UserEntity userEntities = userMapper.findOneByOpenId(openId);
+        String userId = userEntities.getId();
+        LambdaQueryWrapper<OrderEntity> eq = lqWrapper().eq(OrderEntity::getUserId, userId).eq(OrderEntity::getOrderNo, outTradeNo);
+        List<OrderEntity> orderEntities = orderMapper.selectList(eq);
     }
 
     @Override

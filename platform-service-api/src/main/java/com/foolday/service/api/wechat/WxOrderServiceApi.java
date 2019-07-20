@@ -25,7 +25,7 @@ public interface WxOrderServiceApi extends BaseServiceApi<OrderEntity> {
 
     OrderEntity submitOrder(WxOrderVo orderVo, String userId,String userName, String shopId);
 
-    void toPay(String userId, String orderId);
+    void pay(String openId, String outTradeNo, String transactionId);
 
     List<OrderEntity> listByOpenId(String userId);
 

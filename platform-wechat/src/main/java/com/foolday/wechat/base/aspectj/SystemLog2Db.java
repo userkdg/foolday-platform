@@ -67,8 +67,8 @@ public class SystemLog2Db {
         return ipAddr;
     }
 
-    @Pointcut("execution(* com.foolday.wechat.controller..*(..))")
-//    @Pointcut("@annotation(com.foolday.admin.base.aspectj.PlatformLog)")
+//    @Pointcut("execution(* com.foolday.wechat.controller..*(..))")
+    @Pointcut("@annotation(com.foolday.wechat.base.aspectj.PlatformLog)")
     public void annotationPointCut() {
     }
 

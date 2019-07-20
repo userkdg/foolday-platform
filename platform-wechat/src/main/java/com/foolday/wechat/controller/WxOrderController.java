@@ -7,7 +7,10 @@ import com.foolday.dao.order.OrderEntity;
 import com.foolday.service.api.admin.OrderDetailServiceApi;
 import com.foolday.service.api.wechat.WxOrderServiceApi;
 import com.foolday.serviceweb.dto.admin.comment.CommentVo;
-import com.foolday.serviceweb.dto.wechat.order.*;
+import com.foolday.serviceweb.dto.wechat.order.OrderDetailViewVo;
+import com.foolday.serviceweb.dto.wechat.order.OrderDetailVo;
+import com.foolday.serviceweb.dto.wechat.order.WxOrderViewVo;
+import com.foolday.serviceweb.dto.wechat.order.WxOrderVo;
 import com.foolday.wechat.base.session.WxUserSessionHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -112,25 +115,15 @@ public class WxOrderController {
         return FantResult.checkAs(cancel);
     }
 
-    @ApiOperation(value = "订单发起退款")
-    @PostMapping(value = "/refund")
-    public FantResult<String> refund(@ApiParam(name = "orderId", value = "订单id", required = true)
-                                     @RequestParam(value = "orderId") String orderId) {
-        String userId = WxUserSessionHolder.getUserId();
-        // 修改状态
-        wxOrderServiceApi.refund(orderId, userId);
-        return FantResult.ok();
-    }
-
-    @ApiOperation(value = "订单去支付")
-    @PostMapping(value = "/pay")
-    public FantResult<String> pay(@ApiParam(name = "orderId", value = "订单id", required = true)
-                                  @RequestParam(value = "orderId") String orderId) {
-        String userId = WxUserSessionHolder.getUserId();
-        //
-        wxOrderServiceApi.toPay(userId, orderId);
-        return FantResult.ok();
-    }
+//    @ApiOperation(value = "订单发起退款")
+//    @PostMapping(value = "/refund")
+//    public FantResult<String> refund(@ApiParam(name = "orderId", value = "订单id", required = true)
+//                                     @RequestParam(value = "orderId") String orderId) {
+//        String userId = WxUserSessionHolder.getUserId();
+//        // 修改状态
+//        wxOrderServiceApi.refund(orderId, userId);
+//        return FantResult.ok();
+//    }
 
     @ApiOperation(value = "订单发起加餐 数据合并")
     @PostMapping(value = "/addGood")
@@ -143,15 +136,15 @@ public class WxOrderController {
     }
 
 
-    @ApiOperation(value = "订单申请开发票")
-    @PostMapping(value = "/newBill")
-    public FantResult<String> newBill(@ApiParam(name = "orderId", value = "订单id", required = true)
-                                      @RequestParam(value = "orderId") String orderId,
-                                      @ApiParam(name = "invoice", value = "企业发票信息", required = true)
-                                      @RequestBody EntInvoiceVo invoiceVo) {
-        wxOrderServiceApi.newBill(orderId, invoiceVo);
-        return FantResult.ok();
-    }
+//    @ApiOperation(value = "订单申请开发票")
+//    @PostMapping(value = "/newBill")
+//    public FantResult<String> newBill(@ApiParam(name = "orderId", value = "订单id", required = true)
+//                                      @RequestParam(value = "orderId") String orderId,
+//                                      @ApiParam(name = "invoice", value = "企业发票信息", required = true)
+//                                      @RequestBody EntInvoiceVo invoiceVo) {
+//        wxOrderServiceApi.newBill(orderId, invoiceVo);
+//        return FantResult.ok();
+//    }
 
 
     @ApiOperation(value = "订单发起评论")
