@@ -13,4 +13,7 @@ public interface UserMapper extends BaseMapper<UserEntity> {
 
     @Select("select * from foolday_platform.t_user where open_id=#{openId} order by create_time desc, update_time desc limit 1")
     UserEntity findOneByOpenId(@Param("openId") String openId);
+
+    @Select("select * from foolday_platform.t_user where open_id=#{openId} and union_id = #{unionId}  order by create_time desc, update_time desc limit 1")
+    UserEntity findOneByOpenIdAndUnionId(@Param("openId") String openId, @Param("unionId") String unionId);
 }

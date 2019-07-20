@@ -194,17 +194,18 @@ public class WxMaUserController {
         WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
         log.info("用户手机信息{}", phoneNoInfo);
         // 记录用户信息
-        UserEntity userPoByOpenIdAndUnionId = wxUserServiceApi.findByOpenIdAndUnionId(userInfo.getOpenId(), userInfo.getUnionId())
-                .orElseGet(() -> wxUserServiceApi.addByWeixinInfo(userInfo, phoneNoInfo));
+        Optional<UserEntity> userOpt = wxUserServiceApi.findByOpenId(userInfo.getOpenId());
+        UserEntity userEntity = userOpt.orElseGet(() -> wxUserServiceApi.addByWeixinInfo(userInfo, phoneNoInfo));
+//        UserEntity userPoByOpenIdAndUnionId = wxUserServiceApi.findByOpenIdAndUnionId(userInfo.getOpenId(), userInfo.getUnionId()).orElseGet(() -> wxUserServiceApi.addByWeixinInfo(userInfo, phoneNoInfo));
 //        WxSessionResult wxSessionResult = (WxSessionResult) redisTemplate.opsForHash().get(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, userInfo.getOpenId());
         Optional<WxSessionResult> wxSessionResultOpt = wxUserSessionApi.getSessionUserInfo(userInfo.getOpenId());
         WxSessionResult wxSessionResult = wxSessionResultOpt.orElse(null);
         log.info("微信session 信息{}", wxSessionResult);
         if (wxSessionResult != null) {
             PlatformAssert.isTrue(StringUtils.isNotBlank(wxSessionResult.getShopId()), "请获取经纬度后请求接口【/wx/user/relateShop】");
-            wxSessionResult.setUserInfo(userPoByOpenIdAndUnionId);
+            wxSessionResult.setUserInfo(userEntity);
             wxUserSessionApi.addUserSessionInfo(userInfo.getOpenId(), wxSessionResult);
-            return FantResult.ok(userPoByOpenIdAndUnionId);
+            return FantResult.ok(userEntity);
         }
         return FantResult.fail("user check failed 2 ");
     }

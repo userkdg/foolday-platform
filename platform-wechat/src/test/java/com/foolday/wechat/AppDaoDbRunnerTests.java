@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.test.TestEntity;
 import com.foolday.dao.test.TestMapper;
+import com.foolday.dao.user.UserEntity;
 import com.foolday.service.api.TestServiceApi;
 import com.foolday.service.api.admin.ShopServiceApi;
+import com.foolday.service.api.wechat.WxUserServiceApi;
 import com.foolday.service.config.WechatProperties;
 import com.foolday.serviceweb.dto.TestServiceWebDto;
 import com.foolday.wechat.base.bean.WxSessionResult;
@@ -72,8 +74,14 @@ public class AppDaoDbRunnerTests {
     @Autowired
     private TestServiceApi testService;
 
+    @Resource
+    private WxUserServiceApi wxUserServiceApi;
+
+
     @Test
     public void t2() {
+        Optional<UserEntity> oTeUN5Mz09IIvYtMAREUUm1fsGnA = wxUserServiceApi.findByOpenId("oTeUN5Mz09IIvYtMAREUUm1fsGnA");
+        Optional<UserEntity> xx = wxUserServiceApi.findByOpenIdAndUnionId("oTeUN5Mz09IIvYtMAREUUm1fsGnA","");
         Optional<String> shopIdOpt = shopServiceApi.findByLatitudeAndLonitude(24.30996f, 116.11699f);
         Optional<ShopEntity> shopEntity = shopServiceApi.selectById(shopIdOpt.orElse(shopServiceApi.getDefaultShop().get().getId()));
         System.out.println(shopEntity);

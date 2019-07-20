@@ -2,20 +2,17 @@ package com.foolday.service.wechat;
 
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.user.UserEntity;
 import com.foolday.dao.user.UserMapper;
 import com.foolday.service.api.admin.ShopServiceApi;
 import com.foolday.service.api.wechat.WxUserServiceApi;
-import com.foolday.serviceweb.dto.wechat.user.WxUserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.Optional;
 
 @Slf4j
@@ -28,26 +25,15 @@ public class WxUserService implements WxUserServiceApi {
     @Resource
     private ShopServiceApi shopServiceApi;
 
-    @Override
-    public UserEntity add(WxUserVo userVo) {
-        UserEntity userEntity = beanFactory().newInstance();
-        return null;
-    }
 
     @Override
     public Optional<UserEntity> findByOpenId(String openId) {
-        return userMapper.selectList(Wrappers.lambdaQuery(new UserEntity()).eq(UserEntity::getOpenId, openId))
-                .stream().min(Comparator.comparing(UserEntity::getUpdateTime)
-                        .thenComparing(UserEntity::getCreateTime));
+        return Optional.ofNullable(userMapper.findOneByOpenId(openId));
     }
 
     @Override
     public Optional<UserEntity> findByOpenIdAndUnionId(String openId, String unionId) {
-        return userMapper.selectList(Wrappers.lambdaQuery(new UserEntity())
-                .eq(UserEntity::getOpenId, openId).eq(UserEntity::getUnionId, unionId))
-                .stream().max(Comparator.comparing(UserEntity::getUpdateTime)
-                        .thenComparing(UserEntity::getCreateTime)
-                );
+        return Optional.ofNullable(userMapper.findOneByOpenIdAndUnionId(openId, unionId));
     }
 
     /**

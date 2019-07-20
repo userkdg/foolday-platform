@@ -5,7 +5,6 @@ import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.foolday.common.base.BaseServiceApi;
 import com.foolday.common.base.BeanFactory;
 import com.foolday.dao.user.UserEntity;
-import com.foolday.serviceweb.dto.wechat.user.WxUserVo;
 
 import java.util.Optional;
 
@@ -17,9 +16,6 @@ public interface WxUserServiceApi extends BaseServiceApi<UserEntity> {
      */
     @Override
     default BeanFactory<UserEntity> beanFactory(){return UserEntity::new;}
-
-    UserEntity add(WxUserVo userVo);
-
 
     Optional<UserEntity> findByOpenId(String openId);
 
