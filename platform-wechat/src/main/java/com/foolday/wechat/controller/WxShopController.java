@@ -1,0 +1,45 @@
+package com.foolday.wechat.controller;
+
+import com.foolday.common.dto.FantResult;
+import com.foolday.dao.shop.ShopEntity;
+import com.foolday.service.api.admin.ShopServiceApi;
+import com.foolday.wechat.base.bean.WxSessionResult;
+import com.foolday.wechat.base.session.WxUserSessionHolder;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+@Api(value = "店铺接口", tags = {"店铺操作接口"})
+@RestController
+@RequestMapping("/shop")
+public class WxShopController {
+
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
+
+    @Resource
+    ShopServiceApi shopServiceApi;
+
+    @ApiOperation(value = "店铺列表", notes = "传入json格式")
+    @PostMapping("/list")
+    public FantResult<List<ShopEntity>> list() {
+        List<ShopEntity> list = shopServiceApi.list();
+        return FantResult.ok(list);
+    }
+
+    @ApiOperation(value = "更换店铺", notes = "传入json格式")
+    @PostMapping("/changeShop")
+    public FantResult<String> changeShop(String shopId) {
+        WxSessionResult wxSessionResult = WxUserSessionHolder.getWxSessionResult();
+        wxSessionResult.setShopId(shopId);
+        WxUserSessionHolder.setWxSessionResultHolder(wxSessionResult);
+        return FantResult.ok();
+    }
+}
+
