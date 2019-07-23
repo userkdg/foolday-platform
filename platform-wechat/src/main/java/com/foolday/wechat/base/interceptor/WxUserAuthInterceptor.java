@@ -60,6 +60,7 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
             // 只要之前有存有openId说明用户已授权登录过，跳过拦截
             if (wxSessionResult != null) {
                 // 增加最新访问时间
+                log.info("获取到用户信息{}", wxSessionResult);
                 wxSessionResult.setLastTime(LocalDateTime.now());
                 wxUserSessionApi.addUserSessionInfo(wxMaJscode2SessionResult.getOpenid(), wxSessionResult);
                 WxUserSessionHolder.setWxSessionResultHolder(wxSessionResult);

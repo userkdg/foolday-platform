@@ -41,6 +41,7 @@ public class WxShopController {
     public FantResult<String> changeShop(String shopId) {
         WxSessionResult wxSessionResult = WxUserSessionHolder.getWxSessionResult();
         wxSessionResult.setShopId(shopId);
+        wxSessionResult.getUserInfo().setShopId(shopId);
         WxUserSessionHolder.setWxSessionResultHolder(wxSessionResult);
         wxUserSessionApi.addUserSessionInfo(wxSessionResult.getOpenid(),wxSessionResult);
         return FantResult.ok();

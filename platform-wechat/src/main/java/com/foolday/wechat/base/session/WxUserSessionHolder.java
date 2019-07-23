@@ -26,7 +26,9 @@ public final class WxUserSessionHolder implements Serializable {
      * @return
      */
     public static WxSessionResult getWxSessionResult() {
-        return wxSessionResultHolder.get();
+        WxSessionResult wxSessionResult = wxSessionResultHolder.get();
+        System.out.println("打印会话信息" + wxSessionResult);
+        return wxSessionResult;
     }
 
     /**
