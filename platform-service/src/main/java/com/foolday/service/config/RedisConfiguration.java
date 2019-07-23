@@ -11,6 +11,8 @@ import com.foolday.service.common.CommentMessageCustomer;
 import com.foolday.service.common.OrderMessageCustomer;
 import com.foolday.service.common.SpringContextUtils;
 import com.google.common.collect.Maps;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.MessageListener;
@@ -40,16 +42,20 @@ import java.util.Map;
 @Configuration
 public class RedisConfiguration implements RedisBeanNameApi {
 
-    private final OrderMessageCustomer orderMessageCustomer;
-    private final CommentMessageCustomer commentMessageCustomer;
-    private final RedisConnectionFactory redisConnectionFactory;
+    @Autowired
+    private OrderMessageCustomer orderMessageCustomer;
+    @Autowired
+    private CommentMessageCustomer commentMessageCustomer;
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
 
-    public RedisConfiguration(OrderMessageCustomer orderMessageCustomer, CommentMessageCustomer commentMessageCustomer, RedisConnectionFactory redisConnectionFactory) {
+    public RedisConfiguration() {
+    }
+
+    public RedisConfiguration(RedisConnectionFactory redisConnectionFactory) {
         this.redisConnectionFactory = redisConnectionFactory;
         // 配置自动注入的redisTemplate 在注入之前的redisTemplate是没有调整的
-        initRedisTemplate();
-        this.orderMessageCustomer = orderMessageCustomer;
-        this.commentMessageCustomer = commentMessageCustomer;
+        initRedisTemplate(redisConnectionFactory);
     }
 
     @Bean
@@ -77,12 +83,20 @@ public class RedisConfiguration implements RedisBeanNameApi {
 
     /**
      * 配置自动生成的bean
+     *
+     * @param redisConnectionFactory
      */
-    private void initRedisTemplate() {
-        StringRedisTemplate stringRedisTemplate = (StringRedisTemplate) SpringContextUtils.getBean("stringRedisTemplate");
-        redisTemplateKey(stringRedisTemplate, redisConnectionFactory);
-        RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtils.getBean("redisTemplate");
-        redisTemplateKey(redisTemplate, redisConnectionFactory);
+    private void initRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        StringRedisTemplate stringRedisTemplate;
+        RedisTemplate redisTemplate;
+        try {
+            stringRedisTemplate = (StringRedisTemplate) SpringContextUtils.getBean("stringRedisTemplate");
+            redisTemplateKey(stringRedisTemplate, redisConnectionFactory);
+            redisTemplate = (RedisTemplate) SpringContextUtils.getBean("redisTemplate");
+            redisTemplateKey(redisTemplate, redisConnectionFactory);
+        } catch (BeansException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings("unchecked")

@@ -34,7 +34,7 @@ public final class SpringContextUtils implements ApplicationContextAware {
      * @param <T>
      * @return
      */
-    public static <T> T getBean(Class<T> clazz) {
+    public static <T> T getBean(Class<T> clazz) throws BeansException{
         return applicationContext.get().getBean(clazz);
     }
 
@@ -46,7 +46,7 @@ public final class SpringContextUtils implements ApplicationContextAware {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static Object getBean(String beanName) {
+    public static Object getBean(String beanName) throws BeansException{
         return applicationContext.get().getBean(beanName);
     }
 

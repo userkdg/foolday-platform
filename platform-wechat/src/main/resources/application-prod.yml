@@ -81,7 +81,7 @@ logging:
 platform:
   web:
     session:
-      openTestSession: true
+      openTestSession: false
       testOpenId: oTeUN5Mz09IIvYtMAREUUm1fsGnA
   # 图片定制
   image:

@@ -7,7 +7,6 @@ import com.foolday.wechat.base.bean.WxSessionResult;
 import com.foolday.wechat.base.session.WxUserSessionHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,13 +20,9 @@ import java.util.List;
 public class WxShopController {
 
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
-
+    ShopServiceApi shopServiceApi;
     @Resource
     private com.foolday.wechat.base.session.WxUserSessionApi wxUserSessionApi;
-
-    @Resource
-    ShopServiceApi shopServiceApi;
 
     @ApiOperation(value = "店铺列表", notes = "传入json格式")
     @PostMapping("/list")
@@ -43,7 +38,7 @@ public class WxShopController {
         wxSessionResult.setShopId(shopId);
         wxSessionResult.getUserInfo().setShopId(shopId);
         WxUserSessionHolder.setWxSessionResultHolder(wxSessionResult);
-        wxUserSessionApi.addUserSessionInfo(wxSessionResult.getOpenid(),wxSessionResult);
+        wxUserSessionApi.addUserSessionInfo(wxSessionResult.getOpenid(), wxSessionResult);
         return FantResult.ok();
     }
 }
