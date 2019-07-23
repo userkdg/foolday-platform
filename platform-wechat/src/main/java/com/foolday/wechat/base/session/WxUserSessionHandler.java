@@ -40,6 +40,7 @@ public class WxUserSessionHandler implements WxUserSessionApi {
         userEntity.setShopId("280763b0bc926997b5d0708a6d9db73b");
         WxSessionResult wxSessionResult = WxSessionResult.newInstance().setWxMaJscode2SessionResult(wxMaJscode2SessionResult)
                 .setLoginTime(LocalDateTime.now()).setUserInfo(userEntity).setShopId("280763b0bc926997b5d0708a6d9db73b");
+        wxSessionResult.setOpenid("oTeUN5Mz09IIvYtMAREUUm1fsGnA");
         addUserSessionInfo("oTeUN5Mz09IIvYtMAREUUm1fsGnA", wxSessionResult);
         redisTemplate.expire(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, 365 << 1, TimeUnit.DAYS);
         Optional<WxSessionResult> init = getSessionUserInfo("oTeUN5Mz09IIvYtMAREUUm1fsGnA");
@@ -56,6 +57,7 @@ public class WxUserSessionHandler implements WxUserSessionApi {
         Object obj = redisTemplate.opsForHash().get(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, openId);
         if (obj != null) {
             WxSessionResult wxSessionResult = GsonUtils.fromJson(obj.toString(), WxSessionResult.class);
+            wxSessionResult.setOpenid(openId);
             return Optional.of(wxSessionResult);
         }
         return Optional.empty();

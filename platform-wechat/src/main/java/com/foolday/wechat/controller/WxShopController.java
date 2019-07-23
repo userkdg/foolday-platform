@@ -24,6 +24,9 @@ public class WxShopController {
     private RedisTemplate<String, String> redisTemplate;
 
     @Resource
+    private com.foolday.wechat.base.session.WxUserSessionApi wxUserSessionApi;
+
+    @Resource
     ShopServiceApi shopServiceApi;
 
     @ApiOperation(value = "店铺列表", notes = "传入json格式")
@@ -39,6 +42,7 @@ public class WxShopController {
         WxSessionResult wxSessionResult = WxUserSessionHolder.getWxSessionResult();
         wxSessionResult.setShopId(shopId);
         WxUserSessionHolder.setWxSessionResultHolder(wxSessionResult);
+        wxUserSessionApi.addUserSessionInfo(wxSessionResult.getOpenid(),wxSessionResult);
         return FantResult.ok();
     }
 }
