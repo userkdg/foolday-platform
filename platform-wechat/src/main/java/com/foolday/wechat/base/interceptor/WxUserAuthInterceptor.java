@@ -62,7 +62,7 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
                 // 增加最新访问时间
                 log.info("获取到用户信息{}", wxSessionResult);
                 wxSessionResult.setLastTime(LocalDateTime.now());
-                wxUserSessionApi.addUserSessionInfo(wxMaJscode2SessionResult.getOpenid(), wxSessionResult);
+//                wxUserSessionApi.addUserSessionInfo(wxMaJscode2SessionResult.getOpenid(), wxSessionResult);
                 WxUserSessionHolder.setWxSessionResultHolder(wxSessionResult);
                 return true;
             }
