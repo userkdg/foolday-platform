@@ -14,6 +14,7 @@
     <artifactId>platform-service-dto</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>platform-service-dto</name>
+    <packaging>jar</packaging>
     <description>把web(controller)端与service端的数据交互的实体类独立出来</description>
 
     <dependencies>
