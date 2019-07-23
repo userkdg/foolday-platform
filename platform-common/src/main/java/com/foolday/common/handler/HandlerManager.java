@@ -19,8 +19,10 @@ public class HandlerManager {
             /*
             shut down 后
              */
-            if (single == null) {
-                single = Executors.newSingleThreadExecutor();
+            synchronized (single) {
+                if (single == null) {
+                    single = Executors.newSingleThreadExecutor();
+                }
             }
             /*
               开一条线程取异步处理事务
