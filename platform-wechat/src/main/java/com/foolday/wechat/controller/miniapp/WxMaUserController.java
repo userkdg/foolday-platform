@@ -34,6 +34,9 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static com.foolday.wechat.base.session.WxUserSessionHolder.makeBase64Session;
+import static com.foolday.wechat.base.session.WxUserSessionHolder.parseBase64Session;
+
 /**
  * 微信小程序用户接口
  * 1.实现用户的授权登录和返回会话信息+openId给前端
@@ -56,6 +59,15 @@ public class WxMaUserController {
     private ShopServiceApi shopServiceApi;
 
     public static void main(String[] args) {
+        WxMaJscode2SessionResult wxMaJscode2SessionResult = new WxMaJscode2SessionResult();
+        wxMaJscode2SessionResult.setUnionid("zzzzzzzzzz");
+        wxMaJscode2SessionResult.setOpenid("112212AAAA");
+        wxMaJscode2SessionResult.setSessionKey("sesdfsdfsdfKey");
+        String base64Session = makeBase64Session(wxMaJscode2SessionResult);
+        System.out.println("返回给前端的" + base64Session);
+        WxMaJscode2SessionResult wxMaJscode2SessionResult1 = parseBase64Session(base64Session);
+        System.out.println(wxMaJscode2SessionResult);
+        System.out.println(wxMaJscode2SessionResult1);
         String keyPath = "classpath:pay_key/apiclient_cert.p12";
         String prefix = "classpath:";
         InputStream inputStream;
@@ -88,6 +100,7 @@ public class WxMaUserController {
         System.out.println(equals);
     }
 
+
     @ApiIgnore
     @GetMapping("/test")
     public FantResult<String> test() {
@@ -100,12 +113,13 @@ public class WxMaUserController {
     /**
      * 登陆接口
      * 用户登录后必须获取用户信息，否则后台无法分析用户身份
+     * @return
      */
     @ApiOperation(value = "登陆接口", notes = "用户登录后必须获取用户信息，否则后台无法分析用户身份")
     @GetMapping("/login/{appid}")
-    public FantResult<WxMaJscode2SessionResult> login(@ApiParam(value = "用户appid", required = true, name = "appid")
+    public FantResult<String> login(@ApiParam(value = "用户appid", required = true, name = "appid")
                                                       @PathVariable(value = "appid") String appid,
-                                                      @ApiParam(value = "用户code", required = true, name = "code")
+                                    @ApiParam(value = "用户code", required = true, name = "code")
                                                       @RequestParam(value = "code") String code) throws WxErrorException {
         if (StringUtils.isBlank(code)) {
             return FantResult.fail("empty jscode");
@@ -119,7 +133,9 @@ public class WxMaUserController {
         WxSessionResult wxSessionResult = WxSessionResult.wrapper(session).setLoginTime(LocalDateTime.now());
         wxSessionResult.setShopId(getDefaultShopId());
         wxUserSessionApi.addUserSessionInfo(session.getOpenid(), wxSessionResult);
-        return FantResult.ok(session);
+        String base64Session = makeBase64Session(session);
+        log.info("返回前端{}", base64Session);
+        return FantResult.ok(base64Session);
     }
 
     /**
@@ -135,11 +151,11 @@ public class WxMaUserController {
     @ApiOperation(value = "根据前端授权后调用地址接口获取到的经纬度，标记用户所在的店铺")
     @PostMapping("/relateShop")
     public FantResult<ShopEntity> relateShop(@ApiParam(value = "用户openid", required = true)
-                                         @RequestParam(value = "openid", required = false) String openid,
-                                         @ApiParam(value = "用户纬度", required = true)
-                                         @RequestParam(value = "latitude", required = false) Float latitude,
-                                         @ApiParam(value = "用户经度", required = true)
-                                         @RequestParam(value = "longitude", required = false) Float longitude) {
+                                             @RequestParam(value = "openid", required = false) String openid,
+                                             @ApiParam(value = "用户纬度", required = true)
+                                             @RequestParam(value = "latitude", required = false) Float latitude,
+                                             @ApiParam(value = "用户经度", required = true)
+                                             @RequestParam(value = "longitude", required = false) Float longitude) {
         log.info("纬度{}-经度{}, appid={}", latitude, longitude, openid);
         Optional<String> shopIdOpt = shopServiceApi.findByLatitudeAndLonitude(latitude, longitude);
         String shopId = shopIdOpt.orElseGet(this::getDefaultShopId);

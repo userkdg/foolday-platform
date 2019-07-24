@@ -3,7 +3,6 @@ package com.foolday.wechat.base.interceptor;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.foolday.common.constant.WebConstant;
 import com.foolday.common.exception.PlatformException;
-import com.foolday.common.util.GsonUtils;
 import com.foolday.wechat.base.bean.WxSessionResult;
 import com.foolday.wechat.base.bean.WxTestSessionProperties;
 import com.foolday.wechat.base.session.WxUserSessionApi;
@@ -43,7 +42,15 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String wxAuthHeader = request.getHeader(WebConstant.AUTH_AUTHED_TOKEN);
-        WxMaJscode2SessionResult wxMaJscode2SessionResult = GsonUtils.fromJson(wxAuthHeader, WxMaJscode2SessionResult.class);
+        log.info("获取请求头{}", wxAuthHeader);
+        WxMaJscode2SessionResult wxMaJscode2SessionResult = null;
+        try {
+            wxMaJscode2SessionResult = WxUserSessionHolder.parseBase64Session(wxAuthHeader);
+        } catch (IllegalArgumentException e) {
+//            e.printStackTrace();
+            throw new PlatformException("请求头参数不对" + e.getMessage());
+        }
+//        WxMaJscode2SessionResult wxMaJscode2SessionResult = GsonUtils.fromJson(wxAuthHeader, WxMaJscode2SessionResult.class);
         if (wxMaJscode2SessionResult == null && wxTestSessionProperties.getOpenTestSession()) {
             Optional<WxSessionResult> sessionUserInfo = wxUserSessionApi.getSessionUserInfo(wxTestSessionProperties.getTestOpenId());
             wxMaJscode2SessionResult = sessionUserInfo.map(WxSessionResult::getWxMaJscode2SessionResult)

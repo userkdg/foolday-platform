@@ -1,10 +1,13 @@
 package com.foolday.wechat.base.session;
 
+import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.foolday.dao.user.UserEntity;
 import com.foolday.wechat.base.bean.WxSessionResult;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * 本地化wx seesion信息
@@ -15,6 +18,48 @@ import java.io.Serializable;
 public final class WxUserSessionHolder implements Serializable {
     private static final ThreadLocal<WxSessionResult> wxSessionResultHolder = new ThreadLocal<>();
     private static final long serialVersionUID = 1L;
+
+    private static final String splitChar = "#@#";
+    /**
+     * base64转码
+     *
+     * @param session
+     * @return
+     */
+    public static String makeBase64Session(WxMaJscode2SessionResult session) {
+        if (session == null){
+            return null;
+        }
+        String openid = session.getOpenid();
+        String sessionKey = session.getSessionKey();
+        String unionid = session.getUnionid();
+        String join = String.join(splitChar, new String[]{openid, sessionKey, unionid});
+//        new String(Base64.getDecoder().decode(Base64.getEncoder().encodeToString(join.getBytes(StandardCharsets.UTF_8))))
+        return Base64.getEncoder().encodeToString(join.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 解析前端传给的
+     *
+     * @param session
+     * @return
+     */
+    public static WxMaJscode2SessionResult parseBase64Session(String session) throws IllegalArgumentException{
+        if (StringUtils.isBlank(session)){
+            return null;
+        }
+        byte[] decode = Base64.getDecoder().decode(session);
+        String sourceSession = new String(decode, StandardCharsets.UTF_8);
+        String[] split = sourceSession.split(splitChar, -1);
+        String openid = split[0];
+        String sessionKey = split[1];
+        String unionid = split[2];
+        WxMaJscode2SessionResult sessionResult = new WxMaJscode2SessionResult();
+        sessionResult.setOpenid(openid);
+        sessionResult.setSessionKey(sessionKey);
+        sessionResult.setUnionid(unionid);
+        return sessionResult;
+    }
 
     public static void setWxSessionResultHolder(final WxSessionResult wxSessionResult) {
         wxSessionResultHolder.set(wxSessionResult);
