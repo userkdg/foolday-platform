@@ -4,6 +4,7 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.foolday.common.constant.WebConstant;
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.exception.PlatformException;
 import com.foolday.common.util.HttpUtils;
@@ -113,14 +114,15 @@ public class WxMaUserController {
     /**
      * 登陆接口
      * 用户登录后必须获取用户信息，否则后台无法分析用户身份
+     *
      * @return
      */
     @ApiOperation(value = "登陆接口", notes = "用户登录后必须获取用户信息，否则后台无法分析用户身份")
     @GetMapping("/login/{appid}")
-    public FantResult<String> login(@ApiParam(value = "用户appid", required = true, name = "appid")
-                                                      @PathVariable(value = "appid") String appid,
-                                    @ApiParam(value = "用户code", required = true, name = "code")
-                                                      @RequestParam(value = "code") String code) throws WxErrorException {
+    public FantResult<WxMaJscode2SessionResult> login(@ApiParam(value = "用户appid", required = true, name = "appid")
+                                    @PathVariable(value = "appid") String appid,
+                                                      @ApiParam(value = "用户code", required = true, name = "code")
+                                    @RequestParam(value = "code") String code) throws WxErrorException {
         if (StringUtils.isBlank(code)) {
             return FantResult.fail("empty jscode");
         }
@@ -135,7 +137,7 @@ public class WxMaUserController {
         wxUserSessionApi.addUserSessionInfo(session.getOpenid(), wxSessionResult);
         String base64Session = makeBase64Session(session);
         log.info("返回前端{}", base64Session);
-        return FantResult.ok(base64Session);
+        return FantResult.ok(session).addMoreData(WebConstant.AUTH_AUTHED_TOKEN, base64Session);
     }
 
     /**
