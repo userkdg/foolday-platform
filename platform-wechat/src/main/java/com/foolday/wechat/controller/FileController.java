@@ -9,7 +9,6 @@ import com.foolday.wechat.base.MultipartFileUtils;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Api(value = "文件上传", tags = "文件上传")
@@ -61,7 +59,7 @@ public class FileController {
         File file = image2DiskServiceApi.getThumbnail(id, width, height).getFile();
         if (file == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
+//                .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
                 .body(new FileSystemResource(file));
 
     }
