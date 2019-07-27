@@ -52,7 +52,7 @@ public class FileController {
     }
 
 
-    @ApiOperation(value = "查看图片")
+    @ApiOperation(value = "查看图片，宽度为0和高度为0，则取原图")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "正常返回", response = ResponseEntity.class)})
     @PostMapping("/viewImage/size")
     public ResponseEntity<FileSystemResource> view(@ApiParam("原文件id") @RequestParam("id") String id,
