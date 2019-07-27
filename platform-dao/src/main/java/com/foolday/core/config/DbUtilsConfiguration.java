@@ -40,7 +40,7 @@ public class DbUtilsConfiguration {
      * @param queryRunner
      * @return
      */
-    @Bean
+//    @Bean
     public static AsyncQueryRunner asyncQueryRunner(@Qualifier(ThreadPoolType.AsyncQueryRunnerThreadPool) ExecutorService executor,
                                                     @Qualifier("queryRunner") QueryRunner queryRunner) {
         return new AsyncQueryRunner(executor, queryRunner);

@@ -81,8 +81,8 @@ logging:
 platform:
   web:
     session:
-      openTestSession: false
-      testOpenId: oTeUN5Mz09IIvYtMAREUUm1fsGnA
+      openTestSession: true
+      testOpenId: oTeUN5Mz09IIvYtMAREUUm1fsGnA1
   # 图片定制
   image:
     # 支持的文件类型

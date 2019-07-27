@@ -18,7 +18,7 @@ public class ThreadPoolConfiguration {
 //    @Resource(name = ThreadPoolType.CommonBlockThreadPool)
 //    private ExecutorService executorService;
 
-    @Bean(ThreadPoolType.AsyncQueryRunnerThreadPool)
+//    @Bean(ThreadPoolType.AsyncQueryRunnerThreadPool)
     public static ExecutorService asyncQueryRunnerThreadPool() {
         int core = Runtime.getRuntime().availableProcessors() - 1;
         return new ThreadPoolExecutor(core,
@@ -43,7 +43,7 @@ public class ThreadPoolConfiguration {
     }
 
 
-    @Bean(ThreadPoolType.CommonNonBlockThreadPool)
+//    @Bean(ThreadPoolType.CommonNonBlockThreadPool)
     public static ExecutorService executor() {
         int core = Runtime.getRuntime().availableProcessors() - 1;
         return new ThreadPoolExecutor(core,

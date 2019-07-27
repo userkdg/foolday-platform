@@ -22,4 +22,6 @@ public interface WxUserServiceApi extends BaseServiceApi<UserEntity> {
     Optional<UserEntity> findByOpenIdAndUnionId(String openId, String unionId);
 
     UserEntity addByWeixinInfo(WxMaUserInfo userInfo, WxMaPhoneNumberInfo phoneNoInfo);
+
+    boolean updateUserShopId(String userId, String shopId);
 }

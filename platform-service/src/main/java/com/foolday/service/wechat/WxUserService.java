@@ -2,6 +2,7 @@ package com.foolday.service.wechat;
 
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.foolday.common.util.PlatformAssert;
 import com.foolday.dao.shop.ShopEntity;
 import com.foolday.dao.user.UserEntity;
 import com.foolday.dao.user.UserMapper;
@@ -64,6 +65,15 @@ public class WxUserService implements WxUserServiceApi {
         boolean insert = userEntity.insert();
         log.info("记录用户信息{}, 记录情况：{}", userEntity, insert);
         return userEntity;
+    }
+
+    @Override
+    public boolean updateUserShopId(String userId, String shopId) {
+        UserEntity userEntity = userMapper.selectOne(lqWrapper().eq(UserEntity::getId, userId));
+        PlatformAssert.notNull(userEntity, "id=" + userId + "获取用户信息失败");
+        userEntity.setShopId(shopId);
+        userEntity.setUpdateTime(LocalDateTime.now());
+        return userEntity.insertOrUpdate();
     }
 
 }

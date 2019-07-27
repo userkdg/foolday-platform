@@ -44,7 +44,7 @@ public class Image2diskService implements Image2DiskServiceApi {
     @Resource
     private ImageConfigProperty imageConfigProperty;
 
-    @Resource(name = ThreadPoolType.SingleThreadPool)
+    @Resource(name = ThreadPoolType.CommonBlockThreadPool)
     private ExecutorService singleThreadPool;
 
     @Override
