@@ -45,7 +45,7 @@ public class Image2diskService implements Image2DiskServiceApi {
     private ImageConfigProperty imageConfigProperty;
 
     @Resource(name = ThreadPoolType.CommonBlockThreadPool)
-    private ExecutorService singleThreadPool;
+    private ExecutorService commonBlockThreadPool;
 
     @Override
     public File download(String imageId) {
@@ -127,7 +127,7 @@ public class Image2diskService implements Image2DiskServiceApi {
         Path newImgPath = Paths.get(newImagePath);
         ImageUtils.resize(oldImgPath, newImgPath, width, height);
         // 异步写入数据库信息
-        singleThreadPool.execute(() -> {
+        commonBlockThreadPool.execute(() -> {
             ImageEntity image = new ImageEntity();
             image.setId(newImgId);
             image.setHeight(height);

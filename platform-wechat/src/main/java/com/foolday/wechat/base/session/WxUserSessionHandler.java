@@ -37,9 +37,9 @@ public class WxUserSessionHandler implements WxUserSessionApi {
         UserEntity userEntity = new UserEntity();
         userEntity.setId("13a9cb603f02453e8d3701f5ceb8fad3");
         userEntity.setName("testUser");
-        userEntity.setShopId("280763b0bc926997b5d0708a6d9db73b1");
+        userEntity.setShopId("280763b0bc926997b5d0708a6d9db73b");
         WxSessionResult wxSessionResult = WxSessionResult.newInstance().setWxMaJscode2SessionResult(wxMaJscode2SessionResult)
-                .setLoginTime(LocalDateTime.now()).setUserInfo(userEntity).setShopId("280763b0bc926997b5d0708a6d9db73b1");
+                .setLoginTime(LocalDateTime.now()).setUserInfo(userEntity).setShopId("280763b0bc926997b5d0708a6d9db73b");
         wxSessionResult.setOpenid("oTeUN5Mz09IIvYtMAREUUm1fsGnA1");
         addUserSessionInfo("oTeUN5Mz09IIvYtMAREUUm1fsGnA1", wxSessionResult);
         redisTemplate.expire(WebConstant.RedisKey.WEIXIN_USER_SESSION_INFO, 365 << 1, TimeUnit.DAYS);

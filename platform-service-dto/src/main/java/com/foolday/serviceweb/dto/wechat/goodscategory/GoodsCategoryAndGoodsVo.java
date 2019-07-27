@@ -1,7 +1,7 @@
 package com.foolday.serviceweb.dto.wechat.goodscategory;
 
 import com.foolday.dao.category.GoodsCategoryEntity;
-import com.foolday.dao.goods.GoodsEntity;
+import com.foolday.serviceweb.dto.wechat.goods.GoodsAndSpecVo;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ import java.util.List;
 @ApiModel("分类中的商品")
 public class GoodsCategoryAndGoodsVo implements Serializable {
     private static final long serialVersionUID = 1L;
-    private List<GoodsEntity> goodsEntitys;
+    private List<GoodsAndSpecVo> goodsAndSpecVo;
 
     private GoodsCategoryEntity goodsCategoryEntity;
 }
