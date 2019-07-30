@@ -3,6 +3,8 @@ package com.foolday.wechat.base.interceptor;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.foolday.common.constant.WebConstant;
 import com.foolday.common.exception.PlatformException;
+import com.foolday.dao.user.UserEntity;
+import com.foolday.service.api.wechat.WxUserServiceApi;
 import com.foolday.wechat.base.bean.WxSessionResult;
 import com.foolday.wechat.base.bean.WxTestSessionProperties;
 import com.foolday.wechat.base.session.WxUserSessionApi;
@@ -29,14 +31,17 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
 
     private final WxUserSessionApi wxUserSessionApi;
 
+    private final WxUserServiceApi wxUserServiceApi;
+
     /**
      * 测试会话
      */
-    private WxTestSessionProperties wxTestSessionProperties;
+    private final WxTestSessionProperties wxTestSessionProperties;
 
-    public WxUserAuthInterceptor(WxUserSessionApi wxUserSessionApi, WxTestSessionProperties wxTestSessionProperties) {
+    public WxUserAuthInterceptor(WxUserSessionApi wxUserSessionApi, WxTestSessionProperties wxTestSessionProperties,WxUserServiceApi wxUserServiceApi) {
         this.wxUserSessionApi = wxUserSessionApi;
         this.wxTestSessionProperties = wxTestSessionProperties;
+        this.wxUserServiceApi = wxUserServiceApi;
     }
 
     @Override
@@ -66,6 +71,12 @@ public class WxUserAuthInterceptor implements HandlerInterceptor {
             /*isNotBlank(wxSessionResult.getSessionKey()) &&wxSessionResult.getSessionKey().equals(wxMaJscode2SessionResult.getSessionKey())*/
             // 只要之前有存有openId说明用户已授权登录过，跳过拦截
             if (wxSessionResult != null) {
+                // 获取用户信息，由于用户下次登录，很有可能不会去请求用户信息接口，为了避免NPE，授权登录后要是首次用户信息为空，则去数据库出一次
+                if (wxSessionResult.getUserInfo() == null) {
+                    Optional<UserEntity> userOpt = wxUserServiceApi.findByOpenId(wxSessionResult.getOpenid());
+                    UserEntity userEntity = userOpt.orElseThrow(() -> new PlatformException("openid=" + wxSessionResult.getOpenid() + "未登录,获取用户信息失败"));
+                    wxSessionResult.setUserInfo(userEntity);
+                }
                 // 增加最新访问时间
                 log.info("获取到用户信息{}", wxSessionResult);
                 wxSessionResult.setLastTime(LocalDateTime.now());

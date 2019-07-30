@@ -85,7 +85,7 @@ public class WxAccessTokenService implements WxAccessTokenServiceApi {
 
             String access_token_key = "access_token";
             String expires_in__key = "expires_in";
-            String errcode_key = "errcode";
+//            String errcode_key = "errcode";
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {

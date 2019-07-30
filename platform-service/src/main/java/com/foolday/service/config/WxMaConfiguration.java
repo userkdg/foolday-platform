@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class WxMaConfiguration {
     private WxMaProperties properties;
 
-    private volatile static WxMaProperties.Config defaultConfig = null;
+    private volatile static WxMaProperties.Config defaultConfig =  null;
 
     private static Map<String, WxMaMessageRouter> routers = Maps.newHashMap();
     private static Map<String, WxMaService> maServices = Maps.newHashMap();
@@ -40,7 +40,7 @@ public class WxMaConfiguration {
     public WxMaConfiguration(WxMaProperties properties) {
         this.properties = properties;
         if (!properties.getConfigs().isEmpty()) {
-            defaultConfig = properties.getConfigs().get(0);
+            defaultConfig = properties.getConfigs().stream().findFirst().orElseThrow(()->new PlatformException("获取配置失败"));
         }
     }
 

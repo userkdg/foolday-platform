@@ -57,24 +57,23 @@ public class ImageUtils {
      * @param sourceFile
      * @param quality    图片质量 在（0F-1F）之间 不包含0F,1F
      * @return
-     * @throws IOException
      */
     public static byte[] getOptimizeBase64Bytes(File sourceFile, float quality) {
         /*
         基于源文件创建临时文件，提取完进行清除
          */
-        File tempFile = null;
+        File tempFile;
         try {
             tempFile = java.nio.file.Files.createTempFile(sourceFile.getName(), null).toFile();
             ImageUtils.optimize(sourceFile, tempFile, quality);
-            return Base64.getMimeEncoder().encode(Files.toByteArray(tempFile));
+            byte[] bytes = Files.toByteArray(tempFile);
+            byte[] encode = Base64.getMimeEncoder().encode(bytes);
+            boolean delete = tempFile.delete();
+            logger.info("清理临时文件{}情况{}", tempFile.getAbsolutePath(), delete);
+            return encode;
         } catch (IOException e) {
-//            e.printStackTrace();
-            logger.error("创建临时文件或压缩文件异常，e:{}", e);
-        } finally {
-            if (tempFile != null) {
-                tempFile.delete();
-            }
+            e.printStackTrace();
+            logger.error("创建临时文件或压缩文件异常，e:{}", e.toString());
         }
         // 默认为空
         return null;

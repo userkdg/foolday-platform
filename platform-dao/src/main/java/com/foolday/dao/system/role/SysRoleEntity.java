@@ -3,6 +3,7 @@ package com.foolday.dao.system.role;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.foolday.common.base.BaseEntity;
 import com.foolday.common.enums.CommonStatus;
+import com.google.common.base.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,16 +22,32 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class SysRoleEntity extends BaseEntity<SysRoleEntity> implements Comparable<SysRoleEntity>{
+public class SysRoleEntity extends BaseEntity<SysRoleEntity> implements Comparable<SysRoleEntity> {
     private String name;
 
     private CommonStatus status;
 
     private String shopId;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SysRoleEntity)) return false;
+        if (!super.equals(o)) return false;
+        SysRoleEntity that = (SysRoleEntity) o;
+        return Objects.equal(name, that.name) &&
+                status == that.status &&
+                Objects.equal(shopId, that.shopId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(super.hashCode(), name, status, shopId);
+    }
 
     @Override
     public int compareTo(SysRoleEntity o) {
+//        return CompareToBuilder.reflectionCompare(this, o);
         if (o.getUpdateTime() != null && this.getUpdateTime() != null) {
             return o.getUpdateTime().compareTo(this.getUpdateTime());
         }

@@ -2,6 +2,7 @@ package com.foolday.wechat.base;
 
 import com.foolday.common.dto.FantResult;
 import com.foolday.common.exception.PlatformException;
+import com.foolday.service.api.wechat.WxUserServiceApi;
 import com.foolday.wechat.base.bean.WxTestSessionProperties;
 import com.foolday.wechat.base.interceptor.WxUserAuthInterceptor;
 import com.foolday.wechat.base.session.WxUserSessionApi;
@@ -49,9 +50,12 @@ public class WeChatWebConfiguration implements WebMvcConfigurer {
     @Autowired
     private WxTestSessionProperties wxTestSessionProperties;
 
+    @Autowired
+    private WxUserServiceApi wxUserServiceApi;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new WxUserAuthInterceptor(wxUserSessionApi,wxTestSessionProperties))
+        registry.addInterceptor(new WxUserAuthInterceptor(wxUserSessionApi, wxTestSessionProperties, wxUserServiceApi))
                 .addPathPatterns("/**")
                 .excludePathPatterns("/v2/api-docs/**")
                 .excludePathPatterns("swagger-resources/**")

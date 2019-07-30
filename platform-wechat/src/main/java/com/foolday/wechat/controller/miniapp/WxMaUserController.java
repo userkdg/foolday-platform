@@ -61,12 +61,14 @@ public class WxMaUserController {
 
     public static void main(String[] args) {
         WxMaJscode2SessionResult wxMaJscode2SessionResult = new WxMaJscode2SessionResult();
-        wxMaJscode2SessionResult.setUnionid("zzzzzzzzzz");
-        wxMaJscode2SessionResult.setOpenid("112212AAAA");
-        wxMaJscode2SessionResult.setSessionKey("sesdfsdfsdfKey");
+        wxMaJscode2SessionResult.setUnionid(null);
+        wxMaJscode2SessionResult.setOpenid("oTeUN5Mz09IIvYtMAREUUm1fsGnA");
+        wxMaJscode2SessionResult.setSessionKey("testSessionKey");
         String base64Session = makeBase64Session(wxMaJscode2SessionResult);
         System.out.println("返回给前端的" + base64Session);
         WxMaJscode2SessionResult wxMaJscode2SessionResult1 = parseBase64Session(base64Session);
+        WxMaJscode2SessionResult wxMaJscode2SessionResult2 = parseBase64Session("b1RlVU41TXowOUlJdll0TUFSRVVVbTFmc0duQSNAI3Rlc3RTZXNzaW9uS2V5I0AjbnVsbA==");
+        System.out.println(wxMaJscode2SessionResult2+" wxMaJscode2SessionResult2");
         System.out.println(wxMaJscode2SessionResult);
         System.out.println(wxMaJscode2SessionResult1);
         String keyPath = "classpath:pay_key/apiclient_cert.p12";

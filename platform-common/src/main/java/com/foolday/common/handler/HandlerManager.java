@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 
 public class HandlerManager {
 
-    private static ExecutorService single = Executors.newSingleThreadExecutor();
+    private final static ExecutorService single = Executors.newSingleThreadExecutor();
 
     /**
      * 利用一个线程执行
@@ -19,11 +19,6 @@ public class HandlerManager {
             /*
             shut down 后
              */
-            synchronized (single) {
-                if (single == null) {
-                    single = Executors.newSingleThreadExecutor();
-                }
-            }
             /*
               开一条线程取异步处理事务
              */

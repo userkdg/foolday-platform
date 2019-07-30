@@ -206,10 +206,10 @@ public class WxOrderService implements WxOrderServiceApi {
      */
     @Override
     public void pay(String openId, String outTradeNo, String transactionId) {
-        UserEntity userEntities = userMapper.findOneByOpenId(openId);
-        String userId = userEntities.getId();
-        LambdaQueryWrapper<OrderEntity> eq = lqWrapper().eq(OrderEntity::getUserId, userId).eq(OrderEntity::getOrderNo, outTradeNo);
-        List<OrderEntity> orderEntities = orderMapper.selectList(eq);
+//        UserEntity userEntities = userMapper.findOneByOpenId(openId);
+//        String userId = userEntities.getId();
+//        LambdaQueryWrapper<OrderEntity> eq = lqWrapper().eq(OrderEntity::getUserId, userId).eq(OrderEntity::getOrderNo, outTradeNo);
+//        List<OrderEntity> orderEntities = orderMapper.selectList(eq);
     }
 
     @Override

@@ -1,13 +1,17 @@
 package com.foolday.serviceweb.dto.image;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.lang.Nullable;
 
 import java.io.File;
 import java.io.InputStream;
 
-@Data
+@ToString
+@Setter
+@Getter
 @Builder
 public class FileDto {
     private String name;

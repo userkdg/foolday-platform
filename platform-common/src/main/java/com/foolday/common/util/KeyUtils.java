@@ -93,56 +93,16 @@ public final class KeyUtils {
     public static class UniqueOrderGenerate {
 
         // ==============================Fields===========================================
-        /**
-         * 开始时间截 (2018-07-03)
-         */
-
-        private final long twepoch = 1530607760000L;
 
         /**
          * 机器id所占的位数
          */
-        private final long workerIdBits = 5L;
+        private static final long workerIdBits = 5L;
 
         /**
          * 数据标识id所占的位数
          */
-        private final long datacenterIdBits = 5L;
-
-        /**
-         * 支持的最大机器id，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
-         */
-        private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
-
-        /**
-         * 支持的最大数据标识id，结果是31
-         */
-        private final long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
-
-        /**
-         * 序列在id中占的位数
-         */
-        private final long sequenceBits = 12L;
-
-        /**
-         * 机器ID向左移12位
-         */
-        private final long workerIdShift = sequenceBits;
-
-        /**
-         * 数据标识id向左移17位(12+5)
-         */
-        private final long datacenterIdShift = sequenceBits + workerIdBits;
-
-        /**
-         * 时间截向左移22位(5+5+12)
-         */
-        private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
-
-        /**
-         * 生成序列的掩码，这里为4095 (0b111111111111=0xfff=4095)
-         */
-        private final long sequenceMask = -1L ^ (-1L << sequenceBits);
+        private static final long datacenterIdBits = 5L;
 
         /**
          * 工作机器ID(0~31)
@@ -173,9 +133,17 @@ public final class KeyUtils {
          * @param datacenterId 数据中心ID (0~31)
          */
         public UniqueOrderGenerate(long workerId, long datacenterId) {
+            /**
+             * 支持的最大机器id，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
+             */
+            long maxWorkerId = -1L ^ (-1L << workerIdBits);
             if (workerId > maxWorkerId || workerId < 0) {
                 throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
             }
+            /**
+             * 支持的最大数据标识id，结果是31
+             */
+            long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
             if (datacenterId > maxDatacenterId || datacenterId < 0) {
                 throw new IllegalArgumentException(String.format("datacenter Id can't be greater than %d or less than 0", maxDatacenterId));
             }
@@ -200,7 +168,15 @@ public final class KeyUtils {
             }
 
             //如果是同一时间生成的，则进行毫秒内序列
+            /**
+             * 序列在id中占的位数
+             */
+            long sequenceBits = 12L;
             if (lastTimestamp == timestamp) {
+                /**
+                 * 生成序列的掩码，这里为4095 (0b111111111111=0xfff=4095)
+                 */
+                long sequenceMask = -1L ^ (-1L << sequenceBits);
                 sequence = (sequence + 1) & sequenceMask;
                 //毫秒内序列溢出
                 if (sequence == 0) {
@@ -217,9 +193,24 @@ public final class KeyUtils {
             lastTimestamp = timestamp;
 
             //移位并通过或运算拼到一起组成64位的ID
+            /**
+             * 时间截向左移22位(5+5+12)
+             */
+            long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
+            /**
+             * 数据标识id向左移17位(12+5)
+             */
+            long datacenterIdShift = sequenceBits + workerIdBits;
+            /**
+             * 机器ID向左移12位
+             */
+            /**
+             * 开始时间截 (2018-07-03)
+             */
+            long twepoch = 1530607760000L;
             return (((timestamp - twepoch) << timestampLeftShift) //
                     | (datacenterId << datacenterIdShift) //
-                    | (workerId << workerIdShift) //
+                    | (workerId << sequenceBits) //
                     | sequence);
         }
 

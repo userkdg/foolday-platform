@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.bean.template.WxMpTemplate;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Api(value = "模板消息推送", tags = "模板消息推送")
 @Slf4j
@@ -56,8 +54,8 @@ public class WxMessageController {
     @PostMapping("/getTemplateId")
     public FantResult<String> getTemplateId() throws WxErrorException {
 
-        String accessToken = tokenService.getAccessToken();
-        List<WxMpTemplate> allPrivateTemplate = wxMpService.getTemplateMsgService().getAllPrivateTemplate();
+//        String accessToken = tokenService.getAccessToken();
+//        List<WxMpTemplate> allPrivateTemplate = wxMpService.getTemplateMsgService().getAllPrivateTemplate();
         String templateId = wxMpService.getTemplateMsgService().addTemplate("MT");
         return FantResult.ok(templateId);
     }

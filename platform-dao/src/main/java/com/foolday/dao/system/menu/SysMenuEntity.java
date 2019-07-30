@@ -3,6 +3,7 @@ package com.foolday.dao.system.menu;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.foolday.common.base.BaseEntity;
 import com.foolday.common.enums.CommonStatus;
+import com.google.common.base.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -39,9 +40,29 @@ public class SysMenuEntity extends BaseEntity<SysMenuEntity> implements Comparab
     private String shopId;
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SysMenuEntity)) return false;
+        if (!super.equals(o)) return false;
+        SysMenuEntity that = (SysMenuEntity) o;
+        return Objects.equal(name, that.name) &&
+                Objects.equal(iconUrl, that.iconUrl) &&
+                status == that.status &&
+                Objects.equal(remark, that.remark) &&
+                Objects.equal(pid, that.pid) &&
+                Objects.equal(shopId, that.shopId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(super.hashCode(), name, iconUrl, status, remark, pid, shopId);
+    }
+
+    @Override
     public int compareTo(SysMenuEntity o) {
+//        return CompareToBuilder.reflectionCompare(this, o);
         if (o.getUpdateTime() != null && this.getUpdateTime() != null) {
-            return o.getUpdateTime().compareTo(this.getUpdateTime());
+            return (o.getUpdateTime().compareTo(this.getUpdateTime()));
         }
         if (o.getCreateTime() != null && this.getCreateTime() != null) {
             return o.getUpdateTime().compareTo(this.getUpdateTime());
