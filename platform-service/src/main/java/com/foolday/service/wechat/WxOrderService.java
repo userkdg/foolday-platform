@@ -107,7 +107,7 @@ public class WxOrderService implements WxOrderServiceApi {
                     return specEntity.getAdjustPrice() ? specEntity.getGoodsAppendPrice() : 0.0F;
                 }).reduce((f1, f2) -> f1 + f2).orElse(0.0F);
             }
-            Float price = goodsEntity.getRealPriceByDiscntCondition();
+            Float price = goodsEntity.calcRealPriceByDiscntCondition();
             Integer cnt = orderDetail.getCnt();
             return price * cnt + appendGoodsPrice;
         }).reduce((f1, f2) -> f1 + f2).orElseThrow(() -> new PlatformException("商品总价计算异常"));

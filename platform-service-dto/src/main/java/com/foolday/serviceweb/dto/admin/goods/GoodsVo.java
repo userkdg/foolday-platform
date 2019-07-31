@@ -61,6 +61,9 @@ public class GoodsVo implements Serializable {
     @ApiModelProperty(value = "打折价格")
     private Float discntPrice;
 
+    @ApiModelProperty(value = "打折是否折扣")
+    private Boolean discntGoods;
+
     /*
     库存数量
      */

@@ -66,7 +66,7 @@ public class GoodsEntity extends BaseEntity<GoodsEntity> {
      *
      * @return
      */
-    public Float getRealPriceByDiscntCondition() {
+    public Float calcRealPriceByDiscntCondition() {
         /*
         基于是否为折扣价
          */
