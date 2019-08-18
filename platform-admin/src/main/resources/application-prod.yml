@@ -165,3 +165,78 @@ wx:
         token: my2019token #（接口配置里的Token值）
         aesKey: wW7fORMF45k7JRrGpGACzPz5bOlCxNyhWOOhZowoGHA #（接口配置里的EncodingAESKey值）
         contactPhone: 1881312121 # 开发票中需要联系电话号码
+
+system:
+  config:
+    permissions:
+      - name: 文章管理
+        id: 1
+        url: pagepage/admin/article/view.html
+        description: 文章管理标志
+
+      - name: 文章栏目
+        id: 2
+        url: pagepage/admin/articleType/view.html
+        description: 查看文章的栏目
+
+      - name: 意见反馈管理
+        id: 3
+        url: pagepage/admin/feedback/view.html
+        description: 意见反馈管理
+
+      - name: 会员积分管理
+        id: 4
+        url: page/admin/integral/view.html
+        description: 会员总积分管理
+
+      - name: 系统权限管理
+        id: 5
+        url: page/admin/permission/view.html
+        description: 系统权限管理
+
+      - name: 角色管理
+        id: 6
+        url: page/admin/sysRole/view.html
+        description: 查看系统中的角色
+
+      - name: 会员管理
+        id: 7
+        url: page/admin/user/view.html
+        description: 会员管理
+
+      - name: 管理员管理
+        id: 8
+        url: page/admin/sysAdmin/view.html
+        description: 查看系统所有/指定管理员信息
+
+      - name: 会员等级管理
+        id: 9
+        url: page/admin/userLevel/view.html
+        description: 会员等级管理
+
+      - name: 会员账单管理
+        id: 11
+        url: page/admin/bill/view.html
+        description: 会员账单管理
+
+  #      - name: 个人信息管理
+  #        id: 10
+  #        url: page/admin/personal/view.html
+  #        description: 个人信息管理
+
+  primary:
+    primary:
+      - name: 系统管理
+        permissions: "2;3;4;5;6;8;9"
+        description: 系统管理
+        available: true
+
+      - name: 酒店管理
+        permissions: "1"
+        description: 酒店管理
+        available: true
+
+      - name: 订单管理
+        permissions: "11"
+        description: 订单管理
+        available: true
