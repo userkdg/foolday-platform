@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+    <link href="/page/layui/font/iconfont.css" rel="stylesheet">
+    <link href="/page/css/formSelects-v4.css" rel="stylesheet">
+    <style type="text/css">
+        .layui-table-cell {
+            height: auto;
+            line-height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add"><i class="layui-icon">&#xe654;</i>添加</button>
+    </div>
+</script>
+
+<section class="panel panel-padding">
+    <table id="dataView" class="layui-hide" lay-filter="data"></table>
+</section>
+
+<script type="text/html" id="operator_item">
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit"><i class="layui-icon">&#xe672;</i>修改</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="permissionEdit"><i class="layui-icon">&#xe672;</i>权限管理</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="enable"><i class="layui-icon">&#xe672;</i>激活</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="prohibit"><i class="layui-icon">&#xe672;</i>冻结</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+<script src="/page/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/page/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/page/js/admin/sysRole/view.js" type="text/javascript" charset="utf-8"></script>
+<!--<script type="text/javascript" src="/page/js/common/functions.js"></script>-->
+</body>
+</html>

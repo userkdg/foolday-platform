@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎使用后台管理系统</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href="../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+    <link href="../css/animate.css" rel="stylesheet">
+    <link href="../css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="../css/admin/welcome.css" rel="stylesheet">
+    <script type="text/javascript" src="../js/admin/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="../js/admin/echarts/ecStat.min.js"></script>
+    <script type="text/javascript" src="../js/admin/echarts/dataTool.min.js"></script>
+    <script type="text/javascript" src="../js/admin/echarts/china.js"></script>
+    <script type="text/javascript" src="../js/admin/echarts/world.js"></script>
+    <script type="text/javascript" src="../js/admin/echarts/simplex.js"></script>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content" id="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="ibox-content m-b-sm border-bottom">
+                        <div class="p-xs">
+                            <div class="pull-left m-r-md">
+                                <i class="fa fa-globe text-navy mid-icon"></i>
+                            </div>
+                            <h2>欢迎来到寒舍酒店后台管理系统</h2>
+                            <span>如遇到问题联系开发人员：张俊雄(475705481@qq.com)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display: none;">
+                    <div class="col-sm-4">
+                        <div class="row row-sm text-center parent">
+                            <div class="col-xs-6 child">
+                                <div class="panel padder-v item">
+                                    <div class="h1 text-info font-thin h1">{{prepay_count}}</div>
+                                    <span class="text-muted text-xs">待 付 款</span>
+                                    <div class="top text-right w-full">
+                                        <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 child">
+                                <div class="panel padder-v item bg-info">
+                                    <div class="h1 text-fff font-thin h1">{{ready_count}}</div>
+                                    <span class="text-muted text-xs">待 发 货</span>
+                                    <div class="top text-right w-full">
+                                        <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 child">
+                                <div class="panel padder-v item">
+                                    <div class="h1 text-info font-thin h1">{{alread_count}}</div>
+                                    <span class="text-muted text-xs">待 收 货</span>
+                                    <div class="top text-right w-full">
+                                        <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 child">
+                                <div class="panel padder-v item bg-info">
+                                    <div class="h1 text-fff font-thin h1">{{complete_count}}</div>
+                                    <span class="text-muted text-xs">已 完 成</span>
+                                    <div class="top text-right w-full">
+                                        <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 child">
+                                <div class="panel padder-v item">
+                                    <div class="h1 text-info font-thin h1">{{sum}}</div>
+                                    <span class="text-muted text-xs">总 单 量</span>
+                                    <div class="top text-right w-full">
+                                        <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display:none;">
+                    <div class="col-xs-12">
+                        <section class="panel">
+                            <div class="panel-heading">
+                                网站信息
+                                <a href="javascript:;" class="pull-right panel-toggle">
+                                    <i class="iconfont"></i>
+                                </a>
+                            </div>
+                            <div class="panel-body">
+                                <table class="layui-table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span>软件名称</span>:</td>
+                                            <td>
+                                                HADMIN后台管理
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>开发作者</span>：</td>
+                                            <td>GAVIN</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>服务器名称</span>：</td>
+                                            <td>
+                                                Window Server2012
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>服务器工作目录</span>：</td>
+                                            <td>
+                                                D://nodeProject
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>开发语言</span>：</td>
+                                            <td>Node.js</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>操作系统</span>：</td>
+                                            <td>
+                                                Window Server2012
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>系统总内存/系统空闲内存</span>：</td>
+                                            <td>
+                                                8G/500G
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>总内存</span>：</td>
+                                            <td>
+                                                rss内存:未定义, 总堆内存: 未定义, 已用堆内存: 未定义
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>操作系统用户名</span>：</td>
+                                            <td>
+                                                Adminisstrator
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>系统正常运行时间</span>：</td>
+                                            <td>
+                                                永久
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script type="text/javascript" src="../js/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js?v=3.3.6"></script>
+    <script type="text/javascript" src="../js/plugins/layer/layer.min.js"></script>
+    <script src="../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+    <!-- Flot -->
+    <script type="text/javascript" src="../js/plugins/flot/jquery.flot.js"></script>
+    <script type="text/javascript" src="../js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script type="text/javascript" src="../js/plugins/flot/jquery.flot.resize.js"></script>
+    <script type="text/javascript" src="../js/plugins/flot/jquery.flot.pie.js"></script>
+    <!-- 自定义js -->
+    <!-- <script type="text/javascript" src="/activity/js/content.js"></script>
+    <script type="text/javascript" src="/activity/js/admin/index.js"></script> -->
+</body>
+
+</html>

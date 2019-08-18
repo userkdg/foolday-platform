@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>地址解析</title>
+<style type="text/css">
+*{
+    margin:0px;
+    padding:0px;
+}
+body, button, input, select, textarea {
+    font: 12px/16px Verdana, Helvetica, Arial, sans-serif;
+}
+p{
+    width:603px;
+    padding-top:3px;
+    margin-top:10px;
+    overflow:hidden;
+}
+input#address{
+	width:300px;
+}
+#container {
+   min-width:603px;
+   min-height:767px;
+}
+</style>
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=HSIBZ-G7E63-4TY3Z-3LPC6-ZMPVQ-XRBQO"></script>
+<script>
+var geocoder,map,marker = null;
+var init = function() {
+    var center = new qq.maps.LatLng(39.916527,116.397128);
+    map = new qq.maps.Map(document.getElementById('container'),{
+        center: center,
+        zoom: 15
+    });
+    //调用地址解析类
+    geocoder = new qq.maps.Geocoder({
+        complete : function(result){
+            console.log(">>>>>>", result);
+            map.setCenter(result.detail.location);
+            var marker = new qq.maps.Marker({
+                map:map,
+                position: result.detail.location
+            });
+        }
+    });
+}
+
+
+function codeAddress() {
+    var address = document.getElementById("address").value;
+    //通过getLocation();方法获取位置信息值
+    geocoder.getLocation(address);
+}
+</script>
+</head>
+<body onload="init()">
+<div>
+<input id="address" type="textbox" value="中国,北京,海淀区,海淀大街38号">
+<button onclick="codeAddress()">search</button>
+</div>
+<div id="container"></div>
+<p>输入地址，点击search进行地址解释。</p>
+</body>
+</html>

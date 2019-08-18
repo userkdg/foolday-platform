@@ -1,0 +1,224 @@
+#dataCount {
+    display: flex;
+    width: 100%;
+    margin: 18px 0 27px;
+}
+.countItem {
+    flex: 1;
+    margin-right: 24px;
+    border-radius: 10px;
+    color: #fff;
+    padding: 18px 12px;
+    position: relative;
+    box-shadow: 1px 2px 12px 3px #e5e5e5;
+}
+.countItem img {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.countItem .title{
+    font-size: 20px;
+    line-height: 20px;
+    letter-spacing: 2px;
+    padding-bottom: 20px;
+}
+.countItem .countNum{
+    font-size: 80px;
+    line-height: 65px;
+}
+.todayOrder, .allState .numBox {
+    background: -webkit-linear-gradient(left top, #ff6d3a, #f68b65);
+    background: -o-linear-gradient(left top, #ff6d3a, #f68b65);
+    background: -moz-linear-gradient(left top, #ff6d3a, #f68b65);
+    background: linear-gradient(left top, #ff6d3a, #f68b65);
+}
+.yesterdayOrder{
+    background: -webkit-linear-gradient(left top, #ffba00, #ffca3d);
+    background: -o-linear-gradient(left top, #ffba00, #ffca3d);
+    background: -moz-linear-gradient(left top, #ffba00, #ffca3d);
+    background: linear-gradient(left top, #ffba00, #ffca3d);
+}
+.skIncrement, .completeState .numBox {
+    background: -webkit-linear-gradient(left top, #3993ff, #2eb6fe);
+    background: -o-linear-gradient(left top, #3993ff, #2eb6fe);
+    background: -moz-linear-gradient(left top, #3993ff, #2eb6fe);
+    background: linear-gradient(left top, #3993ff, #2eb6fe);
+}
+.skIncrement{
+    margin-right: 0;
+}
+.cancleState .numBox{
+    background: -webkit-linear-gradient(left top, #86817c, #a7a6a4);
+    background: -o-linear-gradient(left top, #86817c, #a7a6a4);
+    background: -moz-linear-gradient(left top, #86817c, #a7a6a4);
+    background: linear-gradient(left top, #86817c, #a7a6a4);
+}
+div#todayData {
+    width: 100%;
+    box-shadow: 1px 1px 8px 2px #e9e9e9;
+    padding: 13px 0;
+}
+#todayData .title {
+    border-left: 10px solid #3a8dff;
+    padding-left: 10px;
+    letter-spacing: 2px;
+    color: #888;
+}
+.detail {
+    display: flex;
+    text-align: center;
+    padding-top: 22px;
+}
+.detailItem {
+    letter-spacing: 2px;
+    flex: 1;
+    border-right: 1px solid #cdcdcd;
+}
+.detailItem.cancel {
+    border-right: 0;
+}
+.todayNum {
+    font-size: 42px;
+    line-height: 35px;
+    color: #3a8dff;
+    padding-bottom: 18px;
+}
+.cancel .todayNum {
+    color: #86817c;
+}
+.todayTitle {
+    color: #000;
+}
+div#stateCount {
+    display: flex;
+    text-align: center;
+    margin: 32px 0 20px;
+}
+.stateItem {
+    flex: 1;
+}
+.numBox {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    border-radius: 50%;
+    position: relative;
+}
+.allState .numBox{
+    color: #ff6d3a;
+}
+.completeState .numBox{
+    color: #3993ff;
+}
+.cancleState .numBox{
+    color: #a7a6a4;
+}
+.stateNum {
+    width: 90%;
+    height: 90%;
+    background: #fff;
+    border-radius: 50%;
+    font-size: 35px;
+    position: absolute;
+    left: 5%;
+    top: 5%;
+}
+.stateTitle {
+    color: #000;
+    padding-top: 11px;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+.stateNum span {
+    margin: 32% 0;
+    display: inline-block;
+}
+
+.notice-platform .title {
+	width:100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    text-align: right;
+    background: #fafafa;
+    border: 1px solid #e7e7eb;
+    display:inline-block;
+    float:left;
+    overflow: hidden;
+    padding:5px 0;
+}
+
+.notice-platform .title .topic {
+    text-align: center;
+    display: inline-block;
+    float: left;
+    cursor: pointer;
+    padding: 0 30px;
+    display:inline-block;
+    overflow: hidden;
+}
+.notice-platform .title .a-public{
+    border-right: 1px solid rgb(170,170,170);
+    color:#32B5E3;
+}
+.notice-platform .notice-content {
+    padding: 0px;
+    width:100%;
+    line-height: 30px;
+    font-size: 14px;
+    float:left;
+}
+.notice-platform .notice-content .public{
+	overflow: hidden;
+}
+.notice-platform ul{
+	height:auto;
+}
+.notice-platform li {
+    line-height: 50px;
+    height: 50px;
+    padding: 0 30px;
+    border: #f0f0f0 1px solid;
+}
+.float-left{
+	float:left;
+}
+
+.float-right{
+	float:right;
+}
+
+
+
+.name{
+    text-align: center;
+}
+
+.count{
+    text-align:center;
+    color: rgb(3,169,244);
+}
+.qrcode{
+    height: 150px;
+    line-height: 150px;
+    position: absolute;
+    background-color: #fff;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+.qrcode > img{
+    margin:0 auto !important;
+    width:120px;
+    height:120px;
+}
+.stat-platform .stat{
+    height: 115px;
+}
+.container .right .tongji{
+    height: 165px;
+}
+.cannotShow{
+    display: none !important;
+}

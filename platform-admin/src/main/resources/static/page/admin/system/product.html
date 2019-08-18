@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <link href="/layui/font/iconfont.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/admin/product.css" rel="stylesheet">
+    <link href="/css/formSelects-v4.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="container">
+        <div class="head">
+            <section class="panel panel-padding">
+                <form class="layui-form" id="select_role">
+                    <div class="layui-form">
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="sel_name" placeholder="公告名称">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button lay-submit class="layui-btn" lay-filter="search">查找</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <section class="panel panel-padding">
+            <div class="group-button">
+                <button class="layui-btn layui-btn-small modal">
+                    <i class="iconfont">&#xe608;</i> 添加内容
+                </button>
+            </div>
+
+            <table id="product_list" class="layui-hide" lay-filter="products"></table>
+        </section>
+
+        <div class="add-subcat">
+            <form id="product_info">
+                <input name="id" type="hidden" value="" v-model="id">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-block">
+                        <select name="dtype" id="dtype" v-model="dtype">
+                            <option value="4">图文简介</option>
+                            <option value="3">视频简介</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item" id="article_title">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="title" v-model="title" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" id="article_img">
+                    <label class="layui-form-label">封面图</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn logo" id="thumb_img">选择图片</button>
+                            <div class="layui-upload-list" v-show="thumb">
+                                <img class="layui-upload-img" :src="thumb">
+                                <p class="clear_item">
+                                    <a class="layui-btn layui-btn-danger layui-btn-xs" @click="clear_thumb">清除</a>
+                                    <span id="logo_result">{{upload_result}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" id="article_content" v-show="dtype == 4">
+                    <label class="layui-form-label">图文内容</label>
+                    <div class="layui-input-block" style="width:80% !important;">
+                        <textarea name="content" id="content">{{content}}</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item" id="video_url" v-show="dtype == 3">
+                    <label class="layui-form-label">视频链接</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="url" v-model="url" placeholder="请输入视频链接" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="">立即添加</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script src="/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/admin/product.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/html" id="operator_item">
+    <a class="layui-btn layui-btn-xs layui-btn layui-btn-warm" lay-event="edit"><i class="iconfont">&#xe649;</i>编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="iconfont">&#xe649;</i>删除</a>
+</script>
+<script type="text/html" id="status">
+    <input type="checkbox" name="is_show" value="{{d._id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="status" {{ d.status ? 'checked' : '' }}>
+  </script>
+<script type="text/html" id="goods_logo">
+    <img src="{{d.thumb}}" class="layui-upload-img show_logo">
+</script>
+
+</html>

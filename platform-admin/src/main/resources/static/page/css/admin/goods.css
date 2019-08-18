@@ -1,0 +1,55 @@
+body {
+    background-color: #ffffff;
+    padding: 15px;
+}
+
+.add-subcat,
+.add-spec,
+.add-videos,
+.goods-detail {
+    display: none;
+    padding: 15px;
+}
+
+.detail_delete {
+    margin-right: 25px;
+}
+
+#detail_result {
+    color: #FF5722;
+}
+
+.modal {
+    margin-top: 20px;
+    width: 80px !important;
+    line-height: 35px !important;
+    height: 35px !important;
+    font-size: 12px;
+    padding: 0px !important;
+}
+
+.more_img,
+.detail_img,
+.upload {
+    width: 80px !important;
+    line-height: 35px !important;
+    height: 35px !important;
+    font-size: 12px;
+    padding: 0px !important;
+}
+
+.layui-form-label {
+    padding: 9px 0px !important;
+    width: 100px !important;
+}
+
+.layui-input-block {
+    width: 50% !important;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    max-width: 50%;
+    max-height: 350px;
+}

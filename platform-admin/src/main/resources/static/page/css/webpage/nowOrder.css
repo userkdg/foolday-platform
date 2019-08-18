@@ -1,0 +1,172 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #DFF1FC;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+.top-bg {
+    width: 100%;
+    height: 8.64rem;
+    background-image: url("/activity/img/webpage/top_bg1.png");
+    background-size: 100% 100%;
+}
+
+.history {
+    width: 100%;
+    height: 1.9rem;
+    background: #D79259;
+    text-align: center;
+    line-height: 1.9rem;
+    box-sizing: border-box;
+}
+
+.history img {
+    width: 1rem;
+    height: 1rem;
+    vertical-align: middle;
+}
+
+.history span {
+    font-size: .7rem;
+    color: #FFFFFF;
+    letter-spacing: .2rem;
+}
+
+.go-icon {
+    width: 2rem;
+    height: 100%;
+    float: left;
+}
+
+.go-icon:active {
+    background: gray;
+}
+
+.go-icon img {
+    margin: .45rem .5rem;
+}
+
+.order {
+    width: 100%;
+    padding: 1.5rem 1.2rem .2rem;
+    box-sizing: border-box;
+}
+
+.order-item {
+    padding: .4rem 1rem;
+    background: #FFFFFF;
+    border-radius: .6rem;
+    border: 1px dotted #333333;
+    margin-bottom: .56rem;
+}
+
+.message {
+    position: relative;
+}
+
+.text-message {
+    width: 7.5rem;
+    font-size: .6rem;
+}
+
+.text-message h3 {
+    font-size: .9rem;
+    font-weight: normal;
+    line-height: 1.4rem;
+    margin: 0;
+    color: #333333;
+}
+
+.text-item {
+    width: 7.5rem;
+    height: 1rem;
+    color: #666666;
+}
+
+.text-item span:nth-of-type(1) {
+    display: block;
+    width: 3rem;
+    height: 1rem;
+    line-height: 1rem;
+    font-size: .6rem;
+    float: left;
+    text-align: justify;
+}
+
+/*不加上这句的话，上面的 text-align: justify; 不生效*/
+.text-item span:after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+}
+
+.text-item span:nth-of-type(2) {
+    display: block;
+    width: 4.5rem;
+    height: 1rem;
+    font-size: .6rem;
+    line-height: 1rem;
+    float: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.message label {
+    display: inline-block;
+    width: 3.1rem;
+    height: 3.1rem;
+    border-radius: 100%;
+    font-size: .74rem;
+    text-align: center;
+    line-height: 3.1rem;
+    color: #FFFFFF;
+    position: absolute;
+    right: 0;
+    top: .8rem;
+}
+
+.label-enable {
+    background: #13AEFF;
+}
+
+.label-disable {
+    background: #C33624;
+}
+
+.label-info {
+    background: #F0AD4E;
+}
+
+.order-item > button {
+    display: block;
+    width: 9.54rem;
+    height: 1.18rem;
+    background: #FF6600;
+    margin: .4rem auto 0;
+    font-size: .7rem;
+    color: #FFFFFF;
+    letter-spacing: .6rem;
+    border-radius: .2rem;
+    border: none;
+    outline: none;
+}
+
+.load-more {
+    display: block;
+    width: 6rem;
+    height: 1.2rem;
+    margin: 0 auto .4rem;
+    font-size: .75rem;
+    line-height: 1.2rem;
+    text-align: center;
+    color: #777777;
+}

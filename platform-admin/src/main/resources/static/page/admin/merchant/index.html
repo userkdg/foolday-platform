@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta name="force-rendering" content="webkit" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+	<title>HAdmin-后台管理系统</title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link href="../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="../css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+	<link href="../layui/font/iconfont.css" rel="stylesheet">
+	<link href="../css/animate.css" rel="stylesheet">
+	<link href="../css/style.css?v=4.1.0" rel="stylesheet">
+	<link rel="stylesheet" href="../layui/css/layui.css?v=1.0.0" media="all">
+</head>
+<style>
+	.home_index {
+		padding: 4px 12px;
+		margin: 14px 5px 5px 8px;
+	}
+</style>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden">
+	<div id="wrapper">
+		<!--左侧导航开始-->
+		<nav class="navbar-default navbar-static-side" role="navigation">
+			<div class="nav-close">
+				<i class="fa fa-times-circle"></i>
+			</div>
+			<div class="sidebar-collapse">
+				<ul class="nav" id="side-menu">
+					<li class="nav-header">
+						<div class="dropdown profile-element">
+							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+								<span class="clear">
+									<span class="block m-t-xs" style="font-size: 20px;">
+										<i class="glyphicon glyphicon-xbt"></i>
+										<!-- <a style="display: block;float: left;" href="/?action=admin.view.welcome" class="font-bold">后台管理系统</a> -->
+										<strong href="/admin/welcome.html" class="font-bold">后台管理系统</strong>
+									</span>
+								</span>
+							</a>
+						</div>
+						<div class="logo-element">后台管理系统</div>
+					</li>
+							<li>
+									<a class="J_menuItem" href="/admin/system/merchant/userDiscount.html"> 优惠券领取记录 </a>
+								</li>
+
+							<li>
+								<a class="J_menuItem" href="/admin/system/merchant/discount.html"> 优惠列表 </a>
+							</li>
+
+				</ul>
+			</div>
+		</nav>
+		<!--左侧导航结束-->
+		<!--右侧部分开始-->
+		<div id="page-wrapper" class="gray-bg dashbard-1">
+			<div class="row border-bottom">
+				<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+					<div class="navbar-header">
+						<a class="navbar-minimalize minimalize-styl-2 btn btn-info" href="#">
+							<i class="fa fa-bars"></i>
+						</a>
+						<a class="btn btn-info home_index J_menuItem" href="/admin/welcome.html">
+							<i class="glyphicon glyphicon-home"></i> 主 页
+						</a>
+					</div>
+					<ul class="nav navbar-top-links navbar-right">
+						<li class="dropdown">
+							<button id="reload" class="layui-btn layui-btn-xs layui-btn-normal">
+								<i class="layui-icon">&#xe666;</i>刷新
+							</button>
+						</li>
+						<li class="dropdown">
+							<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+								<i class="glyphicon glyphicon-user"></i>
+							</a>
+							<ul class="dropdown-menu dropdown-alerts">
+								<li style="display: none;">
+									<a class="J_menuItem" href="/?action=admin.view.system_info">
+										<div>
+											<i class="glyphicon glyphicon-user"></i> 系统信息
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="/loginOut">
+										<div>
+											<i class="fa fa-envelope fa-fw"></i> 退出登录
+										</div>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+			<div class="row J_mainContent" id="content-main">
+				<iframe id="J_iframe" width="100%" height="100%" src="/admin/welcome.html" frameborder="0" data-id="index_v1.html" seamless></iframe>
+			</div>
+		</div>
+		<!--右侧部分结束-->
+	</div>
+
+</body>
+<script src="../layui/layui.js" type="text/javascript"></script>
+<!-- 全局js -->
+<script src="../js/jquery.min.js?v=2.1.4" type="text/javascript"></script>
+<script src="../js/bootstrap.min.js?v=3.3.6" type="text/javascript"></script>
+<script src="../js/plugins/metisMenu/jquery.metisMenu.js" type="text/javascript"></script>
+<script src="../js/plugins/slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+
+<!-- 自定义js -->
+<script src="../js/hAdmin.js?v=4.1.0" type="text/javascript"></script>
+<script type="text/javascript" src="../js/index.js"></script>
+<script>
+	$('#reload')
+		.bind(
+			"click",
+			function () {
+				$('#page-wrapper #content-main').children('iframe')[0].contentWindow.location
+					.reload(true);
+			})
+</script>
+
+</html>

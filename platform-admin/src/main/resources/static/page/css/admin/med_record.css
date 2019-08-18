@@ -1,0 +1,14 @@
+body {
+    background: #fff;
+    padding: 10px;
+}
+
+.group-button {
+    padding: 15px 0 0 5px;
+}
+
+.detail-subcat,
+.result-subcat {
+    display: none;
+    padding: 10px;
+}

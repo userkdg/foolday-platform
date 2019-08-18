@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="/page/css/common/style.css">
+</head>
+<body class="childrenBody">
+	<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
+	    <div class="layui-form-item">
+	        <label class="layui-form-label">会员等级名</label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="name" name="name" placeholder="请输入会员等级名称" lay-verify="required">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label">所需积分</label>
+	        <div class="layui-input-block">
+	            <input type="number" class="layui-input" id="requiredPoints" name="requiredPoints" placeholder="请输入所需积分" lay-verify="required">
+	        </div>
+	    </div>
+		<div class="layui-form-item btn-group">
+	        <div class="layui-input-block">
+	            <button class="layui-btn" lay-submit="" id="add" lay-filter="add">提交</button>
+	            <button class="layui-btn layui-btn-primary" type="reset" >重置</button>
+	        </div>
+	    </div>
+	</form>
+
+	<script type="text/javascript" src="/page/layui/layui.js"></script>
+	<script type="text/javascript" src="/page/js/admin/userLevel/add.js">
+	</script>
+</body>
+</html>

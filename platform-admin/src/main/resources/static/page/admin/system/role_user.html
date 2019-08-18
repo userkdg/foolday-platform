@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <link href="/layui/font/iconfont.css" rel="stylesheet">
+    <link href="/css/formSelects-v4.css" rel="stylesheet">
+</head>
+<style>
+    body {
+        background-color: #ffffff;
+        padding: 15px;
+    }
+
+    .add-subcat {
+        display: none;
+        padding: 15px;
+    }
+
+    .modal {
+        margin-top: 20px;
+        width: 80px !important;
+        line-height: 35px !important;
+        height: 35px !important;
+        font-size: 12px;
+        padding: 0px !important;
+    }
+</style>
+
+<body>
+    <div class="head">
+        <section class="panel panel-padding">
+            <form class="layui-form" id="select_role">
+                <div class="layui-form">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input class="layui-input" name="sel_name" placeholder="角色名称">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button lay-submit class="layui-btn" lay-filter="search">查找</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <section class="panel panel-padding">
+        <div class="group-button">
+            <button class="layui-btn layui-btn-small modal">
+                <i class="iconfont">&#xe608;</i> 添加角色
+            </button>
+        </div>
+
+        <table id="user_role_list" class="layui-hide" lay-filter="roles"></table>
+    </section>
+
+    <div class="add-subcat">
+        <form class="layui-form" id="user_role_info">
+            <input name="id" type="hidden" value="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required lay-verify="required" placeholder="请输入角色名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">一级佣金</label>
+                <div class="layui-input-block">
+                    <input type="text" name="parent_money" required lay-verify="required" placeholder="请设置一级佣金金额" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">二级佣金</label>
+                <div class="layui-input-block">
+                    <input type="text" name="p_parent_money" required lay-verify="required" placeholder="请设置二级佣金金额" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">升级条件</label>
+                <div class="layui-input-block">
+                    <input type="text" name="conditions" required lay-verify="required" placeholder="升级至下一个角色所需购买的数量" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">分红比例</label>
+                <div class="layui-input-block">
+                    <input type="text" name="bonus_rate" required lay-verify="required" placeholder="请设置分红比例（输入范围0~100，80表示80%）" autocomplete="off"
+                        class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">优先级</label>
+                <div class="layui-input-block">
+                    <input type="text" name="order" required lay-verify="required" placeholder="请设置优先级（从1开始，值越小，优先级越高）" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="">立即添加</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+<script src="/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/admin/role_user.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/html" id="operator_item">
+    <a class="layui-btn layui-btn-xs layui-btn layui-btn-warm" lay-event="edit"><i class="iconfont">&#xe649;</i>编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="iconfont">&#xe649;</i>删除</a>
+</script>
+<script type="text/html" id="status">
+    <input type="checkbox" name="is_show" value="{{d._id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="status" {{ d.is_show ? 'checked' : '' }}>
+  </script>
+</html>

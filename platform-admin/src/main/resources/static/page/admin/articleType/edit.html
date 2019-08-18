@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="/page/css/common/style.css">
+</head>
+<body class="childrenBody">
+	<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
+		<input type="hidden" id="primaryKey" th:value="${id}">
+		<div class="layui-form-item">
+			<label class="layui-form-label" style="width: 100px">资讯栏目名</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="name" name="name" lay-verify="required" placeholder="请输入资讯栏目名" style="width: 350px">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label" style="width: 100px">资讯栏目英文名</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="englishTitle" name="englishTitle" placeholder="请输入资讯栏目英文名" style="width: 350px">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label" style="width: 100px">资讯栏目特性1</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="attribution1" lay-verify="required" name="attribution1" placeholder="请输入资讯栏目特性1" style="width: 350px">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label" style="width: 100px">资讯栏目特性2</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="attribution2" lay-verify="required" name="attribution2" placeholder="请输入资讯栏目特性2" style="width: 350px">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label" style="width: 100px">资讯栏目特性3</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="attribution3" lay-verify="required" name="attribution3" placeholder="请输入资讯栏目特性3" style="width: 350px">
+			</div>
+		</div>
+		<div class="layui-form-item btn-group" id="submit">
+	        <div class="layui-input-block">
+	            <button class="layui-btn" lay-submit="" id="edit" lay-filter="edit">提交</button>
+	            <button class="layui-btn layui-btn-primary" type="reset" >重置</button>
+	        </div>
+	    </div>
+	</form>
+	<script type="text/javascript" src="/page/layui/layui.all.js"></script>
+	<script type="text/javascript" src="/page/js/admin/articleType/edit.js">
+	</script>
+</body>
+</html>

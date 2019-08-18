@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/page/css/common/style.css">
+</head>
+<body class="childrenBody">
+<div id="userLevel_info">
+    <form class="layui-form" lay-filter="userLevel_info" style="width: 90%; margin-top: 10px">
+    <input type="hidden" id="primaryKey" th:value="${id}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">ID</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" lay-verify="required" id="id" name="id" readonly="readonly">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">会员等级名称</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="name" name="name" placeholder="请输入会员等级名称" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所需积分</label>
+        <div class="layui-input-block">
+            <input type="number" class="layui-input" id="requiredPoints" name="requiredPoints" placeholder="请输入所需积分" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item btn-group">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" id="edit" lay-filter="edit">提交</button>
+            <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+        </div>
+    </div>
+</form>
+</div>
+
+<script type="text/javascript" src="/page/layui/layui.js"></script>
+<!--<script type="text/javascript" src="/page/vue.min.js"></script>-->
+<script type="text/javascript" src="/page/js/admin/userLevel/edit.js">
+</script>
+</body>
+</html>

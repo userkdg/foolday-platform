@@ -1,0 +1,79 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <link href="../layui/font/iconfont.css" rel="stylesheet">
+    <link href="../css/formSelects-v4.css" rel="stylesheet">
+</head>
+<style>
+    body {
+        background-color: #ffffff;
+        padding: 15px;
+    }
+
+    .add-subcat {
+        display: none;
+        padding: 15px;
+    }
+
+    .show_logo {
+        width: 30px;
+        height: 30px;
+    }
+
+    .modal {
+        margin-top: 20px;
+        width: 80px !important;
+        line-height: 35px !important;
+        height: 35px !important;
+        font-size: 12px;
+        padding: 0px !important;
+    }
+</style>
+
+<body>
+<div id="container">
+	<div class="head">
+        <section class="panel panel-padding">
+            <form class="layui-form" id="select_role">
+                <div class="layui-form">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input class="layui-input" name="sel_name" placeholder="">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button lay-submit class="layui-btn" lay-filter="search">查找</button>
+                    </div>
+                </div>
+            </form>
+            <table id="user_list" class="layui-hide" lay-filter="dictionarys"></table>
+        </section>
+    </div>
+
+</div>
+    </body>
+<script src="../layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/admin/user.js?v=1.0.2" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/html" id="userIcon">
+    <img src="{{d.userIcon}}" class="layui-upload-img show_logo">
+</script>
+
+<script type="text/html" id="gender">
+    {{# if(d.gender == 0) { }}
+    <a class="layui-btn layui-btn-xs">未知</a>
+    {{# }else if(d.gender == 1){ }}
+    <a class="layui-btn layui-btn-xs layui-btn-normal">男</a>
+    {{# }else if(d.gender == 2){ }}
+    <a class="layui-btn layui-btn-xs layui-btn-normal">女</a>
+    {{# }  }}
+</script>
+</html>

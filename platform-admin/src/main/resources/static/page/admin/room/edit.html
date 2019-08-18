@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/page/css/common/style.css">
+</head>
+<body class="childrenBody">
+<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
+    <input type="hidden" id="primaryKey" th:value="${id}">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">ID</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" lay-verify="required" id="id" name="id" readonly="readonly">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">房间号</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="name" name="name" placeholder="请输入房间号">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">预订人</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="userName" name="userName" placeholder="请输入预订人">
+        </div>
+    </div>
+    <div class="layui-form-item btn-group">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" id="edit" lay-filter="edit">提交</button>
+            <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="/page/layui/layui.all.js"></script>
+<script type="text/javascript" src="/page/js/admin/room/edit.js">
+</script>
+</body>
+</html>

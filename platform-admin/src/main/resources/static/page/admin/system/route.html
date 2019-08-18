@@ -1,0 +1,202 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <link href="../layui/font/iconfont.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+
+</head>
+<style>
+    body {
+        background-color: #ffffff;
+        padding: 15px;
+    }
+
+    .add-subcat {
+        display: none;
+        padding: 15px;
+    }
+
+    .modal {
+        margin-top: 20px;
+        width: 80px !important;
+        line-height: 35px !important;
+        height: 35px !important;
+        font-size: 12px;
+        padding: 0px !important;
+    }
+
+    .layui-upload-img {
+        width: 120px !important;
+        height: 80px !important;
+    }
+
+    select {
+        height: 35px;
+        width: 120px;
+    }
+</style>
+
+<body>
+    <div id="container">
+        <div class="head">
+            <section class="panel panel-padding">
+                <form  id="select_role">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input class="layui-input" v-model="sel_name" placeholder="路线名称">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input class="layui-input" v-model="end_name" placeholder="目的地名称">
+                        </div>
+                        <select v-model="sel_dictionaryId">
+                            <option v-for="(item, index) in dictionarys" :value="item.dictionaryId">{{item.dictionaryName}}</option>
+                        </select>
+                    </div>
+                    <div class="layui-inline">
+                        <button lay-submit class="layui-btn" lay-filter="search">查找</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <section class="panel panel-padding">
+            <div class="group-button">
+                <button class="layui-btn layui-btn-small modal">
+                    <i class="iconfont">&#xe608;</i> 添加路线
+                </button>
+            </div>
+
+            <table id="route_list" class="layui-hide" lay-filter="feedbacks"></table>
+        </section>
+
+        <div class="add-subcat">
+            <form id="message_info">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">路线名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" v-model="name" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">路线副标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" v-model="routeSubtitle" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所属目的地</label>
+                    <div class="layui-input-block">
+                        <select v-model="tourId">
+                            <option v-for="item in tourists" :value="item.endId">{{item.endName}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">栏目</label>
+                    <div class="layui-input-block">
+                        <select v-model="dictionaryId">
+                        <option v-for="(item, index) in dictionarys" :value="index">{{item.dictionaryName}}</option>
+                        </select>
+                        <button type="button" class="layui-btn layui-btn-sm update" >添加栏目</button>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" id="specs_detail_item" v-if="dictionaryIds.length">
+                    <div id="grants" class="layui-input-block">
+                        <div v-for="(item, index) in dictionaryIds" @click="delSpec(index)" class="tag tag-selected">
+                            <p class="text">{{item.dictionaryName}}</p>
+                            <p class="tick-box" style="display: block;">
+                                <span class="tick-bg"></span>
+                                <i class="layui-icon tick">&#xe605;</i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">完成所需天数</label>
+                    <div class="layui-input-block">
+                        <input type="number" v-model="day" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">封面图</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn layui-btn-sm detail_img" id="detail_img">选择图片</button>
+                            <div class="layui-upload-list" v-show="thumb">
+                                <img class="layui-upload-img" id="thumb" :src="thumb">
+                                <p>
+                                    <a class="layui-btn layui-btn-danger layui-btn-xs" @click="clear_path(1)">清除</a>
+                                    <span>{{thumb_result}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">路线图</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn layui-btn-sm detail_img" id="location_img">选择图片</button>
+                            <div class="layui-upload-list" v-show="img">
+                                <img class="layui-upload-img" id="img" :src="img">
+                                <p>
+                                    <a class="layui-btn layui-btn-danger layui-btn-xs" @click="clear_path(2)">清除</a>
+                                    <span>{{img_result}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">完成所需预算</label>
+                    <div class="layui-input-block">
+                        <input type="number" v-model="money" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">路线详情</label>
+                    <div class="layui-input-block">
+                        <textarea v-model="routeIntroduce" required placeholder="" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="">立即添加</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script src="../layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=HSIBZ-G7E63-4TY3Z-3LPC6-ZMPVQ-XRBQO"></script>
+<script charset="utf-8" type="text/javascript" src="../js/map/map.js"></script>
+<script src="../js/admin/route.js?v=1.0.5" type="text/javascript" charset="utf-8"></script>
+<script type="text/html" id="operator_item">
+    <a class="layui-btn layui-btn-xs layui-btn layui-btn-warm" lay-event="edit"><i class="iconfont">&#xe649;</i>编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="iconfont">&#xe649;</i>删除</a>
+</script>
+<script type="text/html" id="status">
+    <input type="checkbox" value="{{d.route_id}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="status" {{ d.route_status ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="recommend">
+    <input type="checkbox" value="{{d.route_id}}" lay-skin="switch" lay-text="是|否" lay-filter="recommend" {{ d.route_recommend ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="image_item">
+    <img src="{{d.front_url}}" class="layui-upload-img show_logo">
+</script>
+<script type="text/html" id="location_thumb">
+    <img src="{{d.route_url}}" class="layui-upload-img show_logo">
+</script>
+</html>

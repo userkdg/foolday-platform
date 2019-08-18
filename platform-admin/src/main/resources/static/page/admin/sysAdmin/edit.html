@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/page/css/common/style.css">
+</head>
+<body class="childrenBody">
+<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
+    <input type="hidden" id="primaryKey" th:value="${id}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">管理员名称</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="username" name="username" placeholder="管理员名称" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> 管理员账号 </label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="phone" name="phone" placeholder="管理员账号" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> 密码 </label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="password" name="password" placeholder="请输入密码" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> 备注 </label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="remarks" name="remarks" placeholder="请输入备注">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">酒店名称</label>
+        <div class="layui-input-block">
+            <select name="hotelId" id="hotelId"  lay-verify="required">
+                <option value="">--请选择--</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">管理员角色</label>
+        <div class="layui-input-block">
+            <select name="sysRoleId" id="sysRoleId"  lay-verify="required">
+                <option value="">--请选择--</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item btn-group">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" id="edit" lay-filter="edit">提交</button>
+            <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="/page/layui/layui.all.js"></script>
+<script type="text/javascript" src="/page/js/admin/sysAdmin/edit.js">
+</script>
+</body>
+</html>

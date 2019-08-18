@@ -1,0 +1,82 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+#login-page {
+    width: 100%;
+    height: 100%;
+    background-image: url('/activity/img/webpage/login_bg.png');
+    background-size: 100% 100%;
+}
+
+.logo {
+    width: 9rem;
+    height: 2.32rem;
+    margin: 0 auto 2.54rem;
+    padding-top: 3.38rem;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+}
+
+.login-form {
+    width: 100%;
+    /*height: 1rem;*/
+}
+
+.enter {
+    width: 9.60rem;
+    height: 1rem;
+    border-bottom: 1px solid #BBBBBB;
+    margin: 0 auto .5rem;
+    padding-bottom: .1rem;
+    display: flex;
+}
+
+.enter img {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    float: left;
+}
+
+.enter input {
+    display: block;
+    flex: 1;
+    height: .8rem;
+    padding-left: .2rem;
+    padding-top: .1rem;
+    background: none;
+    float: left;
+    font-size: .5rem;
+    letter-spacing: .1rem;
+    border: none;
+    outline: none;
+}
+
+.login-btn {
+    display: block;
+    width: 10rem;
+    height: 1.56rem;
+    background: #00A2E9;
+    border-radius: .3rem;
+    margin: 1.8rem auto;
+    font-size: .8rem;
+    color: #FFFFFF;
+    line-height: 1.56rem;
+    letter-spacing: .3rem;
+    border: none;
+    outline: none;
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+    <title>完整demo</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/page/css/common/style.css">
+
+    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"> </script>
+    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+    <script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
+</head>
+<body>
+<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
+    <div class="layui-form-item">
+        <label class="layui-form-label">文章内容</label>
+        <div class="layui-input-block">
+            <div class="layui-upload-list">
+                <div id="editor" style="width:1024px;height:500px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item btn-group">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" id="add" lay-filter="add">提交</button>
+            <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="/page/layui/layui.all.js"></script>
+<script type="text/javascript">
+    //设置内容，isAppendTo为TRUE是为追加内容
+    function setContent(text) {
+        UE.getEditor('content').ready(function () {
+            UE.getEditor('content').execCommand('insertHtml', text)
+        });
+    }
+
+    function getContent() {
+        return UE.getEditor('editor').getContent();
+    }
+    var ue = UE.getEditor('editor');
+    layui.use(['layer','form'], function () {
+        var form = layui.form,
+            layer = layui.layer;
+
+        //需要等待editor初始完毕才能进行添加内容操作，否则会报错
+        setTimeout(function() {
+            setContent("<p>这是添加内容1</p><p>这是添加内容2</p><p>这是添加内容3</p><p><img src=\"http://hbimg.b0.upaiyun.com/38bacc628f591b5aca4db9773a64e62faa2886b5eb25-kJVfL3_fw658\"/></p>");
+        }, 500);
+
+
+        form.on("submit(add)", function (data) {
+            console.log("获取的内容为：", getContent());
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

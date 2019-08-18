@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="renderer" content="webkit" />
+    <meta name="force-rendering" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+
+    <title>后台管理系统</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="../css/animate.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/login.css" rel="stylesheet">
+    <link href="../css/loginFont.css" rel="stylesheet">
+    <link href="../layui/css/layui.css" rel="stylesheet">
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.location;
+        }
+    </script>
+
+</head>
+
+<body class="signin">
+<div class="login-form-box">
+    <div class="login-logo-box">
+        <img src="../img/hs_logo.png" alt="">
+        <span class="text">系统后台登录</span>
+    </div>
+    <div class="signinpanel">
+        <form style="text-align: center;" id="login-form">
+            <div class="login-title-box">
+                <span class="login-title">登录中心</span>
+                <span class="box-line"></span>
+            </div>
+<!--            <div class="login-input">-->
+<!--                <span class="icontfont icon-user"></span>-->
+<!--                <input name="phone" type="text" class="form-control uname" value="" placeholder="请输入手机号" />-->
+<!--            </div>-->
+<!--            <div class="login-input">-->
+<!--                <span class="icontfont icon-mima"></span>-->
+<!--                <input name="password" type="password" class="form-control pword m-b" value="" placeholder="请输入密码" />-->
+<!--            </div>-->
+            <input name="phone" style="padding: 18px 12px;" type="text" class="form-control uname" value="" placeholder="请输入账号" />
+            <input name="password" style="padding: 18px 12px;" type="password" class="form-control pword m-b" value="" placeholder="请输入密码" />
+            <button class="login-btn">登录</button>
+        </form>
+        <div class="signup-footer">
+            2019 @版权所有 寒舍集团
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" charset="utf-8" src="../layui/layui.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.min.js"></script>
+<script>
+    layui.use("layer");
+
+    $("#login-form").submit(function(e) {
+        var params = $(this).serializeArray();
+        var data = {};
+        for(var i = 0;i < params.length;i++) {
+            var dat = params[i];
+            data[dat.name] = dat.value;
+        }
+        if(!data.phone || !data.password) {
+            layer.msg("填写项不能为空!")
+            return false;
+        }
+
+        $.ajax({
+            url: "/admin/loginByPW",
+            method: "post",
+            data: {
+                phone: data.phone,
+                password: data.password
+            },
+            dataType: "json",
+            success: function (res) {
+                if(!res || res.errcode != 0) {
+                    layer.msg(res ? res.errmsg : "请求错误，请稍后重试");
+                    return;
+                }
+
+                location.replace("/page/admin/index.html");
+            }
+        })
+        return false;
+    });
+
+</script>
+
+</html>

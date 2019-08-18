@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/page/css/common/style.css">
+</head>
+<body class="childrenBody">
+<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
+    <input type="hidden" id="primaryKey" th:value="${id}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">封面图片</label>
+        <div class="layui-input-block">
+            <div class="layui-upload-list">
+                <input type="hidden" class="layui-input" id="picture" name="picture">
+                <img class="layui-upload-img" src="/page/img/upload.png" id="showPicture" title="点击上传图片"
+                     style="float: left; width: 120px; height: 120px; cursor:pointer;">
+            </div>
+        </div>
+        <p style="float: bottom;" id="showText"></p>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">酒店名称</label>
+        <div class="layui-input-block">
+            <select name="hotelId" id="hotelId"  lay-verify="required">
+                <option value="">--请选择--</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> 房型名称 </label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="name" name="name" placeholder="请输入房型名称">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> 房型面积 </label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="area" name="area" placeholder="请输入房型面积">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> 床型名称 </label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="bedType" name="bedType" placeholder="请输入床型名称">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> 价格 </label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="price" name="price" placeholder="请输入价格">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> 包含内容 </label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="content" name="content" placeholder="请输入包含内容">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> 可住人数 </label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="residence" name="residence" placeholder="请输入可住人数">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">早餐</label>
+        <div class="layui-input-block">
+            <input type="checkbox" id="isBreakfast" name="isBreakfast" lay-skin="switch" value="1" lay-text="是|否">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">接机</label>
+        <div class="layui-input-block">
+            <input type="checkbox" id="isAirport" name="isAirport" lay-skin="switch" value="1" lay-text="是|否">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否可取消</label>
+        <div class="layui-input-block">
+            <input type="checkbox" id="isCancelTime" name="isCancelTime" lay-skin="switch" value="1" lay-text="是|否">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <input type="checkbox" id="status" name="status" lay-skin="switch" value="1" lay-text="满房|空房">
+        </div>
+    </div>
+
+    <div class="layui-form-item btn-group">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" id="edit" lay-filter="edit">提交</button>
+            <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="/page/layui/layui.all.js"></script>
+<script type="text/javascript" src="/page/js/admin/house/edit.js">
+</script>
+</body>
+</html>

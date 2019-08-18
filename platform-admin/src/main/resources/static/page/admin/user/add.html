@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="/page/css/common/style.css">
+</head>
+<body class="childrenBody">
+	<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
+		<div class="layui-form-item">
+			<label class="layui-form-label">头像</label>
+			<div class="layui-input-block">
+				<div class="layui-upload-list">
+					<input type="hidden" class="layui-input" id="photo" name="photo">
+					<img class="layui-upload-img" src="/page/img/upload.png" id="showPicture" title="点击上传图片"
+						 style="float: left; width: 120px; height: 120px; cursor:pointer;">
+				</div>
+			</div>
+			<p style="float: bottom;" id="showText"></p>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">会员名称</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="username" name="username" placeholder="请输入会员名称" lay-verify="required">
+			</div>
+		</div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label"> 手机号 </label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="phone" name="phone" placeholder="请输入手机号" lay-verify="required">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+			<label class="layui-form-label"> 密码 </label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="password" name="password" placeholder="请输入密码" lay-verify="required">
+			</div>
+		</div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label"> 证件类型 </label>
+			<div class="layui-input-block">
+				<select name="idType" id="idType">
+					<option value="ID_CARD">大陆身份证</option>
+					<option value="OTHER">其他证件</option>
+				</select>
+			</div>
+	    </div>
+		<div class="layui-form-item">
+			<label class="layui-form-label"> 证件号 </label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="identity" name="identity" placeholder="请输入证件号" lay-verify="required">
+			</div>
+		</div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label"> 会员邮箱 </label>
+	        <div class="layui-input-block">
+	            <input type="email" class="layui-input" id="email" name="email" placeholder="会员邮箱">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label"> 会员地址 </label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="address" name="address" placeholder="请输入会员地址">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label"> 会员生日 </label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="birthday" name="birthday" placeholder="请输入会员生日">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">性别</label>
+			<div class="layui-input-block">
+				<select name="gender" id="gender">
+					<option value="UNKNOWN">--请选择--</option>
+					<option value="MALE">男</option>
+					<option value="FEMALE">女</option>
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">状态</label>
+			<div class="layui-input-block">
+				<select name="status" id="status" >
+					<option value="NORMAL">正常</option>
+					<option value="FROZEN">冻结</option>
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item btn-group">
+	        <div class="layui-input-block">
+	            <button class="layui-btn" lay-submit="" id="add" lay-filter="add">提交</button>
+	            <button class="layui-btn layui-btn-primary" type="reset" >重置</button>
+	        </div>
+	    </div>
+	</form>
+
+	<script type="text/javascript" src="/page/layui/layui.all.js"></script>
+	<script type="text/javascript" src="/page/js/admin/user/add.js">
+	</script>
+</body>
+</html>

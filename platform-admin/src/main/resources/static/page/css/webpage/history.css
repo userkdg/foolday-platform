@@ -1,0 +1,72 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #DFF1FC;
+}
+
+.top-bg {
+    width: 100%;
+    height: 8.64rem;
+    background-image: url("/activity/img/webpage/top_bg1.png");
+    background-size: 100% 100%;
+}
+
+.history {
+    width: 100%;
+    height: 1.9rem;
+    background: #D79259;
+    text-align: center;
+    line-height: 1.9rem;
+    box-sizing: border-box;
+}
+
+.history img {
+    width: 1rem;
+    height: 1rem;
+    vertical-align: middle;
+}
+
+.history span {
+    font-size: .7rem;
+    color: #FFFFFF;
+    letter-spacing: .2rem;
+}
+
+.go-icon {
+    margin-top: .45rem;
+    float: left;
+    margin-left: .5rem;
+}
+
+.order {
+    width: 100%;
+    padding: 1.5rem 1.2rem;
+    box-sizing: border-box;
+}
+
+.order-list {
+    margin: 0;
+    padding: .4rem 1rem;
+    list-style: none;
+    background: #FFFFFF;
+    border-radius: .6rem;
+    box-sizing: content-box;
+}
+
+.order-list li {
+    height: 2.4rem;
+    border-bottom: 1px dotted black;
+    line-height: 2.4rem;
+    font-size: .9rem;
+    text-align: center;
+    color: #444444;
+}
+
+.order-list li:last-of-type {
+    border-bottom: none;
+}

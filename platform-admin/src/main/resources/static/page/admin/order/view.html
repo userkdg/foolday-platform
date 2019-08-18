@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+    <link href="/page/layui/font/iconfont.css" rel="stylesheet">
+    <link href="/page/css/formSelects-v4.css" rel="stylesheet">
+    <style type="text/css">
+        .layui-table-cell {
+            height: auto;
+            line-height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+<form class="layui-form" style="margin-top: 15px">
+    <div class="layui-inline" style="margin-left: 10px">
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" name="userName" placeholder="请输入用户名">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" name="orderNumber" placeholder="请输入订单号">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            <select name="hotelName" id="hotelName" >
+                <option value="">--请选择酒店名称--</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            <select name="status">
+                <option value="">--请选择订单状态--</option>
+                <option value="0">未使用</option>
+                <option value="1">已使用</option>
+                <option value="-1">已删除</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            <select name="payStatus">
+                <option value="">--请选择支付状态--</option>
+                <option value="0">未支付</option>
+                <option value="1">已支付</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            <select name="payType" >
+                <option value="">--请选择支付方式--</option>
+                <option value="0">支付宝</option>
+                <option value="1"> 微信 </option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline" style="margin-left: 15px">
+        <a class="layui-btn search_btn" lay-submit="" lay-filter="query">查询</a>
+    </div>
+</form>
+
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add"><i class="layui-icon">&#xe654;</i>添加</button>
+    </div>
+</script>
+
+<section class="panel panel-padding">
+    <table id="dataView" class="layui-hide" lay-filter="data"></table>
+</section>
+
+
+<script type="text/html" id="operator_item">
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="check"><i class="layui-icon">&#xe642;</i>查看</a>
+    <a class="layui-btn layui-btn-xs layui-btn-container" lay-event="residence"><i class="layui-icon">&#xe643;</i>入住</a>
+    <a class="layui-btn layui-btn-xs layui-btn-container" lay-event="exit"><i class="layui-icon">&#xe644;</i>退房</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+
+<script src="/page/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
+<script src="/page/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/page/js/admin/order/view.js" type="text/javascript" charset="utf-8"></script>
+<!--<script type="text/javascript" src="/page/js/common/functions.js"></script>-->
+</body>
+</html>

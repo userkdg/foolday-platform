@@ -1,0 +1,126 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="../../../layui/css/layui.css" media="all">
+    <link href="../../../layui/font/iconfont.css" rel="stylesheet">
+    <link href="../../../css/formSelects-v4.css" rel="stylesheet">
+</head>
+<style>
+    body {
+        background-color: #ffffff;
+        padding: 15px;
+    }
+
+    .add-subcat {
+        display: none;
+        padding: 15px;
+    }
+
+    .modal {
+        margin-top: 20px;
+        width: 80px !important;
+        line-height: 35px !important;
+        height: 35px !important;
+        font-size: 12px;
+        padding: 0px !important;
+    }
+
+    select {
+        height: 35px;
+        width: 120px;
+    }
+</style>
+
+<body>
+<div id="container">
+	<div class="head">
+        <section class="panel panel-padding">
+
+        </section>
+    </div>
+
+    <section class="panel panel-padding">
+        <div class="group-button">
+            <button class="layui-btn layui-btn-small modal">
+                <i class="iconfont">&#xe608;</i> 添加优惠券
+            </button>
+        </div>
+
+        <table id="route_list" class="layui-hide" lay-filter="feedbacks"></table>
+    </section>
+
+    <div class="add-subcat">
+        <form  id="message_info">
+
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">满足金额</label>
+                <div class="layui-input-block">
+                    <input type="text" v-model="price" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">优惠类型</label>
+                <div class="layui-input-block">
+                    <select v-model="discountType">
+                        <option value ="0">红包</option>
+                        <option value="1">优惠券</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+            <label class="layui-form-label">优惠金额</label>
+            <div class="layui-input-block">
+                <input type="text" v-model="condition" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">开始时间</label>
+                <div class="layui-input-block">
+                    <input type="date" v-model="beginTime" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">结束时间</label>
+                <div class="layui-input-block">
+                    <input type="date" v-model="endTime" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="">立即添加</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+    </body>
+<script src="../../../layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/admin/merchant/discount.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/html" id="operator_item">
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit"><i class="iconfont">&#xe649;</i>编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="iconfont">&#xe649;</i>删除</a>
+</script>
+<script type="text/html" id="status">
+    <input type="checkbox" value="{{d.discountId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="status" {{ d.discountStatus ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="discount_status">
+    {{# if(d.discountType == 0) { }}
+    <a class="layui-btn layui-btn-xs">红包</a>
+    {{# }else if(d.discountType == 1){ }}
+    <a class="layui-btn layui-btn-xs layui-btn-normal">优惠券</a>
+    {{# }  }}
+</script>
+
+</html>

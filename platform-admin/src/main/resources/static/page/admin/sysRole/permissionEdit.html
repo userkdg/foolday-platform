@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="/page/css/common/style.css">
+	<style>
+		.childrenBody{
+			padding: 15px;
+		}
+		#permissionBox{
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<body class="childrenBody">
+<!--<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">-->
+<!--	<input type="hidden" id="primaryKey" th:value="${id}">-->
+<!--</form>-->
+<input type="hidden" id="primaryKey" th:value="${id}">
+<div id="permissionBox"></div>
+<div class="layui-btn-container">
+	<button id="confirmChange" type="button" class="layui-btn layui-btn-sm">确定修改</button>
+</div>
+	<script type="text/javascript" src="/page/layui/layui.js"></script>
+	<script src="/page/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="/page/js/admin/sysRole/permissionEdit.js"></script>
+</body>
+</html>

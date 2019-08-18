@@ -1,0 +1,38 @@
+.text-muted {
+    font-size: 15px;
+}
+
+.month {
+    display: inline;
+}
+
+#last-month {
+    position: absolute;
+    top: 50%;
+    left: 50px;
+}
+
+#next-month {
+    position: absolute;
+    top: 50%;
+    right: 70px
+}
+
+.col-sm-4 {
+    width: 100% !important;
+    overflow: hidden !important;
+}
+
+.parent {
+    display: inline-flex;
+    flex-direction: row;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.child {
+    display: block;
+    flex: 1;
+    float: left;
+}
