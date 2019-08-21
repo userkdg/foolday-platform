@@ -120,5 +120,7 @@
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.59" level="project" />
     <orderEntry type="library" name="Maven: com.github.binarywang:weixin-java-miniapp:3.3.0" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.36" level="project" />
+    <orderEntry type="library" name="R User Library" level="project" />
+    <orderEntry type="library" name="R Skeletons" level="application" />
   </component>
 </module>

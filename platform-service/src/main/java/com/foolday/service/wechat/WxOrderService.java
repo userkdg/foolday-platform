@@ -162,7 +162,7 @@ public class WxOrderService implements WxOrderServiceApi {
         log.info("写入订单{}", (insert == 1));
         // 写入明细
         orderDetailsVo.forEach(orderDetailVo -> orderDetailServiceApi.add(orderDetailVo, orderEntity.getId()));
-        // 异步消息发送 todo
+        // 异步消息发送
         CommonMessageManager.OrderMsgHandler.notifyShopMsgFormUser(userId, shopId, orderEntity.getId(),
                 "用户下单通知", "您已成功下单,点击可查看订单详情", MessageAction.下单, ChannelType.订单类);
         return orderEntity;
@@ -182,14 +182,14 @@ public class WxOrderService implements WxOrderServiceApi {
         // 计算优惠
         String couponId = orderVo.getCouponId();
         if (StringUtils.isNotBlank(couponId)) {
-            CouponEntity couponEntity = couponServiceApi.get(couponId).orElseThrow(() -> new PlatformException("订单优惠券异常"));
+            CouponEntity couponEntity = couponServiceApi.get(couponId).orElseThrow(() -> new PlatformException("订单优惠券不存在"));
             couponRealPrice = couponEntity.getTargetPriceBySourcePrice(couponEntity.getType(), couponRealPrice);
             userCouponServiceApi.updateUsedByUserIdAndCouponId(userId, couponId, true);
 //            userCouponMapper.updateUsed(userId, couponId);
         }
         String otherCouponId = orderVo.getOtherCouponId();
         if (StringUtils.isNotBlank(otherCouponId)) {
-            CouponEntity couponEntity = couponServiceApi.get(otherCouponId).orElseThrow(() -> new PlatformException("订单优惠券异常"));
+            CouponEntity couponEntity = couponServiceApi.get(otherCouponId).orElseThrow(() -> new PlatformException("订单优惠券不存在"));
             couponRealPrice = couponEntity.getTargetPriceBySourcePrice(couponEntity.getType(), couponRealPrice);
             userCouponServiceApi.updateUsedByUserIdAndCouponId(userId, otherCouponId, true);
 //            userCouponMapper.updateUsed(userId, couponId);
@@ -294,6 +294,9 @@ public class WxOrderService implements WxOrderServiceApi {
         OrderEntity entity = BaseServiceUtils.checkOneById(orderMapper, orderId, "订单信息不存在");
         PlatformAssert.isTrue(OrderStatus.canAppendGoodsStatus(entity.getStatus()), "订单状态异常，无法加餐");
         OrderDetailEntity orderDetailEntity = orderDetailServiceApi.add(orderDetailvo, orderId);
+        //
+//        Float allPrice = entity.getAllPrice() != null ? entity.getAllPrice()+ orderDetailvo.g;
+
         return orderDetailEntity;
     }
 

@@ -98,7 +98,7 @@ public class WxPayController {
         return this.wxService.closeOrder(wxPayOrderCloseRequest);
     }
 
-    @ApiOperation(value = "提供系统内部单号，在下单前获取")
+    @ApiOperation(value = "1 提供系统内部单号，在下单前获取")
     @GetMapping("/outTradeNo")
     public FantResult<Long> outTradeNo() {
         long uniqueOrderNo = KeyUtils.generateUniqueOrderNo();
@@ -130,7 +130,7 @@ public class WxPayController {
      *
      * @param request 请求对象，注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）
      */
-    @ApiOperation(value = "在发起微信支付前，需要调用统一下单接口，获取\"预支付交易会话标识\",原生的统一下单接口,请求对象，注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）")
+    @ApiOperation(value = "[场景：公共号支付、扫码支付、APP支付]; 在发起微信支付前，需要调用统一下单接口，获取\"预支付交易会话标识\"")
     @PostMapping("/unifiedOrder")
     public WxPayUnifiedOrderResult unifiedOrder(@RequestBody WxPayUnifiedOrderRequest request) throws WxPayException {
         String outTradeNo = request.getOutTradeNo();

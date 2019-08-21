@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
-@ApiModel("微信用户下单表单对象")
+@ApiModel(description = "微信用户下单表单vo")
 @Data
 public class WxOrderViewVo implements Serializable {
 

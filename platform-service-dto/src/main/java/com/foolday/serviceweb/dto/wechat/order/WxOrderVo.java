@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
-@ApiModel("微信用户下单表单对象")
+@ApiModel(description = "微信用户下单表单对象")
 @Data
 public class WxOrderVo implements Serializable {
 
@@ -73,12 +73,7 @@ public class WxOrderVo implements Serializable {
     @ApiModelProperty(value = "订单状态必填", required = true)
     @NotNull(message = "订单状态必填")
     private OrderStatus status;
-    /**
-     * 下订单后的编号 规则生成
-     */
-    @ApiModelProperty(value = "提交订单时提供的订单编号必填", required = false, hidden = true)
-//    @NotNull(message = "提交订单时提供的订单编号必填")
-    private String orderNo;
+
     /*
     订单类型
      */
