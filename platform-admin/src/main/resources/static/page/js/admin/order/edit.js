@@ -1,87 +1,68 @@
-function dateFormat(datetime, format) {
-    if (datetime != null && datetime != "") {
-        if (parseInt(datetime) == datetime) {
-            if (datetime.length == 10) {
-                datetime = parseInt(datetime) * 1000;
-            } else if (datetime.length == 13) {
-                datetime = parseInt(datetime);
-            }
-        }
-        datetime = new Date(datetime);
-        var o = {
-            "M+": datetime.getMonth() + 1,                 	//月份
-            "d+": datetime.getDate(),                    		//日
-            "h+": datetime.getHours(),                   		//小时
-            "m+": datetime.getMinutes(),                 		//分
-            "s+": datetime.getSeconds(),                 		//秒
-            "q+": Math.floor((datetime.getMonth() + 3) / 3), 	//季度
-            "S": datetime.getMilliseconds()             		//毫秒
-        };
-        if (/(y+)/.test(format)) {
-            format = format.replace(RegExp.$1, (datetime.getFullYear() + "").substr(4 - RegExp.$1.length));
-        }
-
-        for (var k in o) {
-            if (new RegExp("(" + k + ")").test(format)) {
-                format = format.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-            }
-        }
-    } else {
-        format = "";
-    }
-
-    return format;
-};
-
-
-
 layui.use(['table', 'layer', "jquery"], function () {
     var table = layui.table;
     var form = layui.form;
     var $ = layui.jquery;
+    var nameTemp;
 
-    function init() {
-        getInitData();
-    }
-    init();
 
-    var initData; // 回显的数据
-    function getInitData(id) {
+    var primaryKey = $("#primaryKey").val();
+    $.ajax({
+        url: "/admin/hotelArea/getInfo",
+        data: {
+            id: primaryKey
+        },
+        type: "get",
+        dataType: "json",
+        success: function (res) {
+            if (!res || res.errcode != 0) {
+                layer.msg(res ? res.errmsg : "请求出错!", {icon: 2, time: 10000});
+                return;
+            }
+            nameTemp = res.data.city;
+            form.val('hotelArea_info', {
+                id: res.data.id,
+                province: res.data.province,
+                city: res.data.city,
+                sequence: res.data.sequence
+            });
+        },
+        error: function (res) {
+            layer.msg('网络异常！', new Function());
+        }
+    });
 
+    form.on("submit(edit)", function (data) {
+        var province = data.field.province;
+        var city = data.field.city;
+        var sequence = data.field.sequence;
+        if (city != nameTemp) {
+
+        }
         $.ajax({
-            url: "/admin/resident/view",
+            url: "/admin/hotelArea/edit",
             data: {
-                orderId: id
+                id: primaryKey,
+                province: province,
+                city: city,
+                sequence: sequence
             },
             type: "post",
+            async: false,
             dataType: "json",
-            success: function(result) {
-                if (result && result.errcode == 0) {
-                    initData = result.data;
-                    $("[name='id']").val(initData.id);
-                    $("[name='orderId']").val(initData.orderId);
-                    $("[name='residentsName']").val(initData.residentsName);
-                    $("[name='residentsName']").val(initData.residentsName);
-                    $("[name='phone']").val(initData.phone);
-                    $("[name='email']").val(initData.email);
-                    $("[name='adultNumber']").val(initData.adultNumber);
-                    $("[name='childNumber']").val(initData.childNumber);
-                    $("[name='identity']").val(initData.identity);
-                    $("[name='arriveTime']").val(initData.arriveTime);
-                    $("[name='residentTime']").val(dateFormat(initData.residentTime,"yyyy-MM-dd hh:mm"));
-                    $("[name='exitTime']").val(dateFormat(initData.exitTime,"yyyy-MM-dd hh:mm"));
-                    $("[name='remarks']").val(initData.remarks);
-                    $("[name='status']").val(initData.status);
-
-                    form.render(); // 重新绘制表单，让修改生效
-                } else {
-                    layer.msg('数据加载异常！', new Function());
+            success: function (res) {
+                if (!res || res.errcode != 0) {
+                    layer.msg(res ? res.errmsg : "请求出错!", {icon: 2, time: 10000});
+                    return;
                 }
+                parent.location.reload();
+                parent.layer.close(parent.layer.getFrameIndex(window.name));
             },
-            error:function(e) {
-                layer.msg('网络异常！', new Function());
+            error: function (e) {
+                layer.msg('网络异常,请稍后再试', new Function());
             }
         });
-    }
+        return false;
+    });
+
 
 });

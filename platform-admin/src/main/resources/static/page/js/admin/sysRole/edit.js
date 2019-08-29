@@ -57,10 +57,7 @@ layui.use(['table', 'layer', "jquery"], function () {
         var description = $('#description').val();
         var available = $('#available').val();
         if(name != nameTmp) {
-            var a = checkName();
-            if (!a) {
-                return false;
-            }
+
         }
         $.ajax({
             url: "/admin/sysRole/update",

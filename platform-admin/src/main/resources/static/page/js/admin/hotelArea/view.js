@@ -56,7 +56,7 @@ layui.use(['table', 'layer', "jquery"], function () {
                 layer.open({
                     type: 2,
                     title: "编辑",
-                    content: "/admin/hotelArea/edit?id=" + data.id,
+                    content: "../../admin/hotelArea/edit.html?id=" + data.id,
                     resize: false,
                     area: ['600px', '600px']
                 });
@@ -94,7 +94,7 @@ layui.use(['table', 'layer', "jquery"], function () {
                 layer.open({
                     type: 2,
                     title: "添加",
-                    content: "/admin/hotelArea/add",
+                    content: "../../admin/hotelArea/add.html",
                     resize: false,
                     area: ['600px', '600px']
                 });

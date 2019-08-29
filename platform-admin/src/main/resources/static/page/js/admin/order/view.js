@@ -1,104 +1,12 @@
-function convertStatus(status) {
-    var statusDesc = "";
-    if (status == 1) {
-        statusDesc = '<button class="layui-btn layui-btn-radius layui-btn-xs">使用中</button>';
-    } else if (status == -1) {
-        statusDesc = '<button class="layui-btn layui-btn-radius layui-btn-xs layui-btn-danger">已删除</button>';
-    } else if (status == 2) {
-        statusDesc = '<button class="layui-btn layui-btn-radius layui-btn-xs layui-btn-danger">已完结</button>';
-    } else {
-        statusDesc = '<button class="layui-btn layui-btn-radius layui-btn-xs">未使用</button>';
-    }
-    return statusDesc;
-};
-
-function convertRecommend(popular) {
-    var statusDesc = "";
-    if (popular == 1) {
-        statusDesc = '<button class="layui-btn layui-btn-radius layui-btn-xs">微信</button>';
-    } else if (popular == 0) {
-        statusDesc = '<button class="layui-btn layui-btn-radius layui-btn-xs  layui-btn-normal">支付宝</button>';
-    }else {
-        statusDesc = '<button class="layui-btn layui-btn-radius layui-btn-xs layui-btn-danger">无</button>';
-    }
-    return statusDesc;
-};
-
-function convertPayStatus(payStuats) {
-    var statusDesc = "";
-    if (payStuats == 0) {
-        statusDesc = '<button class="layui-btn layui-btn-radius layui-btn-xs layui-btn-warm">未支付</button>';
-    } else {
-        statusDesc = '<button class="layui-btn layui-btn-radius layui-btn-xs ">已支付</button>';
-    }
-    return statusDesc;
-};
-
-function dateFormat(datetime, format) {
-    if (datetime != null && datetime != "") {
-        if (parseInt(datetime) == datetime) {
-            if (datetime.length == 10) {
-                datetime = parseInt(datetime) * 1000;
-            } else if (datetime.length == 13) {
-                datetime = parseInt(datetime);
-            }
-        }
-        datetime = new Date(datetime);
-        var o = {
-            "M+": datetime.getMonth() + 1,                 	//月份
-            "d+": datetime.getDate(),                    		//日
-            "h+": datetime.getHours(),                   		//小时
-            "m+": datetime.getMinutes(),                 		//分
-            "s+": datetime.getSeconds(),                 		//秒
-            "q+": Math.floor((datetime.getMonth() + 3) / 3), 	//季度
-            "S": datetime.getMilliseconds()             		//毫秒
-        };
-        if (/(y+)/.test(format)) {
-            format = format.replace(RegExp.$1, (datetime.getFullYear() + "").substr(4 - RegExp.$1.length));
-        }
-
-        for (var k in o) {
-            if (new RegExp("(" + k + ")").test(format)) {
-                format = format.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-            }
-        }
-    } else {
-        format = "";
-    }
-
-    return format;
-};
-
 layui.use(['table', 'layer', "jquery"], function () {
     var table = layui.table;
     var form = layui.form;
-    var $ = layui.jquery;
     var tableIns;
-
-    function defineSelect() {
-        $.ajax({
-            url: '/admin/hotel/getHotelName',
-            dataType: 'json',
-            type: 'get',
-            success: function (result) {
-                if (result.errcode == 0) {
-                    var data = result.data;
-                    $.each(data, function (index, item) {
-                        $('#hotelName').append(new Option(item.name)); // 下拉菜单里添加元素
-                    })
-                    form.render(); // 渲染 把内容加载进去
-                }
-            }
-        });
-    }
-
-    defineSelect();
-
 
     tableIns = table.render({
         elem: '#dataView',
-        url: '/admin/reserveOrder/view',
-        title: '订单列表',
+        url: '/admin/hotelArea/view',
+        title: '酒店地区列表',
         method: 'post',
         toolbar: '#toolbar',
         page: true,
@@ -107,38 +15,16 @@ layui.use(['table', 'layer', "jquery"], function () {
         cols: [
             [
                 {type: "numbers", width: 80, align: "center", title: '序号'},
-                {field: 'orderNumber', title: '订单号', align: 'center'},
-                {field: 'userName', title: '用户名', align: 'center'},
-                {field: 'hotelName', title: '酒店名称', align: 'center'},
-                {field: 'roomName', title: '房型名称', align: 'center'},
-                {field: 'totalPirce', title: '总价', align: 'center'},
-                {field: 'price', title: '价格', align: 'center'},
-                {field: 'payNumber', title: '支付订单号', align: 'center'},
-                {
-                    field: 'payType', title: '支付类型', align: 'center',
-                    templet: '<div>{{convertRecommend(d.payType)}}</div>'
-                },
-                {
-                    field: 'payStatus', title: '支付状态', align: 'center',
-                    templet: '<div>{{convertPayStatus(d.payStatus)}}</div>'
-                },
-                {field: 'payTime', title: '支付时间', align: 'center'},
-                {
-                    field: 'status', title: '订单状态', align: 'center',
-                    templet: '<div>{{convertStatus(d.status)}}</div>'
-                },
-                {
-                    field: 'createTime', title: '创建时间', align: 'center',
-                    templet: '<div>{{dateFormat(d.createTime, "yyyy-MM-dd hh:mm")}}</div>'
-                },
-                {title: '操作', fixed: "right", align: 'center', toolbar: '#operator_item',width:"30%"}
+                {field: 'province', title: '省份', align: 'center'},
+                {field: 'city', title: '城市', align: 'center'},
+                {field: 'sequence', title: '排序序号', align: 'center'},
+                {title: '操作', fixed: "right", align: 'center', toolbar: '#operator_item', width: "35%"}
             ]
         ],
         parseData: function (res) {
-            if (res.errcode != 0) {
-                layer.msg(res.errmsg, {icon: 2, time: 5000}, function () {
-                });
-                return {};
+            if(!res || res.errcode != 0) {
+                layer.msg(res ? res.errmsg : "请求出错!" , {icon: 2, time: 10000});
+                return;
             }
             return {
                 "code": res.errcode,
@@ -150,19 +36,14 @@ layui.use(['table', 'layer', "jquery"], function () {
     });
 
     form.on("submit(query)", function (data) {
-        var userName = data.field.userName;
-        var hotelName = data.field.hotelName;
-        var status = data.field.status;
-        var payStatus = data.field.payStatus;
-        var payType = data.field.payType;
+        var province = data.field.province;
+        var city = data.field.city;
+
         // 表格重新加载
         tableIns.reload({
             where: {
-                userName: userName,
-                hotelName: hotelName,
-                status: status,
-                payStatus: payStatus,
-                payType: payType
+                province: province,
+                city: city
             }
         });
         return false;
@@ -171,11 +52,11 @@ layui.use(['table', 'layer', "jquery"], function () {
     table.on('tool(data)', function (obj) {
         var data = obj.data;
         switch (obj.event) {
-            case 'check':
+            case 'edit':
                 layer.open({
                     type: 2,
-                    title: "查看",
-                    content: "/admin/resident/view?orderId=" + data.orderNumber,
+                    title: "编辑",
+                    content: "../../admin/hotelArea/edit.html?id=" + data.id,
                     resize: false,
                     area: ['600px', '600px']
                 });
@@ -184,54 +65,18 @@ layui.use(['table', 'layer', "jquery"], function () {
                 layer.confirm('确认删除吗？', function (confirmIndex) {
                     layer.close(confirmIndex);
                     $.ajax({
-                        url: "/admin/reserveOrder/delete",
+                        url: "/admin/hotelArea/delete",
                         data: {
                             ids: data.id
                         },
                         type: "post",
                         dataType: "json",
-                        success: function (result) {
-                            if (result && result.errcode == 0) {
-                                layer.msg(result.errmsg, {icon: 1, time: 1000}, function () {
-                                    tableIns.reload();
-                                });
-                            } else {
-                                layer.msg(result.errmsg, {icon: 2, time: 1000});
+                        success: function (res) {
+                            if(!res || res.errcode != 0) {
+                                layer.msg(res ? res.errmsg : "请求出错!" , {icon: 2, time: 10000});
+                                return;
                             }
-                        },
-                        error: function (e) {
-                            layer.msg('网络异常,请稍后再试', new Function());
-                        }
-                    });
-                });
-                break;
-            case 'residence':
-               layer.open({
-                   type: 2,
-                   title: "确定入住",
-                   content: "/admin/reserveOrder/toResidence?orderId=" + data.orderNumber,
-                   resize: false,
-                   area: ['600px', '600px']
-               })
-                break;
-            case "exit":
-                layer.confirm('确定退房吗？', function (confirmIndex) {
-                    layer.close(confirmIndex);
-                    $.ajax({
-                        url: "/admin/reserveOrder/exit",
-                        data: {
-                            orderId: data.id
-                        },
-                        type: "post",
-                        dataType: "json",
-                        success: function (result) {
-                            if (result && result.errcode == 0) {
-                                layer.msg(result.errmsg, {icon: 1, time: 1000}, function () {
-                                    tableIns.reload();
-                                });
-                            } else {
-                                layer.msg(result.errmsg, {icon: 2, time: 1000});
-                            }
+                            location.reload();
                         },
                         error: function (e) {
                             layer.msg('网络异常,请稍后再试', new Function());
@@ -244,19 +89,16 @@ layui.use(['table', 'layer', "jquery"], function () {
     });
 
     table.on('toolbar(data)', function (obj) {
-        var checkStatus = table.checkStatus(obj.config.id);
-        var data = checkStatus.data; // 获取选中的数据
         switch (obj.event) {
             case 'add':
                 layer.open({
                     type: 2,
                     title: "添加",
-                    content: "/admin/reserveOrder/add",
+                    content: "../../admin/order/add.html",
                     resize: false,
                     area: ['600px', '600px']
                 });
                 break;
-        }
-        ;
+        };
     });
 });

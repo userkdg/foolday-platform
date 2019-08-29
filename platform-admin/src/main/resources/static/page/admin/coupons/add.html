@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="/system/page/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="/system/page/css/common/style.css">
+</head>
+<body class="childrenBody">
+	<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
+	    <div class="layui-form-item">
+	        <label class="layui-form-label">优惠券名称</label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="couponsName" name="couponsName" placeholder="优惠券名称">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label">优惠券可领取时间</label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="endTime" name="endTime" placeholder="优惠券可领取时间">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label">使用范围</label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="sequence" name="sequence" placeholder="使用范围">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">领取上限</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="maxTime" name="maxTime" placeholder="领取上限">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">库存</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="inventory" name="inventory" placeholder="库存">
+			</div>
+		</div>
+		<div class="layui-form-item">
+		<label class="layui-form-label">可使用店铺</label>
+		<div class="layui-input-block">
+			<input type="text" class="layui-input" id="storeIds" name="storeIds" placeholder="可使用店铺">
+		</div>
+	</div>
+		<div class="layui-form-item btn-group">
+	        <div class="layui-input-block">
+	            <button class="layui-btn" lay-submit="" id="add" lay-filter="add">提交</button>
+	            <button class="layui-btn layui-btn-primary" type="reset" >重置</button>
+	        </div>
+	    </div>
+	</form>
+
+	<script type="text/javascript" src="/system/page/layui/layui.js"></script>
+	<script type="text/javascript" src="/system/page/js/admin/coupons/add.js">
+	</script>
+</body>
+</html>

@@ -15,10 +15,7 @@ layui.use(['table', 'layer', "jquery"], function () {
             "description": $("#description").val(),
             "available": $("#available").val()
         };
-        var a = checkName();
-        if (!a) {
-            return false;
-        }
+
         layui.jquery.ajax({
             url: "/admin/sysRole/addRole",
             data: JSON.stringify(data),

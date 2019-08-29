@@ -5,10 +5,7 @@ layui.use(['table', 'layer', "jquery"], function () {
 
     form.on("submit(add)", function(data) {
         var data = {"name": data.field.name,"requiredPoints":data.field.requiredPoints};
-        var a = checkName();
-        if (!a) {
-            return false;
-        }
+
         a = checkPoints();
         if (!a) {
             return false;

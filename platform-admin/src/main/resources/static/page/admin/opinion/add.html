@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="/system/page/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="/system/page/css/common/style.css">
+</head>
+<body class="childrenBody">
+	<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
+	    <div class="layui-form-item">
+	        <label class="layui-form-label">省份名称</label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="province" name="province" placeholder="名称">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label">城市名称</label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="city" name="city" placeholder="名称">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label">排序顺序</label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="sequence" name="sequence" placeholder="请输入排序顺序">
+	        </div>
+	    </div>
+		<div class="layui-form-item btn-group">
+	        <div class="layui-input-block">
+	            <button class="layui-btn" lay-submit="" id="add" lay-filter="add">提交</button>
+	            <button class="layui-btn layui-btn-primary" type="reset" >重置</button>
+	        </div>
+	    </div>
+	</form>
+
+	<script type="text/javascript" src="/system/page/layui/layui.js"></script>
+	<script type="text/javascript" src="/system/page/js/admin/opinion/add.js">
+	</script>
+</body>
+</html>

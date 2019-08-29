@@ -1,100 +1,40 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="/page/layui/css/layui.css" media="all">
-    <link rel="stylesheet" href="/page/css/common/style.css">
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="/system/page/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="/system/page/css/common/style.css">
 </head>
 <body class="childrenBody">
-<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
-    <div class="layui-form-item">
-        <label class="layui-form-label">酒店名称</label>
-        <div class="layui-input-block">
-            <select name="hotelId" id="hotelId" lay-verify="required" lay-filter="house">
-                <option value="">--请选择--</option>
-            </select>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">房型名称</label>
-        <div class="layui-input-block">
-            <select name="houseId" id="houseId" lay-verify="required">
-                <option value="">--请选择--</option>
-            </select>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">入住时间</label>
-        <div class="layui-input-inline">
-            <input type="text" class="layui-input" name="residentTime" id="residentTime">
-        </div>
-    </div>
+	<form class="layui-form" id="_form" style="width: 90%; margin-top: 10px">
+	    <div class="layui-form-item">
+	        <label class="layui-form-label">省份名称</label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="province" name="province" placeholder="名称">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label">城市名称</label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="city" name="city" placeholder="名称">
+	        </div>
+	    </div>
+		<div class="layui-form-item">
+	        <label class="layui-form-label">排序顺序</label>
+	        <div class="layui-input-block">
+	            <input type="text" class="layui-input" id="sequence" name="sequence" placeholder="请输入排序顺序">
+	        </div>
+	    </div>
+		<div class="layui-form-item btn-group">
+	        <div class="layui-input-block">
+	            <button class="layui-btn" lay-submit="" id="add" lay-filter="add">提交</button>
+	            <button class="layui-btn layui-btn-primary" type="reset" >重置</button>
+	        </div>
+	    </div>
+	</form>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">离店时间</label>
-        <div class="layui-input-inline">
-            <input type="text" class="layui-input" name="exitTime" id="exitTime">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">入住人</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" id="residentsName" name="residentsName" placeholder="请输入入住人">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">手机号码</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" id="phone" name="phone" placeholder="请输入手机号码">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">电子邮箱</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" id="email" name="email" placeholder="请输入电子邮箱">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">成人人数</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" id="adultNumber" name="adultNumber" placeholder="请输入成人人数">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">儿童人数</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" id="childNumber" name="childNumber" placeholder="请输入儿童人数">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">身份证号</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" id="identity" name="identity" placeholder="请输入身份证号">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">到店时间</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" id="arriveTime" name="arriveTime" placeholder="请输入到店时间">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label"> 备注 </label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" id="remarks" name="remarks" placeholder="请输入备注">
-        </div>
-    </div>
-
-    <div class="layui-form-item btn-group">
-        <div class="layui-input-block">
-            <button class="layui-btn" lay-submit="" id="add" lay-filter="add">提交</button>
-            <button class="layui-btn layui-btn-primary" type="reset">重置</button>
-        </div>
-    </div>
-</form>
-
-<script type="text/javascript" src="/page/layui/layui.all.js"></script>
-<script type="text/javascript" src="/page/js/admin/order/add.js">
-</script>
+	<script type="text/javascript" src="/system/page/layui/layui.js"></script>
+	<script type="text/javascript" src="/system/page/js/admin/order/add.js">
+	</script>
 </body>
 </html>

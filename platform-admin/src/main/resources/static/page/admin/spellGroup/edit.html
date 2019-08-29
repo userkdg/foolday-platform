@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/system/page/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/system/page/css/common/style.css">
+</head>
+<body class="childrenBody">
+<form class="layui-form" lay-filter="hotelArea_info" style="width: 90%; margin-top: 10px">
+    <input type="hidden" id="primaryKey" th:value="${id}">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">ID</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" lay-verify="required" id="id" name="id" readonly="readonly">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">拼团活动名称</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="name" name="name" placeholder="拼团活动名称">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品拼团时间</label>
+        <div class="layui-input-block">
+            <input type="date" class="layui-input" id="time" name="time" placeholder="商品拼团时间">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">成团时间</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="startTime" name="startTime" placeholder="成团时间">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">拼团价格</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="oriPrice" name="oriPrice" placeholder="拼团价格">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品单买价格</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="curPrice" name="curPrice" placeholder="商品单买价格">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">拼团人数</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="conditionNum" name="conditionNum" placeholder="拼团人数">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">拼团商品库存</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="kcCount" name="kcCount" placeholder="拼团商品库存">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">可重复参团次数</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="repeatTime" name="repeatTime" placeholder="可重复参团次数">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">使用有效期</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="endTime" name="endTime" placeholder="使用有效期">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="remark" name="remark" placeholder="备注">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">可使用店铺</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="includeShopIds" name="includeShopIds" placeholder="可使用店铺">
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="/system/page/layui/layui.js"></script>
+<script type="text/javascript" src="/system/page/js/admin/spellGroup/edit.js">
+</script>
+</body>
+</html>
