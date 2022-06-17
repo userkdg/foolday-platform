@@ -64,7 +64,7 @@
         <commons.dbutils.version>1.6</commons.dbutils.version>
         <okhttp3.version>3.3.1</okhttp3.version>
         <commons.fileupload.version>1.3.3</commons.fileupload.version>
-        <fastjson.version>1.2.36</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <joda.time.version>2.9.9</joda.time.version>
         <mybatis.plus.boot.version>3.1.0</mybatis.plus.boot.version>
         <mysql8.version>8.0.16</mysql8.version>
